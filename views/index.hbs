@@ -1,7 +1,7 @@
-<ul class="max-w-lg m-auto bg-base-300 p-2 mt-2  rounded-box shadow-2xl">
+<ul class="p-8 menu-vertical w-full max-w-2xl m-auto bg-base-100 rounded-box shadow-2xl">
 {{#each notelist}}
-  <li class=" list-disc text-lg bg-base-100 m-1 rounded-lg list-inside p-4">{{ key }}:
-  <a class=" text-xl pl-2 link text-primary" href="/notes/view?key={{ key }}">{{ title }}</a>
+  <li class=" m-1">
+  <a class=" text-xl btn btn-block p-4 text-accent " href="/notes/view?key={{ key }}">{{ title }}</a>
   </li>
 {{/each}}
 </ul>

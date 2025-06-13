@@ -1,4 +1,4 @@
-<form class=" max-w-lg m-auto p-8 bg-base-100 shadow-2xl rounded-2xl" method="post" action="/notes/destroy/confirm">
+<form class="p-8 max-w-2xl m-auto bg-base-100 rounded-box shadow-2xl" method="post" action="/notes/destroy/confirm">
 <input type="hidden" name="notekey" value="{{#if note}}{{notekey}}{{/if}}">
 <p class=" text-xl">Delete <span class=" font-bold"> {{note.title}}?</span></p>
 <br><input class="btn btn-error" type="submit" value="Delete">
