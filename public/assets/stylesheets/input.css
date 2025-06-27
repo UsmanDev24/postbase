@@ -3,7 +3,7 @@
 @source "../../../views/*";
 @source "../../../public/*";
 @plugin "daisyui" {
-  themes: caramellatte --default, dark --prefersdark, abyss;
+  themes: all;
 }
 
 
