@@ -6,7 +6,7 @@
   "scripts": {
     "start": " REQUEST_LOG_FILE=log.txt  REQUEST_LOG_FORMAT=common cross-env DEBUG=notes:* node ./app.mjs",
     "fs": "NOTES_MODEL=fs cross-env DEBUG=notes:* node ./app.mjs",
-    "nodemon": "cross-env DEBUG=notes:error nodemon --ext js,mjs,json,hbs,css ./app.mjs",
+    "nodemon": "NOTES_MODEL=fs cross-env DEBUG=notes:* nodemon --ext js,mjs,json,hbs,css ./app.mjs",
     "watch": "npx @tailwindcss/cli -i ./public/assets/stylesheets/input.css -o ./public/assets/stylesheets/styles.css --watch"
   },
   "dependencies": {
