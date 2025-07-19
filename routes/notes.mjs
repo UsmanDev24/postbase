@@ -1,6 +1,10 @@
 import { default as express } from "express";
 import { NotesStore as notes } from "../models/notes-store.mjs";
+import { default as DBG } from "debug";
 import { title } from "node:process";
+
+const debug = DBG('notes:routs_notes.mjs')
+const dbgerror = DBG('notes:error')
 export const router = express.Router();
 
 //Add Notes.
@@ -15,9 +19,10 @@ router.get('/add', (req, res, next) => {
 //save Note (update)
 router.post('/save', async (req, res, next) => {
   try {
-    console.log(req.body.title)
     let note;
+    debug(req.body.docreate);
     if (req.body.docreate === "create") {
+      
       note = await notes.create(req.body.notekey, req.body.title, req.body.body)
     } else {
       note = await notes.update(req.body.notekey, req.body.title, req.body.body)
@@ -66,7 +71,7 @@ router.get('/destroy', async (req, res, next) => {
 })
 
 router.post('/destroy/confirm', async (req, res, next) => {
-  try { console.log(req.body.notekey)
+  try { 
     await notes.destroy(req.body.notekey);
     res.redirect('/');
   } catch (err) {
