@@ -10,10 +10,10 @@ const error = DBG('notes:error-fs');
 export default class FSNotesStore extends AbstractNotesStore {
   async close() { }
   async update(key, title, body) {
-    return crupdate(key, title, body);
+    return await crupdate(key, title, body);
   }
   async create(key, title, body) {
-    return crupdate(key, title, body);
+    return await crupdate(key, title, body);
   }
   async read(key) {
     const notesdir = await notesDir();
