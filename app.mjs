@@ -1,10 +1,9 @@
-import { default as express } from 'express';
+import { default as express} from 'express';
 import { default as hbs } from'hbs';
 import * as path from'path';
 // import * as favicon from'serve-favicon';
 import morgan, { default as logger } from'morgan';
 import { default as cookieParser } from'cookie-parser';
-import { default as bodyParser } from'body-parser';
 import * as http from 'http';
 import { approotdir } from './approotdir.mjs';
 import { createStream } from 'rotating-file-stream';
@@ -41,13 +40,12 @@ app.use(logger(process.env.REQUEST_LOG_FORMAT || 'dev', {
         compress: 'gzip'
     }) : process.stdout
 }))
-app.use(bodyParser.json());
+app.use(express.json());
 
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(express.urlencoded({"extended": false}));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use('/assets/vendor/jquery', express.static(path.join(__dirname, 'node_modules', 'jquery', 'dist')));
-app.use('/assets/vendor/popper.js', express.static(path.join(__dirname, 'node_modules', 'popper.js', 'dist', 'umd')));
+
 app.use('/assets/vendor/feather-icons', express.static(path.join(__dirname, 'node_modules', 'feather-icons', 'dist')));
 // Router function lists
 app.use('/', indexRouter);
@@ -67,5 +65,5 @@ server.listen(port);
 server.on('error', onError);
 server.on('listening', onListening);
 server.on('request', (req, res) => {
-    debug(`${new Date().toISOString()} request ${req.method} ${req.url}`)
+    //debug(`${new Date().toISOString()} request ${req.method} ${req.url}`)
 })

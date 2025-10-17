@@ -7,7 +7,7 @@ let sequlz;
 export async function connectDB() {
   if (typeof sequlz === 'undefined') {
     const yamltext = await fs.readFile(process.env.SEQUELIZE_CONNECT, 'utf-8');
-    const params = jsyaml.safeLoad(yamltext, 'utf8');
+    const params = jsyaml.load(yamltext, 'utf8');
     
     if (typeof process.env.SEQUELIZE_DBNAME !== 'undefined'
       && process.env.SEQUELIZE_DBNAME !== '') {
