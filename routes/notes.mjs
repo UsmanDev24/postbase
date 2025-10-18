@@ -19,14 +19,15 @@ router.get('/add', (req, res, next) => {
 router.post('/save', async (req, res, next) => {
   try {
     let note;
+    let notekey = req.body.notekey;
+    notekey = notekey.trim()
     debug(req.body.docreate);
-    if (req.body.docreate === "create") {
-      
-      note = await notes.create(req.body.notekey, req.body.title, req.body.body)
+    if (req.body.docreate === "create") {  
+      note = await notes.create(notekey, req.body.title, req.body.body)
     } else {
-      note = await notes.update(req.body.notekey, req.body.title, req.body.body)
+      note = await notes.update(notekey, req.body.title, req.body.body)
     }
-    res.redirect('/notes/view?key='+req.body.notekey)
+    res.redirect('/notes/view?key='+notekey)
   } catch (err) {
     next(err)
   }

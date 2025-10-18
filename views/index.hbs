@@ -1,22 +1,19 @@
-<div class="p-4 list w-full  m-auto bg-base-100  ">
+<div class="p-4 md:p-8 list w-full m-auto bg-base-100  ">
   {{#if notelist}}
+  <div class="rounded-2xl border border-gray-500 ">
   {{#each notelist}}
-  <li class=" flex flex-row justify-between items-center-safe bg-base-200 p-4 rounded-lg">
-    <div>
-      <a class="text-xl pl-2 text-primary " href="/notes/view?key={{key}}">{{title}}</a>
-    </div>
-    <div>
-      <a class=" tooltip tooltip-bottom  ml-auto text-secondary mr-4 " data-tip=" Edit " href="/notes/edit?key={{key}}"><span
-          data-feather="edit"></span></a>
-      <a class=" tooltip  tooltip-warning text-warning" data-tip=" Destroy " href="/notes/destroy?key={{key}}"><span
-          data-feather="trash"></span></a>
-    </div>
-  </li>
+
+  <div class="p-4 border-b text-center border-base-300 ">
+    <a class="text-xl pl-2 text-primary " href="/notes/view?key={{key}}">{{title}}</a>
+  </div>
+
   {{/each}}
-  {{else}}
-  <h1 class=" text-2xl p-8 m-auto">No Note Added Yet.</h1>
-  <p class=" m-auto w-[12rem]">
-    <a class="btn btn-block btn-primary" href="/notes/add">ADD Note</a>
-  </p>
-  {{/if}}
+  </div>
+</div>
+{{else}}
+<h1 class=" text-2xl p-8 m-auto">No Note Added Yet.</h1>
+<p class=" m-auto w-[12rem]">
+  <a class="btn btn-block btn-primary" href="/notes/add">ADD Note</a>
+</p>
+{{/if}}
 </div>
