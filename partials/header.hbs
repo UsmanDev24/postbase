@@ -1,163 +1,40 @@
 <div class=" fixed top-0 z-50 max-w-[720px] navbar bg-base-300 text-base-content rounded-t-2xl">
   <div class="navbar-start gap-2 align-middle">
-    <a class="btn tooltip tooltip-bottom" data-tip=" Home " href="/"><i
-        data-feather="home"
-      ></i></a>
-    <h1 class="text-xl">{{title}}</h1>
+    <a class="btn btn-sm sm:btn-md tooltip tooltip-bottom" data-tip=" Home " href="/"><i data-feather="home"></i></a>
+    <h1 class="text-md sm:text-xl">{{title}}</h1>
   </div>
-  <div class="navbar-end">
-    <div class="dropdown dropdown-end">
-      <div tabindex="0" role="button" class="btn btn-circle m-1"><span
-          class=" h-6"
-          data-feather="settings"
-        ></span></div>
-      
-        <ul
-          tabindex="0"
-          class="menu dropdown-content h-[50vh] z-1  w-42 bg-base-100 rounded-box  overflow-y-scroll p-2 shadow-sm"
-        >
-          
-          
-          <li>
-            <p class=" menu-title">Change Theme</p>
-            <input
-              type="radio"
-              name="theme"
-              class="btn  theme-controller "
-              aria-label="Light"
-              value="light"
-            />
-            <input
-              type="radio"
-              name="theme"
-              class="btn  theme-controller "
-              aria-label="Cupcake"
-              value="cupcake"
-            />
-            <input
-              type="radio"
-              name="theme"
-              class="btn  theme-controller "
-              aria-label="Garden"
-              value="garden"
-            />
-            <input
-              type="radio"
-              name="theme"
-              class="btn  theme-controller"
-              aria-label="Retro"
-              value="retro"
-            />
-            <input
-              type="radio"
-              name="theme"
-              class="btn  theme-controller"
-              aria-label="Cyberpunk"
-              value="cyberpunk"
-            />
-            <input
-              type="radio"
-              name="theme"
-              class="btn  theme-controller"
-              aria-label="Valentine"
-              value="valentine"
-            />
-            <input
-              type="radio"
-              name="theme"
-              class="btn  theme-controller"
-              aria-label="Aqua"
-              value="aqua"
-            />
-            <input
-              type="radio"
-              name="theme"
-              class="btn  theme-controller"
-              aria-label="Coffee"
-              value="coffee"
-            />
-            <input
-              type="radio"
-              name="theme"
-              class="btn  theme-controller"
-              aria-label="Winter"
-              value="winter"
-            />
-            <input
-              type="radio"
-              name="theme"
-              class="btn  theme-controller"
-              aria-label="Dim"
-              value="dim"
-            />
-            <input
-              type="radio"
-              name="theme"
-              class="btn  theme-controller"
-              aria-label="Abyss"
-              value="abyss"
-            />
-            <input
-              type="radio"
-              name="theme"
-              class="btn  theme-controller"
-              aria-label="Acid"
-              value="acid"
-            />
-            <input
-              type="radio"
-              name="theme"
-              class="btn  theme-controller"
-              aria-label="Sunset"
-              value="sunset"
-            />
-            <input
-              type="radio"
-              name="theme"
-              class="btn  theme-controller"
-              aria-label="Lofi"
-              value="lofi"
-            />
-            <input
-              type="radio"
-              name="theme"
-              class="btn  theme-controller"
-              aria-label="Black"
-              value="black"
-            />
-            <input
-              type="radio"
-              name="theme"
-              class="btn  theme-controller"
-              aria-label="Forest"
-              value="forest"
-            />
-            <input
-              type="radio"
-              name="theme"
-              class="btn  theme-controller"
-              aria-label="Wireframe"
-              value="wireframe"
-            />
-            <input
-              type="radio"
-              name="theme"
-              class="btn  theme-controller"
-              aria-label="Silk"
-              value="silk"
-            />
-            <input
-              type="radio"
-              name="theme"
-              class="btn  theme-controller"
-              aria-label="Dark"
-              value="dark"
-            />
-          </li>
-        </ul>
+  {{#if user}}
+    <div class="navbar-end hidden sm:inline-flex">
+      <p>
+        <a class="btn btn-accent" href="/users/logout"><span
+            class="p-1 bg-gray-300 rounded-2xl">{{user.givenName}}</span>LogOut</a>
+      </p>
+      <p class="">
+        <a class="btn  btn-primary ml-1" href="/notes/add">ADD Note</a>
+      </p>
     </div>
-    <p class="">
-      <a class="btn btn-accent" href="/notes/add">ADD Note</a>
-    </p>
+    {{else }}
+    <div class=" navbar-end hidden sm:inline-flex">
+      <a class="btn btn-primary " href="/users/login">Login</a>
+    </div>
+    {{/if}}
+  <div class="navbar-end dropdown dropdown-end dropdown-bottom sm:hidden">
+    <div role="button" tabindex="0" class="btn btn-outline">Manu</div>
+    {{#if user}}
+    <div tabindex="-1" class="dropdown-content mt-4 bg-base-300 rounded-box z-1  p-3 shadow-sm">
+      <p>
+        <a class="btn btn-accent" href="/users/logout"><span
+            class="p-1 bg-gray-300 rounded-2xl">{{user.givenName}}</span>LogOut</a>
+      </p>
+      <p class="">
+        <a class="btn btn-primary w-full mt-2" href="/notes/add">ADD Note</a>
+      </p>
+    </div>
+    {{else }}
+    <div tabindex="-1" class="dropdown-content mt-4  bg-base-300 rounded-box z-1 p-3 shadow-2xl">
+      <a class="btn btn-primary " href="/users/login">Login</a>
+    </div>
+    {{/if}}
   </div>
+
 </div>
