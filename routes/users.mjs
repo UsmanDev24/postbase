@@ -26,15 +26,17 @@ router.get('/login', (req, res, next) => {
 
 router.post('/login', passport.authenticate('local', {
   successRedirect: '/',
-  failureRedirect: 'users/login'
+  failureRedirect: '/users/login'
 }))
 
-router.get('/logout', (req, res, next) => {
+router.get('/logout',async (req, res, next) => {
   try {
-    req.session.destroy();
-    req.logOut()
-    res.clearCookie(sessionCookieName)
-    res.redirect('/')
+    req.logOut((err) => {
+      if (err) next(err)
+      req.session.destroy();
+      res.clearCookie(sessionCookieName) ; 
+      res.redirect('/')
+    })
   } catch (error) {
     next(error)
   }
@@ -49,7 +51,7 @@ passport.use(new LocalStrategy({
     if (check.check) {
       done(null, { username: check.username, id: check.username })
     } else {
-      done(null, false, check.message)
+      done(null, false, {message: check.message})
     }
   } catch (error) {
     done(error)
