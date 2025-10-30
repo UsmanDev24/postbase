@@ -21,27 +21,52 @@ export function ensureAuthenticated(req, res, next) {
 }
 
 router.get('/login', (req, res, next) => {
-  res.render('login', { title: "Login to Notes", user: req.user });
+  res.render('login', { title: "Login to Notes", user: req.user,
+    level: req.query.level,
+    massage: req.query.massage
+   });
 })
 
 router.post('/login', passport.authenticate('local', {
-  successRedirect: '/',
-  failureRedirect: '/users/login'
+  successRedirect: '/?level=success&massage='+encodeURIComponent('Login Success'),
+  failureRedirect: '/users/login?level=error&massage='+encodeURIComponent('Wrong password or username')
 }))
 
-router.get('/logout',async (req, res, next) => {
+router.get('/logout', async (req, res, next) => {
   try {
     req.logOut((err) => {
       if (err) next(err)
       req.session.destroy();
-      res.clearCookie(sessionCookieName) ; 
-      res.redirect('/')
+      res.clearCookie(sessionCookieName);
+      res.redirect('/?level=warning&massage='+encodeURIComponent('Logout Complete'))
     })
   } catch (error) {
     next(error)
   }
 })
-
+router.get('/create', async (req, res, next) => {
+  res.render('create-user', {
+    title: "Create New Account",
+    user: req.user,
+    level: req.query.level,
+    massage: req.query.massage
+  })
+})
+router.post('/create', async (req, res, next) => {
+  try {
+    const isUser = await usersModel.find(req.body.username)
+    if (isUser) {
+      res.redirect('/users/create?level=warning&massage=' + encodeURIComponent('!User Already Exit with this username'))
+      return;
+    }
+  } catch (error) {
+    
+  }
+  const user = await usersModel.create(req.body.username, req.body.password, "local", req.body.familyName, req.body.givenName, req.body.givenName, [req.body.email], []);
+    if (user) {
+      res.redirect('/users/login?level=success&massage='+encodeURIComponent("User account created. Now you can Login."))
+    }
+})
 passport.use(new LocalStrategy({
   usernameField: 'username',
   passwordField: 'password'
@@ -51,7 +76,7 @@ passport.use(new LocalStrategy({
     if (check.check) {
       done(null, { username: check.username, id: check.username })
     } else {
-      done(null, false, {message: check.message})
+      done(null, false, { message: check.message })
     }
   } catch (error) {
     done(error)

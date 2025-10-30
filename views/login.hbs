@@ -1,14 +1,21 @@
-<form class=" p-8  m-auto bg-base-100" method='POST' action='/users/login'>
+<form class=" pt-4 pl-8 pr-8 bg-base-100 max-w-90" method='POST' action='/users/login'>
   <label class=" input input-primary m-2">
     User Name:
-    <input type="text" name="username"> 
+    <input type="text" name="username" required>
   </label>
   <label class=" input input-primary m-2">
     Password:
-    <input type="text" name="password">
+    <input type="text" name="password" required>
   </label>
+  <div class="pl-2">
+    <input class="block btn btn-primary mt-2 " type="submit" value="Submit">
+  </div>
   
-    <input class="block btn btn-primary m-2" type="submit" value="Submit">
-  
-  
-</form>
+
+</form >
+<div class="ml-8 bg-base-100 max-w-85">
+  <p class="pl-2 mt-2  w-fit">New User?</p>
+<div class="pl-2 w-fit mt-2">
+  <a class="btn btn-primary  " href="/users/create">Create Account</a>
+</div>
+</div>

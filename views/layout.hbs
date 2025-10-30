@@ -6,16 +6,30 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <link rel='stylesheet' href='/assets/stylesheets/styles.css' />
-  
-</head>
 
-<body class=" max-w-[720px] m-auto rounded-box border border-base-300 shadow-2xl h-[100vh] overflow-auto ">
+</head>
+<style>
+  p {}
+</style>
+
+<body class=" max-w-[720px] m-auto rounded-box border border-base-300 shadow-2xl h-[100vh] overflow-auto">
   {{> header }}
   <div class=" h-[64px]"></div>
+  {{#if level}}
+  <div id="alert" class="alert alert-{{level}} transition-opacity ease-in-out duration-1000">{{massage}}</div>
+  {{/if}}
+  <div style="display: none;" class="alert-error alert-success alert-warning"></div>
   {{{body}}}
   <script src="/assets/vendor/feather-icons/feather.js"></script>
   <script>
     feather.replace();
+    const alert = document.getElementById('alert')
+    if (alert) {
+      setTimeout(() => {
+        alert.style.opacity = '0'
+      }, 2000)
+    }
+
   </script>
 </body>
 
