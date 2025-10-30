@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "mongodb-start": "cross-env DEBUG=notes* MONGO_URL=mongodb://localhost/ MONGO_DBNAME=chap07 NOTES_MODEL=mongo REQUEST_LOG_FILE=log.txt nodemon --ext js,mjs,css,json ./app.mjs",
-    "start": "cross-env DEBUG=notes:* USER_SERVICE_URL=http://localhost:5858 SEQUELIZE_CONNECT=models/sequelize-sqlite.yaml NOTES_MODEL=sequelize REQUEST_LOG_FILE=log.txt nodemon --ext js,mjs,hbs,css ./app.mjs",
+    "start": "cross-env DEBUG=notes:* USER_SERVICE_URL=http://localhost:5858 SEQUELIZE_CONNECT=models/sequelize-psql.yaml NOTES_MODEL=sequelize REQUEST_LOG_FILE=log.txt nodemon --ext js,mjs,hbs,css ./app.mjs",
     "watch": "npx @tailwindcss/cli -i ./public/assets/stylesheets/input.css -o ./public/assets/stylesheets/styles.css --watch"
   },
   "dependencies": {
@@ -26,7 +26,6 @@
     "passport-jwt": "^4.0.1",
     "passport-local": "^1.0.0",
     "pg": "^8.16.3",
-    "pg-hstore": "^2.3.4",
     "rotating-file-stream": "^3.2.7",
     "sequelize": "^6.37.7",
     "session-file-store": "^1.5.0",

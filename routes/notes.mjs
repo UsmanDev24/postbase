@@ -17,6 +17,7 @@ router.get('/add', ensureAuthenticated, (req, res, next) => {
     user: req.user? req.user: undefined
   })
 });
+
 //save Note (update)
 router.post('/save', ensureAuthenticated, async (req, res, next) => {
   try {

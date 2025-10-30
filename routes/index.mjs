@@ -18,7 +18,9 @@ router.get('/', async (req, res, next) => {
     }
     res.render('index', {
       title: 'Notes', notelist: notelist,
-      user: req.user ? req.user : undefined
+      user: req.user ? req.user : undefined,
+      level: req.query.level,
+      massage: req.query.massage
     });
   } catch (err) {
     next(err);
