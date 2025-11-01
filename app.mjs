@@ -71,7 +71,7 @@ mainRouter.use(session({
     }),
     name: sessionCookieName,
     secret: "hello",
-    cookie: { httpOnly: true, path: "/", sameSite: "strict", maxAge: 1000 * 60 * 60 * 24 * 30 },
+    cookie: { httpOnly: true, path: "/", sameSite: 'lax', maxAge: 1000 * 60 * 60 * 24 * 30 },
     saveUninitialized: false,
     resave: false
 }))
