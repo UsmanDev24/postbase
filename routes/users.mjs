@@ -38,11 +38,12 @@ router.get('/oauth/google', passport.authenticate('google', {
 router.get('/oauth/google/redirect', passport.authenticate('google', {
   failureRedirect: '/users/login?level=error&massage=' + encodeURIComponent('Wrong password or username'),
 }), (req, res, next) => {
-  res.redirect('/users/oauth/google/complete')
-})
-router.get('/oauth/google/complete', (req, res , next) => {
+  req.session.save((err) => {
+    if (err) console.error(err)
+  })
   res.redirect('/')
 })
+
 
 router.post('/login', passport.authenticate('local', {
   successRedirect: '/?level=success&massage=' + encodeURIComponent('Login Success'),
@@ -53,9 +54,13 @@ router.post('/login', passport.authenticate('local', {
 
 router.get('/logout', async (req, res, next) => {
   try {
-
+   req.logOut((err) => {
+    console.error(err)
+    req.session.destroy()
     res.clearCookie(sessionCookieName);
     res.redirect('/?level=warning&massage=' + encodeURIComponent('Logout Complete'))
+   })
+    
 
   } catch (error) {
     next(error)
