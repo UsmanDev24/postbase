@@ -1,4 +1,5 @@
 import { default as request } from "superagent";
+import { default as bcrypt } from 'bcryptjs';
 import * as util from "node:util";
 import * as url from "node:url";
 import debug from "debug";
@@ -19,6 +20,7 @@ function reqURL(path) {
 export async function create(username, password,
   provider, familyName, givenName, middleName,
   emails, photos) {
+  password = await genHash(password)
   const res = await request.post(reqURL('/create-user'))
     .send({
       username, password,
@@ -34,6 +36,7 @@ export async function create(username, password,
 export async function update(username, password,
   provider, familyName, givenName, middleName,
   emails, photos) {
+    password = await genHash(password)
   const res = await request.post(reqURL(`/update-user/${username}`))
     .send({
       username, password,
@@ -50,7 +53,7 @@ export async function findOrCreate(profile) {
   var res = await request
     .post(reqURL('/find-or-create'))
     .send({
-      username: profile.id, password: profile.password,
+      username: profile.id, password: await genHash(profile.password),
       provider: profile.provider,
       familyName: profile.familyName,
       givenName: profile.givenName,
