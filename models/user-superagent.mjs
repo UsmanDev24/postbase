@@ -11,8 +11,8 @@ const saltRound = 10;
 async function genHash(password) {
   return await bcrypt.hash(password, saltRound)
 }
-var authid = 'them';
-var authcode = 'D4ED43C0-8BD6-4FE2-B358-7C0E230D11EF';
+var authid = process.env.USERS_AUTHID ;
+var authcode =process.env.USERS_AUTHCODE ;
 
 function reqURL(path) {
   const requrl = new URL(process.env.USER_SERVICE_URL);
