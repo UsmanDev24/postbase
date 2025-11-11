@@ -75,6 +75,13 @@ export async function passwordCheck(username, password) {
     .auth(authid, authcode);
   return res.body;
 }
+export async function destroy(username) {
+  const res = await request.delete(reqURL(`/destroy/${username}`))
+    .send('content-type', "application/json")
+    .set("Accept", "application/json")
+    .auth(authid, authcode);
+  return res.body;
+}
 
 export async function find(username) {
   const res = await request.get(reqURL(`/find/${username}`))
