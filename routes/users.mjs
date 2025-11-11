@@ -9,6 +9,7 @@ import { default as jwt } from 'jsonwebtoken';
 import debug from "debug";
 import * as usersModel from '../models/user-superagent.mjs';
 import { sessionCookieName } from '../app.mjs';
+import { title } from "node:process";
 
 export const router = Router();
 const LocalStrategy = passportLocal.Strategy;
@@ -89,6 +90,27 @@ router.post('/create', async (req, res, next) => {
     res.redirect('/users/login?level=success&massage=' + encodeURIComponent("User account created. Now you can Login."))
   }
 })
+
+router.get('/about-user', async (req, res ,next) => {
+  res.render('about-user', {
+    title: "About "+req.user.givenName,
+    user: req.user
+  })
+})
+router.get('/destroy', async (req, res, next) => {
+  try {
+    const apiRes = await usersModel.destroy(req.user.username);
+    req.logOut((err) => {
+    if (err) console.error(err)
+    req.session.destroy()
+    res.clearCookie(sessionCookieName);
+    res.redirect('/?level=warning&massage=' + encodeURIComponent('! User Account Deleted'))
+   })
+  } catch (error) {
+    next(error)
+  }
+  
+})
 passport.use(new googleStrategy({
   clientID: process.env.GOOGLE_CLIENT_ID,
   clientSecret: process.env.GOOGLE_CLIENT_SECRET,
@@ -96,6 +118,7 @@ passport.use(new googleStrategy({
 }, async (accessToken, refreshToken, profile, done) => {
   try {
     const jsonProfile = profile._json
+    console.log(jsonProfile)
     done(null, await usersModel.findOrCreate({
       id: profile.id, username: profile.id, password:
         "",
