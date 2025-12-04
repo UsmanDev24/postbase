@@ -13,52 +13,52 @@ export default class PrismaNotesStore extends AbstractNotesStore {
   async close () {
     await prisma.$disconnect();
   }
-  async create(key,  title, body) {
+  async create(notekey,  title, body) {
     await connectDB()
-    const isNote = await this.read(key);
+    const isNote = await this.read(notekey);
     if (isNote) {
       return  isNote;
     }
     const note = await prisma.notes.create({
       data: {
-        key: key,
+        notekey: notekey,
         title: title,
         body: body
       }
     });
-    return new Note(note.key, note.title, note.body)
+    return new Note(note.notekey, note.title, note.body)
   }
 
-  async update (key, title, body) {
+  async update (notekey, title, body) {
     await connectDB();
-    const note = await prisma.notes.findUnique({ where: { key: key}});
+    const note = await prisma.notes.findUnique({ where: {notekey}});
     if (!note) {
-      throw new Error('No note found for '+key);
+      throw new Error('No note found for '+notekey);
     } else {
-      await prisma.notes.update({ where: {key}, data: {key, title, body}})
-      return await this.read(key);
+      await prisma.notes.update({ where: {notekey}, data: {notekey, title, body}})
+      return await this.read(notekey);
     }
   }
 
-  async read(key) {
+  async read(notekey) {
     await connectDB();
-    const note = await prisma.notes.findUnique({where: {key}})
+    const note = await prisma.notes.findUnique({where: {notekey}})
     if (!note) {
       return undefined;
     } else {
-      return new Note(note.key, note.title, note.body);
+      return new Note(note.notekey, note.title, note.body);
     }
   }
 
-  async destroy(key) {
+  async destroy(notekey) {
     await connectDB();
-    await prisma.notes.delete({where: {key}})
+    await prisma.notes.delete({where: {notekey}})
   }
 
   async keylist() {
     await connectDB();
     const notes = await prisma.notes.findMany();
-    const notekeys = notes.map(note => note.key);
+    const notekeys = notes.map(note => note.notekey);
     return notekeys;
   }
 
