@@ -18,7 +18,6 @@ export function init(req, socket, head) {
 ws.on('connection', (socket, req) => {
   socket.send(JSON.stringify({ type: 'connection', message: 'connected' }))
 })
-
 export function addNoteListners() {
   notes.on('notecreated', (note) => {
     ws.clients.forEach((socket) => {
