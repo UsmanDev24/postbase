@@ -1,4 +1,4 @@
-<div class=" fixed top-0 z-50 max-w-[720px] navbar bg-base-300 text-base-content rounded-t-2xl">
+<div class=" fixed top-0 z-50 navbar bg-base-300 text-base-content rounded-t-2xl">
   <div class="navbar-start gap-2 align-middle">
     <a class="btn btn-ghost  tooltip tooltip-bottom" data-tip=" Home " href="/"><i data-feather="home"></i></a>
     <h1 class="text-md sm:text-xl">{{title}}</h1>
@@ -25,7 +25,7 @@
     <div tabindex="-1" class="dropdown-content mt-4 bg-base-300 rounded-box z-1  p-3 shadow-sm">
       <p>
         <a class="btn rounded-2xl w-full" href="/users/about-user"><span
-            class=" bg-pink-200 dark:bg-neutral rounded-full w-8 h-8 "><img class="" src="/users/photo/{{user.username}}" alt="">
+            class=""><img class="bg-pink-200 dark:bg-neutral rounded-full w-8 h-8 " src="/users/photo/{{user.username}}" alt="">
           </span>{{user.username}}</a>
         <a class="btn btn-outline rounded-full text-primary  w-full mt-2" href="/notes/add">ADD Note</a>
       </p>

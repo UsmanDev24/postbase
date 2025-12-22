@@ -2,8 +2,7 @@ import * as express from 'express';
 import * as util from "node:util";
 import { NotesStore as notes } from '../models/notes-store.mjs';
 import { WebSocketServer } from 'ws';
-
-
+import { toRelativeTime } from '../models/timeage';
 
 export const router = express.Router();
 const ws = new WebSocketServer({ noServer: true })
@@ -41,6 +40,10 @@ router.get('/', async (req, res, next) => {
       return notes.read(key);
     });
     let notelist = await Promise.all(keyPromises);
+    notelist = notelist.map(note => {
+      note.updatedAt = toRelativeTime(note.createdAt)
+      return note
+    })
     //console.log(util.inspect(notelist));
     if (notelist.length === 0) {
       notelist = false;
@@ -50,7 +53,7 @@ router.get('/', async (req, res, next) => {
       user: req.user ? req.user : undefined,
       level: req.query.level,
       massage: req.query.massage
-    });
+    }); new Intl.RelativeTimeFormat()
   } catch (err) {
     next(err);
   }
