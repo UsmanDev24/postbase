@@ -18,7 +18,7 @@ import sessionFileStore from "session-file-store"
 import connectPgSimple from 'connect-pg-simple';
 import { default as pg } from 'pg';
 import { router as indexRouter, addNoteListners as wsHomeListener } from './routes/index.mjs';
-import { router as notesRouter } from './routes/notes.mjs';
+import { router as notesRouter, init as notesInit, addNoteListners as wsNotesListener } from './routes/notes.mjs';
 import { initPassport, router as usersRouter } from './routes/users.mjs'
 import { default as DBG } from "debug";
 import * as ws from 'ws';
@@ -115,12 +115,14 @@ WsServer.on("connection", async (socket, req) => {
     if (rawCookies)
         socket.user = await wsSession(rawCookies);
     socket.send(JSON.stringify({ type: 'connection', message: 'connected '+ JSON.stringify(socket.user) }))
+    notesInit(socket)
 })
 
 
 addWsListeners()
 function addWsListeners() {
     wsHomeListener()
+    wsNotesListener()
 }
 
 server.on('error', onError);

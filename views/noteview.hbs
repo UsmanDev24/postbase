@@ -4,14 +4,12 @@
   <div class="card bg-base-100 shadow-xl border border-base-300">
     <div class="card-body p-6 md:p-10">
 
-      <div
-        class="flex flex-row justify-between items-center gap-4 mb-6 border-b border-base-200 pb-4">
+      <div class="flex flex-row justify-between items-center gap-4 mb-6 border-b border-base-200 pb-4">
 
         <div class="flex items-center gap-3">
           <div class="avatar">
             <div class="w-10 h-10 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
-              <img src="/users/photo/{{note.auther.username}}" alt="{{note.auther.username}}"
-                />
+              <img src="/users/photo/{{note.auther.username}}" alt="{{note.auther.username}}" />
             </div>
           </div>
           <div>
@@ -33,7 +31,7 @@
             </svg>
             <span class="hidden sm:inline">Edit</span>
           </a>
-          <button  class="btn btn-sm btn-ghost text-error join-item gap-2" onclick="confirm_delete_modal.showModal()">
+          <button class="btn btn-sm btn-ghost text-error join-item gap-2" onclick="confirm_delete_modal.showModal()">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
               stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -46,8 +44,8 @@
       </div>
 
       <article class="prose max-w-none">
-        <h1 class="text-3xl font-extrabold text-accent mb-4">{{note.title}}</h1>
-        <p class="text-lg text-base-content/90 leading-relaxed whitespace-pre-wrap">{{note.body}}</p>
+        <h1 id="noteTitle" class="text-3xl font-extrabold text-accent mb-4">{{note.title}}</h1>
+        <p id="noteBody" class="text-lg text-base-content/90 leading-relaxed whitespace-pre-wrap">{{note.body}}</p>
       </article>
 
       <div class="divider mt-8"></div>
@@ -57,7 +55,8 @@
           <span class="font-bold">0</span> Comments
         </div>
 
-        <button class="btn btn-primary gap-2" onclick="comment_modal.showModal()">
+        <button {{#if user}} {{else}} disabled {{/if}} class="btn btn-primary gap-2"
+          onclick="comment_modal.showModal()">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
               d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 8 9 8z" />
@@ -70,10 +69,32 @@
   </div>
 
   <div class="mt-6 space-y-4">
-    <h3 class="text-xl font-bold px-1">Comments</h3>
-    <div class="p-8 text-center text-base-content/50 bg-base-200/50 rounded-xl">
+
+    <h3  class="text-xl font-bold px-1">Comments</h3>
+    <div id="liveComments" class=" p-0 flex flex-col-reverse justify-start items-start gap-4"></div>
+    {{#if note.comments}}
+    {{#each note.comments}}
+    <div id="comment_{{id}}" class=" p-2 rounded-2xl bg-base-200">
+      <div class=" flex justify-between">
+        <div class=" flex justify-start gap-2 items-center">
+          <img class=" rounded-full bg-black w-6 h-6" src="/users/photo/{{auther.username}}">
+          <p class=" flex flex-col justify-center items-start">
+            <span class=" text-sm">{{auther.username}}</span>
+            <span class=" opacity-70 text-sm">{{createdAt}}</span>
+          </p>
+        </div>
+        <div>
+
+        </div>
+      </div>
+      <p class=" text-lg p-2 pl-4">{{body}}</p>
+    </div>
+    {{/each}}
+    {{else}}
+    <div class=" p-8 text-center text-base-content/50 bg-base-200/50 rounded-xl">
       No comments yet. Be the first to share your thoughts!
     </div>
+    {{/if}}
   </div>
 
   {{else}}
@@ -94,10 +115,12 @@
 <dialog id="confirm_delete_modal" class=" modal modal-bottom sm:modal-middle">
   <div class=" modal-box">
     <h2 class=" font-bold text-lg">Confirm Deletion</h2>
-    <p class=" text-warning">Do you want to permanently delete <strong>{{note.title}}</strong>  and all comments in it?</p>
+    <p class=" text-warning">Do you want to permanently delete <strong>{{note.title}}</strong> and all comments in it?
+    </p>
     <div class=" modal-action">
       <button class="btn btn-primary" onclick="confirm_delete_modal.close()">Cancel</button>
-      <button class=" btn btn-warning"  onclick="delete_note_modal.showModal(); confirm_delete_modal.close()">confirm</button>
+      <button class=" btn btn-warning"
+        onclick="delete_note_modal.showModal(); confirm_delete_modal.close()">confirm</button>
     </div>
   </div>
   <form class=" modal-backdrop" method="dialog">
@@ -108,8 +131,8 @@
 <dialog id="delete_note_modal" class=" modal modal-bottom sm:modal-middle">
   <div class=" modal-box">
     <h2 class=" font-bold text-lg">Permanently Delete </h2>
-    <p class="">This will permanently delete <span class=" font-bold px-1">{{note.title}}</span>    and all comments in it.
-      <span class=" text-warning">⚠️ This cannot be undone</span> 
+    <p class="">This will permanently delete <span class=" font-bold px-1">{{note.title}}</span> and all comments in it.
+      <span class=" text-warning">⚠️ This cannot be undone</span>
     </p>
     <form class="" method="post" action="/notes/destroy/confirm">
       <div class=" modal-action">
@@ -130,17 +153,17 @@
     <h3 class="font-bold text-lg">Add a Comment</h3>
     <p class="py-4 text-sm opacity-70">Replying to: <span class="font-bold">{{note.title}}</span></p>
 
-    <form action="/notes/comment" method="POST">
-      <input type="hidden" name="noteKey" value="{{notekey}}">
-
-      <div class="form-control w-full">
-        <textarea name="commentBody" class="textarea textarea-bordered h-24 w-full"
+    <form id="commentForm" >
+      <input type="hidden" name="notekey" value="{{notekey}}">
+      <input type="hidden" name="autherId" value="{{user.id}}">
+      <div class=" w-full">
+        <textarea id="commentText" name="commentBody" class="textarea textarea-bordered h-24 w-full"
           placeholder="Type your thoughts here..." required></textarea>
       </div>
 
       <div class="modal-action">
         <button type="button" class="btn" onclick="comment_modal.close()">Cancel</button>
-        <button type="submit" class="btn btn-primary">Post Comment</button>
+        <button type="submit" class="btn btn-primary" onclick="comment_modal.close()">Post Comment</button>
       </div>
     </form>
   </div>
@@ -149,5 +172,55 @@
   </form>
 </dialog>
 <script>
+  const commentForm = document.getElementById('commentForm');
+  const commentText = document.getElementById("commentText");
+  const liveComments = document.getElementById("liveComments");
+  const noteBody = document.getElementById("noteBody")
+  const ws = new WebSocket("ws://localhost:3000")
+  ws.addEventListener("message", event => {
+    const data = JSON.parse(event.data);
 
+    if (data.type === 'connection') {
+      console.log(data.message);
+    } 
+    else if (data.type === 'commentcreated' && data.notekey === "{{notekey}}") {
+      const commentdiv = document.createElement("div");
+      const comment = data.comment
+      commentdiv.id = "comment_"+ comment.id;
+      commentdiv.className = "p-2 rounded-2xl bg-base-200 w-full"
+      commentdiv.innerHTML = `
+      <div class=" flex justify-between">
+        <div class=" flex justify-start gap-2 items-center">
+          <img class=" rounded-full bg-black w-6 h-6" src="/users/photo/${comment.auther.username}">
+          <p class=" flex flex-col justify-center items-start">
+            <span class=" text-sm">${comment.auther.username}</span>
+            <span class=" opacity-70 text-sm">${comment.createdAt}</span>
+          </p>
+        </div>
+        <div>
+
+        </div>
+      </div>
+      <p class=" text-lg p-2 pl-4">${comment.body}</p>
+      `;
+      liveComments.appendChild(commentdiv)
+    } else if ( data.type === "noteupdated" && data.note.key === "{{notekey}}" ) {
+      const noteTitle = document.getElementById("noteTitle");
+      noteTitle.textContent = data.note.title
+      noteBody.textContent = data.note.body
+    }
+  })
+  commentForm.addEventListener("submit", (event) => {
+    event.preventDefault()
+    if (ws.readyState === ws.OPEN) {
+      ws.send(JSON.stringify({
+        type: "createcomment",
+        body: {
+          notekey: "{{notekey}}",
+          autherId: "{{user.id}}",
+          commentBody: commentText.value
+        }
+      }))
+    }
+  })
 </script>

@@ -1,11 +1,44 @@
 import { default as express } from "express";
-import { NotesStore as notes } from "../models/notes-store.mjs";
+import { NotesStore as notes, NotesStore } from "../models/notes-store.mjs";
 import { default as DBG } from "debug";
 import { ensureAuthenticated } from "./users.mjs";
+import { WsServer } from "../app.mjs"
+import { PrismaCommentsStore } from "../models/comments-prisma.mjs";
 
 const debug = DBG('notes:routs_notes.mjs')
 const dbgerror = DBG('notes:error')
+const commentStore = new PrismaCommentsStore()
 export const router = express.Router();
+
+export function addNoteListners() {
+  commentStore.on("commentcreated", (notekey, comment) => {
+    WsServer.clients.forEach(socket => {
+      if (socket.readyState === socket.OPEN) {
+        socket.send(JSON.stringify({ type: "commentcreated", notekey, comment }))
+      }
+    })
+  })
+  notes.on("noteupdated", note => {
+    WsServer.clients.forEach(socket => {
+      if (socket.readyState === socket.OPEN) {
+        socket.send(JSON.stringify({ type: "noteupdated", note }))
+      }
+    })
+  })
+}
+export async function init(socket) {
+  socket.on("message",async (rawData) => {
+    let req = JSON.parse(rawData.toString())
+    if (req.type === "createcomment" && socket.user) {
+      try {
+        const comment = await commentStore.create(req.body.notekey, req.body.autherId, req.body.commentBody);
+        
+      } catch (error) {
+        console.error(error)
+      }
+    }
+  })
+}
 
 //Add Notes.
 router.get('/add', ensureAuthenticated, (req, res, next) => {
@@ -50,6 +83,7 @@ router.get('/view', async (req, res, next) => {
     })
   } catch (err) { next(err) }
 })
+
 
 //Edit note (update)
 router.get('/edit', ensureAuthenticated, async (req, res, next) => {
@@ -96,5 +130,20 @@ router.post('/destroy/confirm', ensureAuthenticated, async (req, res, next) => {
     res.redirect('/');
   } catch (err) {
     next(err);
+  }
+})
+
+
+
+router.post('/comment/destroy', ensureAuthenticated, async (req, res, next) => {
+  try {
+    const comment = await commentStore.read(req.body.id)
+    if (comment.id === req.user.id) {
+      await commentStore.destroy(comment.id);
+      res.send(comment)
+    }
+    res.end
+  } catch (error) {
+    next(error)
   }
 })

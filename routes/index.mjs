@@ -1,33 +1,22 @@
 import * as express from 'express';
 import * as util from "node:util";
 import { NotesStore as notes } from '../models/notes-store.mjs';
-import { WebSocketServer } from 'ws';
-import { toRelativeTime } from '../models/timeage';
+import { toRelativeTime } from '../models/timeage.js';
+import { WsServer } from '../app.mjs';
 
 export const router = express.Router();
-const ws = new WebSocketServer({ noServer: true })
-export function init(req, socket, head) {
-  if (req.url === "/home") {
-    ws.handleUpgrade(req, socket, head, (socket, req) => {
-      ws.emit('connection', socket, req)
-    })
-  }
-}
 
-ws.on('connection', (socket, req) => {
-  socket.send(JSON.stringify({ type: 'connection', message: 'connected' }))
-})
 export function addNoteListners() {
   notes.on('notecreated', (note) => {
-    ws.clients.forEach((socket) => {
+    WsServer.clients.forEach((socket) => {
       if (socket.readyState === socket.OPEN)
-      socket.send(JSON.stringify({ type: "notecreated", note: note }))
+        socket.send(JSON.stringify({ type: "notecreated", note: note }))
     })
   })
   notes.on('notedestroyed', (key) => {
-    ws.clients.forEach((socket) => {
+    WsServer.clients.forEach((socket) => {
       if (socket.readyState === socket.OPEN)
-      socket.send(JSON.stringify({ type: 'notedestroyed', key: key }));
+        socket.send(JSON.stringify({ type: 'notedestroyed', key: key }));
     })
   })
 }
@@ -41,7 +30,7 @@ router.get('/', async (req, res, next) => {
     });
     let notelist = await Promise.all(keyPromises);
     notelist = notelist.map(note => {
-      note.updatedAt = toRelativeTime(note.createdAt)
+      note.updatedAt = toRelativeTime(note.updatedAt)
       return note
     })
     //console.log(util.inspect(notelist));

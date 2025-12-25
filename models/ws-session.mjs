@@ -19,8 +19,6 @@ export async function wsSession(rawCookies) {
     const payload = prefixedPayload.startsWith("s:")
         ? prefixedPayload.slice(2)
         : prefixedPayload;
-    console.log(payload, signature)
-
     const expectedSignature = crypto.createHmac("sha256", process.env.SESSION_COOKIE_SECRET)
                                     .update(payload)
                                     .digest("base64");
