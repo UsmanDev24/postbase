@@ -73,11 +73,8 @@ export default class PrismaNotesStore extends AbstractNotesStore {
 
   async destroy(key) {
     await connectDB();
-    const deleteComments = prisma.comments.deleteMany({
-      where: { noteNotekey: key },
-    });
-    const deleteNote = prisma.notes.delete({ where: { key: key } });
-    await prisma.$transaction([deleteComments, deleteNote]);
+    const deleteNote = await prisma.notes.delete({ where: { key: key } });
+    
     this.emitDestroyed(key);
   }
 

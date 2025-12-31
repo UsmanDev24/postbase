@@ -26,7 +26,7 @@ model Notes {
   public     Boolean    @default(true) @db.Boolean
   likes      Int?       @db.Integer
   comments   comments[]
-  auther     notesUsers @relation(fields: [autherId], references: [id])
+  auther     notesUsers @relation(fields: [autherId], references: [id], onDelete: Cascade)
   autherId   String     @db.VarChar(255)
   createdAt  DateTime   @default(now()) @db.Timestamptz(6)
   updatedAt  DateTime   @updatedAt @db.Timestamptz(6)
@@ -34,10 +34,10 @@ model Notes {
 
 model comments {
   id          Int        @id @default(autoincrement())
-  auther        notesUsers @relation(fields: [autherId], references: [id])
+  auther        notesUsers @relation(fields: [autherId], references: [id], onDelete: Cascade)
   autherId      String
   body        String     @db.VarChar(1024)
-  note        Notes      @relation(fields: [noteNotekey], references: [key])
+  note        Notes      @relation(fields: [noteNotekey], references: [key], onDelete: Cascade)
   createdAt   DateTime   @default(now()) @db.Timestamptz(6)
   noteNotekey String     @db.VarChar(255)
 }

@@ -20,10 +20,21 @@ export class PrismaNotesUsersStore  {
     )
     return user
   }
-  async update() {
-
+  async update(userId, userName, displayName, fullName, provider, photo, photoType) {
+    await prisma.$connect();
+    const user = await prisma.notesUsers.update({
+      where: {id: userId}, 
+      data: {
+        displayName,
+        fullName,
+        provider,
+        photo,
+        photoType
+      },
+    })
+    return user
   }
-
+  
   async read(userId ) {
     await prisma.$connect();
     const user = await prisma.notesUsers.findUnique({

@@ -68,7 +68,6 @@ router.post(
 );
 
 router.get("/logout", async (req, res, next) => {
-  try {
     req.logOut((err) => {
       console.error(err);
       req.session.destroy();
@@ -77,9 +76,6 @@ router.get("/logout", async (req, res, next) => {
         "/?level=warning&massage=" + encodeURIComponent("Logout Complete")
       );
     });
-  } catch (error) {
-    next(error);
-  }
 });
 router.get("/create", async (req, res, next) => {
   res.render("create-user", {
@@ -132,8 +128,8 @@ router.get("/about-user", async (req, res, next) => {
 });
 router.get("/destroy", async (req, res, next) => {
   try {
-    const apiRes = await usersModel.destroy(req.user.username);
     await notesUsersStore.destroy(req.user.id)
+    const apiRes = await usersModel.destroy(req.user.username);
     req.logOut((err) => {
       if (err) console.error(err);
       req.session.destroy();
@@ -180,6 +176,9 @@ passport.use(
         const noteUser = await notesUsersStore.read(user.id);
         if (!noteUser)
           await notesUsersStore.create(user.id, user.username, user.displayName, user.fullName, user.provider, photo, user.photoType);
+        else {
+          await notesUsersStore.update(user.id, user.username, user.displayName, user.fullName, user.provider, photo, user.photoType)
+        }
       } catch (err) {
         done(err);
       }
