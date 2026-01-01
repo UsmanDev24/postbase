@@ -29,10 +29,6 @@ router.get('/', async (req, res, next) => {
       return notes.read(key);
     });
     let notelist = await Promise.all(keyPromises);
-    notelist = notelist.map(note => {
-      note.updatedAt = toRelativeTime(note.updatedAt)
-      return note
-    })
     //console.log(util.inspect(notelist));
     if (notelist.length === 0) {
       notelist = false;

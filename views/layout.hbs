@@ -16,7 +16,9 @@
   {{> header }}
   <div class=" h-[64px]"></div>
   {{#if level}}
-  <div id="alert" class=" absolute z-10 left-[50%]  transform translate-x-[-50%] opacity-90 alert alert-{{level}} transition-opacity ease-in-out duration-1000 text-center w-fit ">{{massage}}</div>
+  <div id="alert"
+    class=" absolute z-10 left-[50%]  transform translate-x-[-50%] opacity-90 alert alert-{{level}} transition-opacity ease-in-out duration-1000 text-center w-fit ">
+    {{massage}}</div>
   {{/if}}
   <div style="display: none;" class="alert-error alert-success alert-warning"></div>
   {{{body}}}
@@ -31,6 +33,28 @@
           alert.style.display = 'none'
         }, 900)
       }, 2000)
+    }
+    const rtf = new Intl.RelativeTimeFormat("en", { numeric: "always", style: "long" });
+    function toRelativeTime(date) {
+      const diffMs = date - new Date();
+      const units = [
+        { limit: 60, name: "minute" },
+        { limit: 60 * 60, name: "hour" },
+        { limit: 60 * 60 * 24, name: "day" },
+        { limit: 60 * 60 * 24 * 7, name: "week" },
+        { limit: 60 * 60 * 24 * 30, name: "month" },
+        { limit: 60 * 60 * 24 * 365, name: "year" }
+      ];
+
+      const seconds = Math.round(diffMs / 1000);
+      for (let i = units.length - 1; i >= 0; i--) {
+        const unitSeconds = units[i].limit;
+        const value = Math.round(seconds / unitSeconds);
+        if (Math.abs(value) >= 1) {
+          return rtf.format(value, units[i].name);
+        }
+      }
+      return rtf.format(seconds, "second");
     }
 
   </script>

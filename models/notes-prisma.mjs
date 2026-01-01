@@ -1,6 +1,7 @@
 import { AbstractNotesStore } from "./Notes.mjs";
 import { default as DBG } from "debug";
 import { prisma } from "./prisma.mjs";
+import { toRelativeTime } from "./timeage.js";
 
 const debug = DBG("notes:notes-prisma");
 const dbgError = DBG("notes:error-prisma");
@@ -13,11 +14,7 @@ export default class PrismaNotesStore extends AbstractNotesStore {
     await prisma.$disconnect();
   }
   async create(key, title, body, autherId) {
-    await connectDB();
-    const isNote = await this.read(key);
-    if (isNote) {
-      return isNote;
-    }
+    await connectDB();c
     const note = await prisma.notes.create({
       data: {
         key: key,
@@ -54,15 +51,22 @@ export default class PrismaNotesStore extends AbstractNotesStore {
       where: { key },
       include: {
         auther: { omit: { photo: true } },
-        comments: { include: { auther: { omit: { photo: true } } } }
+        comments: { include: { auther: { omit: { photo: true } } }, orderBy: {createdAt: "desc"} },
       },
     });
     try {
-      if (note.comments)
+      note.updatedAt = toRelativeTime(note.updatedAt);
+    } catch{}
+    note.createdAt = toRelativeTime(note.createdAt);
+    try {
+      if (note.comments) {
         note.commentsLength = note.comments.length;
-    } catch {
-
-    }
+        note.comments = note.comments.map(comment => {
+          comment.createdAt = toRelativeTime(comment.createdAt)
+          return comment
+        })
+      } 
+    } catch {}
 
     if (!note) {
       return undefined;
@@ -74,7 +78,7 @@ export default class PrismaNotesStore extends AbstractNotesStore {
   async destroy(key) {
     await connectDB();
     const deleteNote = await prisma.notes.delete({ where: { key: key } });
-    
+
     this.emitDestroyed(key);
   }
 
