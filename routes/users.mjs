@@ -12,6 +12,7 @@ import { PrismaNotesUsersStore } from "../models/users-prisma.mjs";
 import { sessionCookieName } from "../app.mjs";
 
 
+
 export const router = Router();
 const LocalStrategy = passportLocal.Strategy;
 const JwtStrategy = passportJwt.Strategy;
@@ -110,7 +111,7 @@ router.post("/create", async (req, res, next) => {
     req.body.lastName,
     req.body.email,
     null,
-    photo,
+    Buffer.from(photo).toString('base64'),
     "svg"
   );
   if (user) {
@@ -121,10 +122,12 @@ router.post("/create", async (req, res, next) => {
   }
 });
 
+
 router.get("/about-user", async (req, res, next) => {
+  const user = await usersModel.find(req.user.username);
   res.render("about-user", {
     title: "About " + req.user.displayName,
-    user: req.user,
+    user: user,
   });
 });
 router.get("/destroy", async (req, res, next) => {
@@ -176,9 +179,9 @@ passport.use(
         );
         const noteUser = await notesUsersStore.read(user.id);
         if (!noteUser)
-          await notesUsersStore.create(user.id, user.username, user.displayName, user.fullName, user.provider, photo, user.photoType);
+          await notesUsersStore.create(user.id, user.username, user.displayName, user.firstName, user.email, user.provider, photo, user.photoType);
         else {
-          await notesUsersStore.update(user.id, user.username, user.displayName, user.fullName, user.provider, photo, user.photoType)
+          await notesUsersStore.update(user.id, user.username, user.displayName, user.firstName, user.email, user.provider, photo, user.photoType)
         }
       } catch (err) {
         done(err);
@@ -187,13 +190,30 @@ passport.use(
   )
 );
 
+router.post('/update/photo/:username', ensureAuthenticated, async (req, res, next) => {
+  
+  try {
+    const noteUser = await notesUsersStore.read(req.user.id);
+    if (noteUser.username === req.params.username) {
+    const type = req.headers.phototype;  
+    await usersModel.updatePhoto(req.user.id, Buffer.from(req.body).toString("base64"), type)
+    await notesUsersStore.updatePhoto(req.user.id, req.body, type);
+  }
+  } catch (error) {
+    next(error)
+  }
+  res.clearCookie("cacheControl")
+  res.status(200)
+  res.end("success")
+}) 
+
 router.get('/photo/:username', async (req, res, next) => {
-  if (req.headers["if-none-match"]) {
+  if (!req.cookies.cacheRefresh && req.headers["if-none-match"]) {
     res.status(304).end()
     return
   }
   console.log("Reading Database")
-  const user = await notesUsersStore.readByUserName(req.params.username)
+  const user = await notesUsersStore.getPhotoByUserName(req.params.username)
   res.type(user.photoType)
   res.send(user.photo)
 })
@@ -207,7 +227,7 @@ async function genUserName(username, rounds, email) {
   if (email) {
     try {
       const user = await usersModel.findViaEmail(email)
-      if (user) return username;
+      if (user) return user.username;
     } catch (error) {
 
     }
@@ -266,8 +286,8 @@ passport.use(
           const user = await usersModel.find(username);
           const noteUser = await notesUsersStore.read(user.id);
           if (!noteUser) {
-            const photo = Buffer.from(new Uint8Array(Object.values(user.photo))).toString('base64');
-            await notesUsersStore.create(user.id, user.username, user.displayName, user.fullName, user.provider, photo, 'svg');
+            const photo = Buffer.from(user.photo, "base64");
+            await notesUsersStore.create(user.id, user.username, user.displayName, user.firstName, user.email, user.provider, photo, user.photoType);
           }
 
           done(null, { username: check.username, id: check.username });
@@ -318,6 +338,6 @@ function createLogo(firstName, lastName) {
   </text>
 </svg>
 `);
-  const buffer = Buffer.from(svg).toString('base64')
+  const buffer = Buffer.from(svg)
   return buffer
 }

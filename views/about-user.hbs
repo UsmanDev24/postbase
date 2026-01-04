@@ -1,25 +1,84 @@
 <div class=" p-8 m-auto max-w-3xl bg-base-100">
   <div class="">
     {{#if user.photo}}
-    <img  class="m-auto bg-pink-300 dark:bg-black w-30 h-30 rounded-full" src="/users/photo/{{user.username}}">
+    <img class="m-auto bg-pink-300 dark:bg-black w-30 h-30 rounded-full" src="/users/photo/{{user.username}}">
+    <span class=" relative -top-8 left-14 block m-auto btn btn-circle w-6 h-6 p-1 "
+      onclick="modal_edit_photo.showModal()" data-feather="edit"></span>
     {{/if}}
-    </span>
     <h1 class="p-4 text-center text-2xl">Welcome {{user.fullName}}</h1>
     <p class="text-lg text-center">View your info and manage account and take decision about your account</p>
     <div class="  mt-4 p-4 rounded-lg ">
       <h2 class=" text-xl p-1">Acount info</h2>
-      <p class="p-2 border-b dark:border-b-gray-600 border-b-gray-400  sm:grid grid-cols-2">username <span class="text-lg  block font-semibold  ">{{user.username}}</span></p>
-      <p class="p-2 border-b dark:border-b-gray-600 border-b-gray-400 sm:grid grid-cols-2">Provider <span class="text-lg block font-semibold">{{user.provider}}</span></p>
-      <p class="p-2 border-b dark:border-b-gray-600 border-b-gray-400 sm:grid grid-cols-2">Email <span class="text-lg block font-semibold">{{user.email}}</span></p>
+      <p class="p-2 border-b dark:border-b-gray-600 border-b-gray-400  sm:grid grid-cols-2">username <span
+          class="text-lg  block font-semibold  ">{{user.username}}</span></p>
+      <p class="p-2 border-b dark:border-b-gray-600 border-b-gray-400 sm:grid grid-cols-2">Provider <span
+          class="text-lg block font-semibold">{{user.provider}}</span></p>
+      <p class="p-2 border-b dark:border-b-gray-600 border-b-gray-400 sm:grid grid-cols-2">Email <span
+          class="text-lg block font-semibold">{{user.email}}</span></p>
     </div>
     <div class=" mt-4 p-4 rounded-lg ">
       <h2 class=" text-xl p-1">Personal info</h2>
-      <p class="p-2 border-b dark:border-b-gray-600 border-b-gray-400  sm:grid grid-cols-2">Name <span class="text-lg  block font-semibold  ">{{user.fullName}}</span></p>
-      <p class="p-2 border-b dark:border-b-gray-600 border-b-gray-400  sm:grid grid-cols-2">First Name <span class="text-lg  block font-semibold  ">{{user.firstName}}</span></p>
-      <p class="p-2 border-b dark:border-b-gray-600 border-b-gray-400  sm:grid grid-cols-2">Last Name <span class="text-lg  block font-semibold  ">{{user.lastName}}</span></p>
+      <p class="p-2 border-b dark:border-b-gray-600 border-b-gray-400  sm:grid grid-cols-2">Name <span
+          class="text-lg  block font-semibold  ">{{user.fullName}}</span></p>
+      <p class="p-2 border-b dark:border-b-gray-600 border-b-gray-400  sm:grid grid-cols-2">First Name <span
+          class="text-lg  block font-semibold  ">{{user.firstName}}</span></p>
+      <p class="p-2 border-b dark:border-b-gray-600 border-b-gray-400  sm:grid grid-cols-2">Last Name <span
+          class="text-lg  block font-semibold  ">{{user.lastName}}</span></p>
+    </div>
+    <div class=" p-4  flex flex-row justify-center-safe gap-2">
+      <a class="btn btn-warning " href="/users/logout">Logout</a>
+      <a class="btn btn-error  " href="/users/destroy">Delete Account</a>
+    </div>
+    <dialog id="modal_edit_photo" class=" modal modal-middle">
+      <div class=" modal-box ">
+        <span class="m-auto h-24 w-24 p-4 rounded-full bg-neutral" id="user_svg"  data-feather="user"></span>
+        <img hidden class=" m-auto h-24 w-24  rounded-full" id="preview_photo" src="">
+        <p id="edit_info" class=" p-4 opacity-90 text-center text-sm ">* Image Size must be less than 2MB</p>
+        <label class="p-4 pt-2">
+          <input id="photo_input" class="block m-auto file-input" type="file">
+        </label>
+        <div class=" modal-action ">
+          <button class=" btn btn-ghost" onclick="modal_edit_photo.close()">Cancel</button>
+          <button id="btn_save_photo"  class=" btn btn-primary">Save </button>
+        </div>
+      </div>
+
+      <form class=" modal-backdrop" method="dialog"></form>
+    </dialog>
+    <script>
+      const photoInput = document.getElementById("photo_input");
+      photoInput.addEventListener("change", (event) => {
+        const preview = document.getElementById("preview_photo");
+        const userSvg = document.getElementById("user_svg");
+        const saveBtn = document.getElementById("btn_save_photo")
+        const edit_info = document.getElementById("edit_info")
+        const newPhoto = photoInput.files[0];
+        
+        userSvg.style.display = "none"
+        preview.hidden = false;
+        const prePhotoURL = URL.createObjectURL(photoInput.files[0]);
+        console.log(newPhoto)
+        preview.src = prePhotoURL
+        preview.addEventListener("load", (event) => {
+          URL.revokeObjectURL(prePhotoURL)
+        })
+        if (newPhoto.size/1000*1000 > 2 * 1000 * 1000) {
+          edit_info.textContent = "🗵 This Photo size is bigger than 2MB"
+          saveBtn.disabled = true
+        } else {
+          edit_info.textContent = "🗹  You can Save this."
+          saveBtn.disabled =false
+        } 
+        saveBtn.addEventListener("click", async (event) => {
+          console.log(newPhoto)
+          const req = await fetch("/users/update/photo/{{user.username}}", {
+            method: "POST",
+            body: await newPhoto.arrayBuffer(),
+            headers: { "content-type": "application/octet-stream",
+            "phototype": newPhoto.type}
+          })
+          modal_edit_photo.close()
+        })
+      })
+    </script>
   </div>
-  <div class=" p-4  flex flex-row justify-center-safe gap-2">
-    <a class="btn btn-warning " href="/users/logout">Logout</a>
-    <a class="btn btn-error  " href="/users/destroy">Delete Account</a>
-  </div>
-</div>

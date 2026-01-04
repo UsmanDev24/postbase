@@ -80,7 +80,7 @@ export async function passwordCheck(username, password) {
 }
 export async function destroy(username) {
   const res = await request.delete(reqURL(`/destroy/${username}`))
-    .send('content-type', "application/json")
+    .set('content-type', "application/json")
     .set("Accept", "application/json")
     .auth(authid, authcode);
   return res.body;
@@ -101,7 +101,14 @@ export async function findViaEmail(email) {
     .auth(authid, authcode);
   return res.body;
 }
-
+export async function updatePhoto(id, photo, photoType) {
+  const res= await request.post(reqURL(`/update-user/photo/${id}`))
+    .set("Content-type", "application/json")
+    .set("Accept", "application/json")
+    .auth(authid, authcode)
+    .send({photo, photoType});
+  return res.body;
+}
 export async function list() {
   const res = await request.get(reqURL(`/list`))
     .set("Content-type", "application/json")
