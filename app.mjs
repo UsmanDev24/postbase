@@ -55,8 +55,10 @@ app.use(logger(process.env.REQUEST_LOG_FORMAT || 'dev', {
         compress: 'gzip'
     }) : process.stdout
 }))
+
 app.use(express.json());
 app.use(express.urlencoded({ "extended": false }));
+app.use(express.raw({type: "application/octet-stream", limit: "3mb"}))
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/assets/vendor/feather-icons', express.static(path.join(__dirname, 'node_modules', 'feather-icons', 'dist')));
@@ -65,6 +67,14 @@ const mainRouter = express.Router()
 
 const connectPG = connectPgSimple(session)
 
+mainRouter.use((req, res , next) => {
+    const cookie = req.cookies;
+    if (!cookie.cacheControl) {
+        res.cookie("cacheControl", " ", {maxAge: 1000 * 60 * 5, httpOnly: true, path: '/', sameSite: 'lax'})
+        res.cookie("cacheRefresh", " ", {maxAge: 1000 * 30 , httpOnly: true, path: '/', sameSite: 'lax' });
+    }                
+    next()
+})
 mainRouter.use(session({
     store: new connectPG({
         pool: pgPool,
