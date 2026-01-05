@@ -67,7 +67,21 @@ export class PrismaNotesUsersStore  {
     
     return user;
   }
-
+  async getPublicData(userName) {
+    log(userName)
+    await prisma.$connect();
+    const user = await prisma.notesUsers.findUnique({
+      where: {username: userName}, 
+      omit: {photo: true, email: true, id: true},
+      include: {notes: {
+        orderBy: {createdAt: "desc"},
+        where: {public: true},
+        include: {auther: {select: {username: true}}}
+      }}
+    })
+    
+    return user;
+  }
   async  getPhotoByUserName(userName) {
     await prisma.$connect();
     const user = await prisma.notesUsers.findUnique({

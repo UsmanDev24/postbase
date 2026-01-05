@@ -1,6 +1,6 @@
 <div class=" p-8 m-auto max-w-3xl bg-base-100">
   <div class="">
-    <img class="m-auto bg-pink-300 dark:bg-black w-30 h-30 rounded-full" src="/assets/users/photo/{{user.username}}">
+    <img id="photo" class="m-auto bg-pink-300 dark:bg-black w-30 h-30 rounded-full" src="/assets/users/photo/{{user.username}}">
     <span class=" relative -top-8 left-14 block m-auto btn btn-circle w-6 h-6 p-1 "
       onclick="modal_edit_photo.showModal()" data-feather="edit"></span>
     <h1 class="p-4 text-center text-2xl">Welcome {{user.fullName}}</h1>
@@ -75,6 +75,13 @@
             headers: { "content-type": "application/octet-stream",
             "phototype": newPhoto.type}
           })
+          const res = await req.text();
+          if (res === 'success') {
+            console.log("ok")
+            const reloadLink = document.createElement("a");
+            reloadLink.href = "/users/profile/{{user.username}}"
+            reloadLink.click()
+          }
           modal_edit_photo.close()
         })
       })

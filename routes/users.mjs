@@ -124,12 +124,22 @@ router.post("/create", async (req, res, next) => {
 });
 
 
-router.get("/about-user", async (req, res, next) => {
-  const user = await usersModel.findUserName(req.user.username);
-  res.render("about-user", {
-    title: "About " + req.user.displayName,
-    user: user,
-  });
+router.get('/profile/:username', async (req, res, next) => {
+  if (req.params.username === req.user.username) {
+    const user = await usersModel.findUserName(req.user.username);
+    res.render("about-user", {
+      title: "About " + req.user.displayName,
+      user: user,
+    });
+  } else {
+    const user = await notesUsersStore.getPublicData(req.params.username)
+    res.render("profile", {
+      user: req.user,
+      publicUser: user,
+      notelist: user.notes
+    })
+  }
+
 });
 router.get("/destroy", async (req, res, next) => {
   try {
@@ -202,12 +212,13 @@ router.post('/update/photo/:username', ensureAuthenticated, async (req, res, nex
       await usersModel.updatePhoto(req.user.id, Buffer.from(req.body).toString("base64"), type)
       await notesUsersStore.updatePhoto(req.user.id, req.body, type);
     }
+    res.clearCookie("cacheControl")
+    res.status(200)
+    res.end("success")
   } catch (error) {
     next(error)
   }
-  res.clearCookie("cacheControl")
-  res.status(200)
-  res.end("success")
+
 })
 
 assetRouter.get('/photo/:username', async (req, res, next) => {
@@ -215,7 +226,7 @@ assetRouter.get('/photo/:username', async (req, res, next) => {
     res.status(304).end()
     return
   }
-  console.log("Reading Database")
+  log("Reading Database")
   const user = await notesUsersStore.getPhotoByUserName(req.params.username)
   res.type(user.photoType)
   res.send(user.photo)
@@ -245,7 +256,7 @@ async function genUserName(username, rounds, email) {
       return username
     }
   } catch (error) {
-      throw new Error(error);
+    throw new Error(error);
   }
 }
 

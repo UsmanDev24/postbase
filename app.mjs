@@ -57,7 +57,7 @@ app.use(logger(process.env.REQUEST_LOG_FORMAT || 'dev', {
 }))
 
 app.use(express.json());
-app.use(express.urlencoded({ "extended": false }));
+app.use(express.urlencoded());
 app.use(express.raw({type: "application/octet-stream", limit: "3mb"}))
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));

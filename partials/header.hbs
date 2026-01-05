@@ -6,7 +6,7 @@
   {{#if user}}
   <div class=" hidden sm:inline-flex">
     <p>
-      <a class="btn rounded-2xl w-max" href="/users/about-user"><span
+      <a class="btn rounded-2xl w-max" href="/users/profile/{{user.username}}"><span
           class=""><img class=" bg-pink-200 dark:bg-neutral rounded-full w-8 h-8 " src="/assets/users/photo/{{user.username}}" alt="">
         </span>{{user.username}}</a>
     </p>
@@ -24,7 +24,7 @@
     {{#if user}}
     <div tabindex="-1" class="dropdown-content mt-4 bg-base-300 rounded-box z-1  p-3 shadow-sm">
       <p>
-        <a class="btn rounded-2xl w-full" href="/users/about-user"><span
+        <a class="btn rounded-2xl w-full" href="/users/profile/{{user.username}}"><span
             class=""><img class="bg-pink-200 dark:bg-neutral rounded-full w-8 h-8 " src="/assets/users/photo/{{user.username}}" alt="">
           </span>{{user.username}}</a>
         <a class="btn btn-outline rounded-full text-primary  w-full mt-2" href="/notes/add">ADD Note</a>
