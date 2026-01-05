@@ -9,7 +9,7 @@
         <div class="flex items-center gap-3">
           <div class="avatar">
             <div class="w-10 h-10 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
-              <img src="/users/photo/{{note.auther.username}}" alt="{{note.auther.username}}" />
+              <img src="/assets/users/photo/{{note.auther.username}}" alt="{{note.auther.username}}" />
             </div>
           </div>
           <div>
@@ -66,7 +66,7 @@
     <div id="comment_{{id}}" class=" p-2 rounded-2xl bg-base-200">
       <div class=" flex justify-between">
         <div class=" flex justify-start gap-2 items-center">
-          <img class=" rounded-full bg-black w-6 h-6" src="/users/photo/{{auther.username}}">
+          <img class=" rounded-full bg-black w-6 h-6" src="/assets/users/photo/{{auther.username}}">
           <p class=" flex flex-col justify-center items-start">
             <span class=" text-sm">{{auther.username}}</span>
             <span class=" opacity-70 text-sm">{{createdAt}}</span>
@@ -181,7 +181,7 @@
       commentdiv.innerHTML = `
       <div class=" flex justify-between">
         <div class=" flex justify-start gap-2 items-center">
-          <img class=" rounded-full bg-black w-6 h-6" src="/users/photo/${comment.auther.username}">
+          <img class=" rounded-full bg-black w-6 h-6" src="/assets/users/photo/${comment.auther.username}">
           <p class=" flex flex-col justify-center items-start">
             <span class=" text-sm">${comment.auther.username}</span>
             <span class=" opacity-70 text-sm">${toRelativeTime(new Date(comment.createdAt))}</span>

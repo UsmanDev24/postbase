@@ -1,7 +1,7 @@
 
 import { prisma } from "./prisma.mjs"
-
-
+import debug from "debug";
+const log = debug("notes:noteUsers-prisma")
 export class PrismaNotesUsersStore  {
   async create(userId, userName, displayName, firstName, email, provider, photo, photoType) {
     await prisma.$connect();
@@ -39,6 +39,7 @@ export class PrismaNotesUsersStore  {
   
   async read(userId ) {
     await prisma.$connect();
+    log(userId)
     const user = await prisma.notesUsers.findUnique({
       where: {id: userId},
       omit: {photo: true}
@@ -57,6 +58,7 @@ export class PrismaNotesUsersStore  {
     return user
   }
   async readByUserName(userName) {
+    log(userName)
     await prisma.$connect();
     const user = await prisma.notesUsers.findUnique({
       where: {username: userName}, 

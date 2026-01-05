@@ -85,16 +85,22 @@ export async function destroy(username) {
     .auth(authid, authcode);
   return res.body;
 }
-
-export async function find(username) {
-  const res = await request.get(reqURL(`/find/${username}`))
+export async function findUserName(username) {
+  const res = await request.get(reqURL(`/find/username/${username}`))
+    .set("Content-type", "application/json")
+    .set("Accept", "application/json")
+    .auth(authid, authcode);
+  return res.body;
+}
+export async function find(userId) {
+  const res = await request.get(reqURL(`/find/${userId}`))
     .set("Content-type", "application/json")
     .set("Accept", "application/json")
     .auth(authid, authcode);
   return res.body;
 }
 
-export async function findViaEmail(email) {
+export async function findEmail(email) {
   const res = await request.get(reqURL(`/find/email/${email}`))
     .set("Content-type", "application/json")
     .set("Accept", "application/json")

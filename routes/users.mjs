@@ -11,9 +11,10 @@ import * as usersModel from "../models/user-superagent.mjs";
 import { PrismaNotesUsersStore } from "../models/users-prisma.mjs";
 import { sessionCookieName } from "../app.mjs";
 
-
-
+const log = debug("notes:routes_users")
+const logError = debug("notes:routes_users_error")
 export const router = Router();
+export const assetRouter = Router();
 const LocalStrategy = passportLocal.Strategy;
 const JwtStrategy = passportJwt.Strategy;
 const googleStrategy = passportGoogle.Strategy;
@@ -89,7 +90,7 @@ router.get("/create", async (req, res, next) => {
 });
 router.post("/create", async (req, res, next) => {
   try {
-    const isUser = await usersModel.find(req.body.username);
+    const isUser = await usersModel.findUserName(req.body.username);
     if (isUser) {
       res.redirect(
         "/users/create?level=warning&massage=" +
@@ -124,7 +125,7 @@ router.post("/create", async (req, res, next) => {
 
 
 router.get("/about-user", async (req, res, next) => {
-  const user = await usersModel.find(req.user.username);
+  const user = await usersModel.findUserName(req.user.username);
   res.render("about-user", {
     title: "About " + req.user.displayName,
     user: user,
@@ -158,8 +159,10 @@ passport.use(
       try {
         const jsonProfile = profile._json;
         const photo = await getPhoto(jsonProfile.picture)
+        const genratedName = await genUserName(jsonProfile.given_name, 10, jsonProfile.email);
+        log(genratedName)
         const user = await usersModel.findOrCreate({
-          username: await genUserName(jsonProfile.given_name, 10, jsonProfile.email),
+          username: genratedName,
           password: "",
           provider: "google",
           pid: jsonProfile.sub,
@@ -191,23 +194,23 @@ passport.use(
 );
 
 router.post('/update/photo/:username', ensureAuthenticated, async (req, res, next) => {
-  
+
   try {
     const noteUser = await notesUsersStore.read(req.user.id);
     if (noteUser.username === req.params.username) {
-    const type = req.headers.phototype;  
-    await usersModel.updatePhoto(req.user.id, Buffer.from(req.body).toString("base64"), type)
-    await notesUsersStore.updatePhoto(req.user.id, req.body, type);
-  }
+      const type = req.headers.phototype;
+      await usersModel.updatePhoto(req.user.id, Buffer.from(req.body).toString("base64"), type)
+      await notesUsersStore.updatePhoto(req.user.id, req.body, type);
+    }
   } catch (error) {
     next(error)
   }
   res.clearCookie("cacheControl")
   res.status(200)
   res.end("success")
-}) 
+})
 
-router.get('/photo/:username', async (req, res, next) => {
+assetRouter.get('/photo/:username', async (req, res, next) => {
   if (!req.cookies.cacheRefresh && req.headers["if-none-match"]) {
     res.status(304).end()
     return
@@ -217,7 +220,6 @@ router.get('/photo/:username', async (req, res, next) => {
   res.type(user.photoType)
   res.send(user.photo)
 })
-
 async function getPhoto(url) {
   const res = await fetch(url);
   const bytes = await res.bytes()
@@ -226,26 +228,24 @@ async function getPhoto(url) {
 async function genUserName(username, rounds, email) {
   if (email) {
     try {
-      const user = await usersModel.findViaEmail(email)
-      if (user) return user.username;
+      const user = await usersModel.findEmail(email)
+      if (user.email) return user.username;
     } catch (error) {
-
+      throw new error(error)
     }
   }
   try {
     username = username.toLowerCase()
-    const user = await usersModel.find(username);
-    if (user) {
+    const user = await usersModel.findUserName(username);
+    if (user.username) {
       rounds = rounds * 10;
       username = username + (Number(Math.random().toFixed(2)) * rounds).toFixed(0);
       return await genUserName(username, rounds);
+    } else if (!user.username) {
+      return username
     }
   } catch (error) {
-    if (error.status === 404) {
-      return username;
-    } else {
       throw new Error(error);
-    }
   }
 }
 
@@ -260,7 +260,7 @@ passport.use(
     },
     async (req, payload, done) => {
       try {
-        const user = await usersModel.find(payload.username);
+        const user = await usersModel.findUserName(payload.username);
         if (user) {
           done(null, user);
         } else {
@@ -283,14 +283,14 @@ passport.use(
       try {
         let check = await usersModel.passwordCheck(username, password);
         if (check.check) {
-          const user = await usersModel.find(username);
+          const user = await usersModel.find(check.id);
           const noteUser = await notesUsersStore.read(user.id);
           if (!noteUser) {
             const photo = Buffer.from(user.photo, "base64");
             await notesUsersStore.create(user.id, user.username, user.displayName, user.firstName, user.email, user.provider, photo, user.photoType);
           }
 
-          done(null, { username: check.username, id: check.username });
+          done(null, { username: check.username, id: check.id });
         } else {
           done(null, false, { message: check.message });
         }
@@ -304,7 +304,7 @@ passport.use(
 passport.serializeUser((user, done) => {
   try {
     if (user) {
-      done(null, user.username);
+      done(null, user.id);
     }
   } catch (error) {
     done(error);
@@ -313,7 +313,7 @@ passport.serializeUser((user, done) => {
 
 passport.deserializeUser(async (id, done) => {
   try {
-    const user = await usersModel.find(id);
+    const user = await notesUsersStore.read(id);
     done(null, user);
   } catch (error) {
     done(error);

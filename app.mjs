@@ -18,7 +18,7 @@ import connectPgSimple from 'connect-pg-simple';
 import { default as pg } from 'pg';
 import { router as indexRouter, addNoteListners as wsHomeListener } from './routes/index.mjs';
 import { router as notesRouter, init as notesInit, addNoteListners as wsNotesListener } from './routes/notes.mjs';
-import { initPassport, router as usersRouter } from './routes/users.mjs'
+import { initPassport, router as usersRouter, assetRouter as userAssestRouter } from './routes/users.mjs'
 import { default as DBG } from "debug";
 import * as ws from 'ws';
 import { wsSession } from './models/ws-session.mjs';
@@ -62,9 +62,9 @@ app.use(express.raw({type: "application/octet-stream", limit: "3mb"}))
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/assets/vendor/feather-icons', express.static(path.join(__dirname, 'node_modules', 'feather-icons', 'dist')));
+app.use('/assets/users', userAssestRouter)
 
 const mainRouter = express.Router()
-
 const connectPG = connectPgSimple(session)
 
 mainRouter.use((req, res , next) => {

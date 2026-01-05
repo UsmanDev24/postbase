@@ -1,7 +1,8 @@
 import * as crypto from 'crypto';
 import { getSessionData } from './prisma-session.mjs';
-import { find as findUser } from './user-superagent.mjs';
+import { PrismaNotesUsersStore } from './users-prisma.mjs';
 import { sessionCookieName } from '../app.mjs';
+const notesUsersStore = new PrismaNotesUsersStore()
 export async function wsSession(rawCookies) {
   const sessionEntry = rawCookies
         .split(";")
@@ -24,8 +25,8 @@ export async function wsSession(rawCookies) {
                                     .digest("base64");
     if (expectedSignature.replace("=", "") === signature) {
         let sessionData = await getSessionData(payload)
-        const username = sessionData.sess.passport.user;
-        const fullUser = await findUser(username);
+        const userId = sessionData.sess.passport.user;
+        const fullUser = await notesUsersStore.read(userId);
         const user = {username: fullUser.username, id: fullUser.id, displayName: fullUser.displayName}
         return user;
     }
