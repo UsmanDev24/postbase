@@ -91,7 +91,7 @@ router.get("/create", async (req, res, next) => {
 router.post("/create", async (req, res, next) => {
   try {
     const isUser = await usersModel.findUserName(req.body.username);
-    if (isUser) {
+    if (isUser.username) {
       res.redirect(
         "/users/create?level=warning&massage=" +
         encodeURIComponent("!User Already Exit with this username")
@@ -112,7 +112,7 @@ router.post("/create", async (req, res, next) => {
     req.body.lastName,
     req.body.email,
     null,
-    Buffer.from(photo).toString('base64'),
+    photo.toString('base64'),
     "svg"
   );
   if (user) {
@@ -125,7 +125,7 @@ router.post("/create", async (req, res, next) => {
 
 
 router.get('/profile/:username', async (req, res, next) => {
-  if (req.params.username === req.user.username) {
+  if (req.user && req.params.username === req.user.username) {
     const user = await usersModel.findUserName(req.user.username);
     res.render("about-user", {
       title: "About " + req.user.displayName,
@@ -297,7 +297,7 @@ passport.use(
           const user = await usersModel.find(check.id);
           const noteUser = await notesUsersStore.read(user.id);
           if (!noteUser) {
-            const photo = Buffer.from(user.photo, "base64");
+            const photo = Buffer.from(new Uint8Array(Object.values(user.photo)))
             await notesUsersStore.create(user.id, user.username, user.displayName, user.firstName, user.email, user.provider, photo, user.photoType);
           }
 
