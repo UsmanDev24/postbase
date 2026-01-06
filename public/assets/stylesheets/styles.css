@@ -1700,6 +1700,9 @@
   .h-6 {
     height: calc(var(--spacing) * 6);
   }
+  .h-7 {
+    height: calc(var(--spacing) * 7);
+  }
   .h-8 {
     height: calc(var(--spacing) * 8);
   }
@@ -1738,6 +1741,9 @@
   .w-6 {
     width: calc(var(--spacing) * 6);
   }
+  .w-7 {
+    width: calc(var(--spacing) * 7);
+  }
   .w-8 {
     width: calc(var(--spacing) * 8);
   }
@@ -1761,6 +1767,9 @@
   }
   .max-w-3xl {
     max-width: var(--container-3xl);
+  }
+  .max-w-fit {
+    max-width: fit-content;
   }
   .max-w-md {
     max-width: var(--container-md);
@@ -1958,6 +1967,12 @@
   .bg-purple-300 {
     background-color: var(--color-purple-300);
   }
+  .bg-warning {
+    background-color: var(--color-warning);
+  }
+  .bg-warning-content {
+    background-color: var(--color-warning-content);
+  }
   .stroke-current {
     stroke: currentcolor;
   }
@@ -2105,6 +2120,19 @@
       --alert-color: var(--color-warning);
     }
   }
+  .link-info {
+    @layer daisyui.l1.l2 {
+      color: var(--color-info);
+      @media (hover: hover) {
+        &:hover {
+          color: var(--color-info);
+          @supports (color: color-mix(in lab, red, red)) {
+            color: color-mix(in oklab, var(--color-info) 80%, #000);
+          }
+        }
+      }
+    }
+  }
   .link-primary {
     @layer daisyui.l1.l2 {
       color: var(--color-primary);
@@ -2154,6 +2182,9 @@
   .text-info {
     color: var(--color-info);
   }
+  .text-neutral {
+    color: var(--color-neutral);
+  }
   .text-primary {
     color: var(--color-primary);
   }
@@ -2186,6 +2217,9 @@
     & :where(.btn-link):not(:where([class~="not-prose"], [class~="not-prose"] *)) {
       text-decoration-line: none;
     }
+  }
+  .underline {
+    text-decoration-line: underline;
   }
   .opacity-50 {
     opacity: 50%;
@@ -2325,6 +2359,12 @@
       --btn-fg: var(--color-error-content);
     }
   }
+  .btn-neutral {
+    @layer daisyui.l1.l2.l3 {
+      --btn-color: var(--color-neutral);
+      --btn-fg: var(--color-neutral-content);
+    }
+  }
   .btn-primary {
     @layer daisyui.l1.l2.l3 {
       --btn-color: var(--color-primary);
@@ -2459,6 +2499,18 @@
   .lg\:justify-center {
     @media (width >= 64rem) {
       justify-content: center;
+    }
+  }
+  .lg\:text-3xl {
+    @media (width >= 64rem) {
+      font-size: var(--text-3xl);
+      line-height: var(--tw-leading, var(--text-3xl--line-height));
+    }
+  }
+  .lg\:text-lg {
+    @media (width >= 64rem) {
+      font-size: var(--text-lg);
+      line-height: var(--tw-leading, var(--text-lg--line-height));
     }
   }
   .dark\:border-b-gray-600 {

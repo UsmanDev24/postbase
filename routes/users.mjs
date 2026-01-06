@@ -27,6 +27,7 @@ export function initPassport(app) {
 export function ensureAuthenticated(req, res, next) {
   if (req.user) next();
   else res.redirect("/users/login");
+  return;
 }
 
 router.get("/login", (req, res, next) => {
@@ -141,7 +142,13 @@ router.get('/profile/:username', async (req, res, next) => {
   }
 
 });
-router.get("/destroy", async (req, res, next) => {
+router.get('/request-data', ensureAuthenticated, async (req, res, next) => {
+  const user = await notesUsersStore.getAllData(req.user.username)
+  res.type('applicaltion/json')
+  res.send(user)
+    
+})
+router.get("/destroy", ensureAuthenticated, async (req, res, next) => {
   try {
     await notesUsersStore.destroy(req.user.id)
     const apiRes = await usersModel.destroy(req.user.username);

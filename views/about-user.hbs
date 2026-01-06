@@ -23,10 +23,29 @@
       <p class="p-2 border-b dark:border-b-gray-600 border-b-gray-400  sm:grid grid-cols-2">Last Name <span
           class="text-lg  block font-semibold  ">{{user.lastName}}</span></p>
     </div>
+    <div class=" mt-4 p-4 rounded-lg">
+      <h2 class=" text-xl p-1">Your Data</h2>
+      <p class="p-2 border-b dark:border-b-gray-600 border-b-gray-400  sm:grid grid-cols-2"> <span class="">Get Your Data (Notes, Comments)</span> <a
+          class=" underline " href="/users/request-data">Request Data</a></p>
+    </div>
     <div class=" p-4  flex flex-row justify-center-safe gap-2">
       <a class="btn btn-warning " href="/users/logout">Logout</a>
-      <a class="btn btn-error  " href="/users/destroy">Delete Account</a>
+      <button class="btn btn-error"  onclick="modal_delete.showModal()">Delete Account</button>
     </div>
+    <dialog id="modal_delete" class=" modal modal-middle">
+      <div class=" modal-box bg-warning-content">
+        <h2 class=" text-2xl lg:text-3xl p-4  font-bold">Permanant Account Delete?</h2>
+        <p class=" text-sm lg:text-lg p-2 pl-4">This will delete account and all your data including <strong>Notes</strong>  and <strong>Commments</strong> .</p>
+        <p class=" text-sm lg:text-lg font-bold p-2 pl-4">Destructive action, cannot be undone.</p>
+        <div class=" modal-action">
+          <button onclick="modal_delete.close()" class=" btn">Cancel</button>
+          <a class=" btn btn-error" href="/users/destroy">Delete</a>
+        </div>
+      </div>
+      <form class=" modal-backdrop" method="dialog">
+
+      </form>
+    </dialog>
     <dialog id="modal_edit_photo" class=" modal modal-middle">
       <div class=" modal-box ">
         <span class="m-auto h-24 w-24 p-4 rounded-full bg-neutral" id="user_svg"  data-feather="user"></span>
