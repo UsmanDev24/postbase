@@ -1,33 +1,53 @@
 import * as express from 'express';
 import { NotesStore as notes } from '../models/notes-store.mjs';
 import { WsServer } from '../app.mjs';
+import { commentStore } from './notes.mjs';
+
+let cachedNotes;
+let changed = true;
 
 export const router = express.Router();
 
-export function addNoteListners() {
+export function wsHomeListners() {
+  commentStore.on("commentcreated", () => { changed = true })
+  commentStore.on("commentdestroyed", () => { changed = true })
   notes.on('notecreated', (note) => {
+    changed = true
     WsServer.clients.forEach((socket) => {
       if (socket.readyState === socket.OPEN)
         socket.send(JSON.stringify({ type: "notecreated", note: note }))
     })
   })
   notes.on('notedestroyed', (key) => {
+    changed = true
     WsServer.clients.forEach((socket) => {
       if (socket.readyState === socket.OPEN)
         socket.send(JSON.stringify({ type: 'notedestroyed', key: key }));
     })
   })
+
 }
 /* GET home page. */
 router.get('/', async (req, res, next) => {
   try {
+    if (!changed) {
+      res.render('index', {
+        title: 'OpenNotes', notelist: cachedNotes,
+        user: req.user ? req.user : undefined,
+        level: req.query.level,
+        massage: req.query.massage
+      });
+      return
+    }
+
     const keylist = await notes.keylist();
-    //console.log(`keylist ${util.inspect(keylist)}`);
     const keyPromises = keylist.map(key => {
       return notes.read(key);
     });
+
     let notelist = await Promise.all(keyPromises);
-    //console.log(util.inspect(notelist));
+    cachedNotes = notelist;
+    changed = false;
     if (notelist.length === 0) {
       notelist = false;
     }
@@ -36,7 +56,7 @@ router.get('/', async (req, res, next) => {
       user: req.user ? req.user : undefined,
       level: req.query.level,
       massage: req.query.massage
-    }); new Intl.RelativeTimeFormat()
+    });
   } catch (err) {
     next(err);
   }

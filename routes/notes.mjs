@@ -8,14 +8,21 @@ import * as crpto from 'node:crypto';
 
 const debug = DBG('notes:routs_notes.mjs')
 const dbgerror = DBG('notes:error')
-const commentStore = new PrismaCommentsStore()
+export const commentStore = new PrismaCommentsStore()
 export const router = express.Router();
 
-export function addNoteListners() {
+export function wsNotesListeners() {
   commentStore.on("commentcreated", (notekey, comment) => {
     WsServer.clients.forEach(socket => {
       if (socket.readyState === socket.OPEN) {
         socket.send(JSON.stringify({ type: "commentcreated", notekey, comment }))
+      }
+    })
+  })
+  commentStore.on("commentdestroyed", (notekey, id) => {
+    WsServer.clients.forEach(socket => {
+      if (socket.readyState === socket.OPEN) {
+        socket.send(JSON.stringify({ type: "commentdestroyed", notekey, id }))
       }
     })
   })
@@ -27,13 +34,13 @@ export function addNoteListners() {
     })
   })
 }
-export async function init(socket) {
-  socket.on("message",async (rawData) => {
+export async function initSocket(socket) {
+  socket.on("message", async (rawData) => {
     let req = JSON.parse(rawData.toString())
     if (req.type === "createcomment" && socket.user) {
       try {
         const comment = await commentStore.create(req.body.notekey, req.body.autherId, req.body.commentBody);
-        
+
       } catch (error) {
         console.error(error)
       }
@@ -56,7 +63,7 @@ router.get('/add', ensureAuthenticated, (req, res, next) => {
 router.post('/save', ensureAuthenticated, async (req, res, next) => {
   try {
     let note;
-    let notekey; 
+    let notekey;
     debug(req.body.docreate);
     if (req.body.docreate === "create") {
       notekey = crpto.randomUUID();
@@ -66,6 +73,7 @@ router.post('/save', ensureAuthenticated, async (req, res, next) => {
       note = await notes.read(notekey)
       if (note.autherId !== req.user.id) {
         res.redirect("/")
+        return
       }
       note = await notes.update(notekey, req.body.title, req.body.body, req.user.id)
     }
@@ -78,10 +86,16 @@ router.post('/save', ensureAuthenticated, async (req, res, next) => {
 router.get('/view', async (req, res, next) => {
   try {
     let note = await notes.read(req.query.key);
+    let owner = false
+    if (req.user)
+      if (req.user.id === note.autherId) {
+        owner = true
+      }
     res.render('noteview', {
       title: note ? note.title : "",
       notekey: req.query.key, note: note,
-      user: req.user ? req.user : undefined
+      user: req.user ? req.user : undefined,
+      owner,
     })
   } catch (err) { next(err) }
 })
@@ -92,7 +106,9 @@ router.get('/edit', ensureAuthenticated, async (req, res, next) => {
   try {
     let note = await notes.read(req.query.key);
     if (note.autherId !== req.user.id) {
-      res.redirect("/")
+      res.redirect("/?level=error&massage=" +
+        encodeURIComponent("! You can only Edit your Notes."))
+      return
     }
     res.render('noteedit', {
       title: note ? ("Edit " + note.title) : "Add a Note",
@@ -111,6 +127,7 @@ router.get('/destroy', ensureAuthenticated, async (req, res, next) => {
     let note = await notes.read(req.query.key);
     if (note.autherId !== req.user.id) {
       res.redirect("/")
+      return;
     }
     res.render('notedestroy', {
       title: note ? note.title : "",
@@ -126,7 +143,9 @@ router.post('/destroy/confirm', ensureAuthenticated, async (req, res, next) => {
   try {
     let note = await notes.read(req.body.notekey);
     if (note.autherId !== req.user.id) {
-      res.redirect("/")
+      res.redirect("/?level=error&massage=" +
+        encodeURIComponent("! You Cannot delete Other User Notes"))
+      return
     }
     await notes.destroy(req.body.notekey);
     res.redirect('/');
@@ -137,14 +156,17 @@ router.post('/destroy/confirm', ensureAuthenticated, async (req, res, next) => {
 
 
 
-router.post('/comment/destroy', ensureAuthenticated, async (req, res, next) => {
+router.get('/comment/destroy/:id', ensureAuthenticated, async (req, res, next) => {
   try {
-    const comment = await commentStore.read(req.body.id)
-    if (comment.id === req.user.id) {
-      await commentStore.destroy(comment.id);
-      res.send(comment)
+    const comment = await commentStore.read(Number(req.params.id))
+    if (comment.autherId === req.user.id) {
+      await commentStore.destroy(comment.id, comment.noteNotekey);
+      res.status(200)
+      res.send("success")
+    } else { 
+      res.send("Not allowed")
     }
-    res.end
+    
   } catch (error) {
     next(error)
   }

@@ -47,6 +47,7 @@ export default class PrismaNotesStore extends AbstractNotesStore {
 
   async read(key) {
     await connectDB();
+    debug("Note read key: ",key)
     let note = await prisma.notes.findUnique({
       where: { key },
       include: {
@@ -84,6 +85,7 @@ export default class PrismaNotesStore extends AbstractNotesStore {
 
   async keylist() {
     await connectDB();
+    debug("Note key list read")
     const notes = await prisma.notes.findMany({
       orderBy: { updatedAt: "desc" },
     });

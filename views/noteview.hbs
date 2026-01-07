@@ -23,11 +23,11 @@
 
         {{#if notekey}}
         <div class="join">
-          <a href="/notes/edit?key={{notekey}}" class="btn btn-sm btn-ghost join-item gap-2" title="Edit Note">
+          <a {{#if owner}}{{else}} hidden{{/if}} href="/notes/edit?key={{notekey}}" class="btn btn-sm btn-ghost join-item gap-2" title="Edit Note">
             <span data-feather="edit" class=" h-4 w-4"></span>
             <span class="hidden sm:inline">Edit</span>
           </a>
-          <button class="btn btn-sm btn-ghost text-error join-item gap-2" onclick="confirm_delete_modal.showModal()">
+          <button {{#if owner}}{{else}} hidden{{/if}} class="btn btn-sm btn-ghost text-error join-item gap-2" onclick="confirm_delete_modal.showModal()">
             <span data-feather="trash-2" class=" h-4 w-4"></span>
             <span class="hidden sm:inline">Delete</span>
           </button>
@@ -73,7 +73,7 @@
           </p>
         </div>
         <div>
-          <button id="comment_{{id}}_delete" onclick="" class=" btn btn-ghost  opacity-80 text-error"><span class=" w-4 h-4" data-feather="trash-2"></span></button>
+          <button  id="comment_{{id}}_delete" onclick="fetch('/notes/comment/destroy/{{id}}')" class=" btn btn-ghost  opacity-80 text-error"><span class=" w-4 h-4" data-feather="trash-2"></span></button>
         </div>
       </div>
       <p class=" text-lg p-2 pl-4">{{body}}</p>
@@ -168,9 +168,8 @@
   const ws = new WebSocket("ws://localhost:3000")
   ws.addEventListener("message", event => {
     const data = JSON.parse(event.data);
-
     if (data.type === 'connection') {
-      console.log(data.message);
+      console.log(data)
     } 
     else if (data.type === 'commentcreated' && data.notekey === "{{notekey}}") {
       const commentdiv = document.createElement("div");
@@ -188,7 +187,7 @@
           </p>
         </div>
         <div>
-
+          <button onclick="fetch('/notes/comment/destroy/${comment.id}')" class=" btn btn-ghost  opacity-80 text-error">⛔</button>
         </div>
       </div>
       <p class=" text-lg p-2 pl-4">${comment.body}</p>
@@ -199,6 +198,9 @@
       const noteTitle = document.getElementById("noteTitle");
       noteTitle.textContent = data.note.title
       noteBody.textContent = data.note.body
+    } else if (data.type === "commentdestroyed" && data.notekey === "{{notekey}}") {
+      const commentdiv = document.getElementById("comment_"+ data.id);
+      commentdiv.remove()
     }
   })
   commentForm.addEventListener("submit", (event) => {

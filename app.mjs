@@ -16,8 +16,8 @@ import { useModel as useNotesModel } from './models/notes-store.mjs';
 import session from 'express-session';
 import connectPgSimple from 'connect-pg-simple';
 import { default as pg } from 'pg';
-import { router as indexRouter, addNoteListners as wsHomeListener } from './routes/index.mjs';
-import { router as notesRouter, init as notesInit, addNoteListners as wsNotesListener } from './routes/notes.mjs';
+import { router as indexRouter, wsHomeListners } from './routes/index.mjs';
+import { router as notesRouter, initSocket as initNotesSocket,  wsNotesListeners } from './routes/notes.mjs';
 import { initPassport, router as usersRouter, assetRouter as userAssestRouter } from './routes/users.mjs'
 import { default as DBG } from "debug";
 import * as ws from 'ws';
@@ -124,14 +124,13 @@ WsServer.on("connection", async (socket, req) => {
     if (rawCookies)
         socket.user = await wsSession(rawCookies);
     socket.send(JSON.stringify({ type: 'connection', message: 'connected '+ JSON.stringify(socket.user) }))
-    notesInit(socket)
+    initNotesSocket(socket)
 })
-
-
 addWsListeners()
+
 function addWsListeners() {
-    wsHomeListener()
-    wsNotesListener()
+    wsHomeListners()
+    wsNotesListeners()
 }
 
 server.on('error', onError);
