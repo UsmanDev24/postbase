@@ -1,7 +1,7 @@
-<div class=" fixed top-0 z-50 navbar justify-around bg-base-300 text-base-content rounded-t-2xl">
-  <div class=" navbar-start lg:justify-center lg:w-auto  gap-2 align-middle">
-    <a class="btn btn-ghost tooltip tooltip-bottom" data-tip=" Home " href="/"><i data-feather="home"></i></a>
-    <h1 class="text-md sm:text-xl">{{title}}</h1>
+<div class=" fixed top-0 z-50 navbar md:px-4 justify-between bg-base-300 text-base-content ">
+  <div class=" navbar-start w-[70%] sm:w-[50%] lg:justify-center lg:w-auto  md:gap-2 align-middle">
+    <a class="btn btn-md sm:btn-lg btn-ghost tooltip tooltip-bottom" data-tip=" Home " href="/"><i data-feather="home"></i></a>
+    <h1 class="truncate   text-lg font-bold  sm:text-xl   ">{{title}}</h1>
   </div>
   {{#if user}}
   <div class=" hidden sm:inline-flex">
@@ -19,12 +19,12 @@
     <a class="btn btn-outline rounded-full text-primary  " href="/users/login">Login</a>
   </div>
   {{/if}}
-  <div class="navbar-end dropdown dropdown-end dropdown-bottom sm:hidden">
+  <div class="navbar-end w-auto dropdown dropdown-end dropdown-bottom sm:hidden">
     <div role="button" tabindex="0" class="btn btn-ghost"><span data-feather="menu"></span></div>
     {{#if user}}
     <div tabindex="-1" class="dropdown-content mt-4 bg-base-300 rounded-box z-1  p-3 shadow-sm">
       <p>
-        <a class="btn rounded-2xl w-full" href="/users/profile/{{user.username}}"><span
+        <a class="btn rounded-2xl w-max" href="/users/profile/{{user.username}}"><span
             class=""><img class="bg-pink-200 dark:bg-neutral rounded-full w-8 h-8 " src="/assets/users/photo/{{user.username}}" alt="">
           </span>{{user.username}}</a>
         <a class="btn btn-outline rounded-full text-primary  w-full mt-2" href="/notes/add">ADD Note</a>
