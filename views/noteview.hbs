@@ -17,7 +17,7 @@
               <a href="/users/profile/{{note.auther.username}}"
                 class="link link-hover text-base-content">{{note.auther.username}}</a>
             </p>
-            <p class="text-xs text-base-content/60 mt-1"> <span class="font-mono">{{note.updatedAt}}</span></p>
+            <p class="text-xs text-base-content/60 mt-1"> <span class="updatedAt font-mono">{{note.updatedAt}}</span></p>
           </div>
         </div>
 
@@ -69,7 +69,7 @@
           <img class=" rounded-full bg-black w-6 h-6" src="/assets/users/photo/{{auther.username}}">
           <p class=" flex flex-col justify-center items-start">
             <span class=" text-sm">{{auther.username}}</span>
-            <span class=" opacity-70 text-sm">{{createdAt}}</span>
+            <span class="updatedAt opacity-70 text-sm">{{createdAt}}</span>
           </p>
         </div>
         <div>
@@ -215,5 +215,20 @@
         }
       }))
     }
+  })
+  const timeDivs = document.querySelectorAll(".updatedAt");
+  const defaultTimes = [];
+  timeDivs.forEach(div => {
+    defaultTimes.push(div.textContent)
+    div.textContent = toRelativeTime(new Date(div.textContent))
+  })
+  const updateTime = setInterval(() => {
+    const timeDivs = document.querySelectorAll(".updatedAt");
+    Array.from(timeDivs).forEach((div, i) => {
+      div.textContent = toRelativeTime(new Date(defaultTimes[i]))
+    })
+  }, 1000 * 30)
+  window.addEventListener("beforeunload", () => {
+    clearInterval(updateTime)
   })
 </script>

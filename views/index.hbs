@@ -17,7 +17,7 @@
             </div>
             <div class="flex flex-col">
               <span class="font-bold text-base">{{auther.username}}</span>
-              <span class="text-xs text-base-content/60">{{updatedAt}}</span>
+              <span id="" class="updatedAt text-xs text-base-content/60">{{updatedAt}}</span>
             </div>
           </div>
           <span id="{{key}}-info" class="badge badge-ghost badge-sm"></span>
@@ -161,4 +161,20 @@
       infoSpan.textContent = "Updated"
     }
   });
+
+  const timeDivs = document.querySelectorAll(".updatedAt");
+  const defaultTimes = [];
+  timeDivs.forEach(div => {
+    defaultTimes.push(div.textContent)
+    div.textContent = toRelativeTime(new Date(div.textContent))
+  })
+  const updateTime = setInterval(() => {
+    const timeDivs = document.querySelectorAll(".updatedAt");
+    Array.from(timeDivs).forEach((div, i) => {
+      div.textContent = toRelativeTime(new Date(defaultTimes[i]))
+    })
+  }, 1000 * 30)
+  window.addEventListener("beforeunload", () => {
+    clearInterval(updateTime)
+  })
 </script>
