@@ -64,16 +64,16 @@
       <h2 class=" text-xl p-1">Your Data</h2>
       <div class="p-2 border-b dark:border-b-gray-600 border-b-gray-400  sm:grid grid-cols-2"> <span class="">Get Your
           Data (Notes, Comments)</span>
-        <p class="block"><a class="btn h-fit w-fit px-3 py-1 " href="/users/request-data"><span
-              data-feather="download"></span>Download Data</a></p>
+        <p class="block"><button class="btn h-fit w-fit px-3 py-1 "  onclick="modal_data.showModal()"><span
+              data-feather="download"></span>Request Data</button></p>
       </div>
     </div>
     <div class="mt-4 p-4 rounded-lg">
       <h2 class=" text-xl p-1 text-error">Danger Zone</h2>
       <div class="p-2 border-b border-dashed border-base-300 sm:grid grid-cols-2"> <span
           class=" text-warning opacity-90">Logout</span>
-        <p class="block"><a class="btn h-fit w-fit px-2 py-1 btn-warning btn-outline opacity-80 " href="/users/logout"><span
-             class="h-5"  data-feather="log-out"></span>Logout </a></p>
+        <p class="block"><button class="btn h-fit w-fit px-2 py-1 btn-warning btn-outline opacity-80 " onclick="modal_logout.showModal()"><span
+             class="h-5"  data-feather="log-out"></span>Logout </button></p>
       </div>
       <div class="p-2 border-b border-base-300   sm:grid grid-cols-2"> <span class="text-error opacity-90">Delete Your
           Data</span>
@@ -99,19 +99,46 @@
     </dialog>
 
     <dialog style="scrollbar-width: thin;" id="modal_delete" class=" modal modal-bottom sm:modal-middle">
-      <div style="scrollbar-width: thin;" class=" modal-box bg-base-200 text-error outline-1 outline-error">
+      <div style="scrollbar-width: thin;" class=" modal-box bg-red-200 dark:bg-warning-content">
         <h2 class=" text-xl lg:text-2xl p-2 sm:p-4  font-bold">Permanant Account Delete?</h2>
         <p class=" text-sm lg:text-lg p-2 sm:pl-4">This will delete account and all your data including
           <strong>Notes</strong> and <strong>Commments</strong> .
         </p>
         <p class=" text-sm lg:text-lg font-bold p-2 sm:pl-4">Once you delete your account, there is no going back. Please
           be certain.</p>
-        <p class=" p-1 pb-2 sm:pl-4">To confirm, type "delete" in the box below
-          <textarea class="input input-error text-error w-full p-2 resize-none" id="input_delete" rows="1" ></textarea>
+        <p class=" p-1 sm:pl-4"> <span class="pb-2 block">To confirm, type "delete" in the box below</span>
+          <textarea class="input text-error w-full p-2 resize-none" id="input_delete" rows="1" ></textarea>
         </p>
         <div class=" modal-action">
           <button onclick="modal_delete.close()" class=" btn">Cancel</button>
           <button id="btn_delete" class=" btn btn-error" disabled><a href="/users/destroy">Delete</a></button>
+        </div>
+      </div>
+      <form class=" modal-backdrop" method="dialog"></form>
+    </dialog>
+
+    <dialog id="modal_logout" class=" modal modal-middle">
+      <div class=" modal-box text-warning ">
+        <h2 class="text-xl lg:text-2xl p-4">Confirm Logout...</h2>
+        <p class="pl-4">Are you realy want to logout?</p>
+        <div class=" modal-action ">
+          <button class=" btn" onclick="modal_logout.close()">Cancel</button>
+          <a class="btn btn-warning  " href="/users/logout"><span
+             class="h-5"  data-feather="log-out"></span>Logout </a>
+        </div>
+      </div>
+      <form class=" modal-backdrop" method="dialog"></form>
+    </dialog>
+
+    <dialog id="modal_data" class=" modal modal-middle">
+      <div class=" modal-box bg-base-200 ">
+        <h2 class="text-xl lg:text-2xl p-4">Request your Data...</h2>
+        <p class="pl-4">Do you want to get your Data? <br>
+        <strong>You can only request once after every 5 minutes.</strong></p>
+        <div class=" modal-action ">
+          <button class=" btn" onclick="modal_data.close()">Cancel</button>
+          <a class="btn btn-primary btn-outline " onclick="modal_data.close()" href="/users/request-data"><span
+             class="h-5"  data-feather="download"></span>Download</a>
         </div>
       </div>
       <form class=" modal-backdrop" method="dialog"></form>
@@ -130,7 +157,6 @@
           <button id="btn_save_photo" class=" btn btn-primary">Save </button>
         </div>
       </div>
-
       <form class=" modal-backdrop" method="dialog"></form>
     </dialog>
     <script>
