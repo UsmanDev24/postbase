@@ -2,8 +2,8 @@
   <div class="">
     <img id="photo" class="m-auto bg-pink-300 dark:bg-black w-30 h-30 rounded-full"
       src="/assets/users/photo/{{user.username}}">
-    <span class=" relative -top-8 left-14 block m-auto btn btn-circle w-6 h-6 p-1 "
-      onclick="modal_edit_photo.showModal()" data-feather="edit"></span>
+    <span class=" relative -top-8 left-14 block m-auto btn w-fit h-6 p-0.5 " onclick="modal_edit_photo.showModal()"
+      data-feather="edit"></span>
     <h1 class="p-4 text-center text-2xl">Welcome {{user.displayName}}</h1>
     <p class="text-lg text-center">View your info and manage account and take decision about your account</p>
     <div class="  mt-4 p-4 rounded-lg ">
@@ -18,9 +18,8 @@
     <div class=" mt-4 p-4 rounded-lg ">
       <div
         class="p-1 mb-2 flex flex-row justify-items-start justify-start items-center-safe gap-2 sm:grid sm:grid-cols-3 sm:gap-0 ">
-        <h2 class=" text-xl" >Personal info</h2>
-        <button class="btn h-fit px-1 " id="btn_p_edit"> Edit<span
-            class="h-4" data-feather="edit"></span></button>
+        <h2 class=" text-xl">Personal info</h2>
+        <button class="btn h-fit px-1 " id="btn_p_edit"><span class="h-4" data-feather="edit"></span>Edit</button>
         <span class="btn btn-sm   h-fit px-1" id="p_edit_time"></span>
       </div>
       <div class="" id="personal_info">
@@ -51,29 +50,42 @@
           <textarea class="textarea w-full  block text-lg font-semibold" type="text" required
             id="input_about">{{user.about}}</textarea>
         </label>
-      
+
         <div class=" flex justify-end gap-2 px-2">
           <button id="cancle_p_edit" class=" btn btn-ghost">Cancel</button>
           <input class=" btn btn-primary" value="Save" type="submit" form="form_personal">
         </div>
-      </form>  
+      </form>
     </div>
-    <div class=" mt-4 p-4 rounded-lg ">
+    <div class=" mt-2 p-4 rounded-lg ">
 
     </div>
     <div class=" mt-4 p-4 rounded-lg">
       <h2 class=" text-xl p-1">Your Data</h2>
-      <p class="p-2 border-b dark:border-b-gray-600 border-b-gray-400  sm:grid grid-cols-2"> <span class="">Get Your
-          Data (Notes, Comments)</span> <a class="btn h-fit w-fit px-2 " href="/users/request-data">Request Data</a></p>
+      <div class="p-2 border-b dark:border-b-gray-600 border-b-gray-400  sm:grid grid-cols-2"> <span class="">Get Your
+          Data (Notes, Comments)</span>
+        <p class="block"><a class="btn h-fit w-fit px-3 py-1 " href="/users/request-data"><span
+              data-feather="download"></span>Download Data</a></p>
+      </div>
     </div>
-    <div class=" p-4  flex flex-row justify-center-safe gap-2">
-      <a class="btn btn-warning " href="/users/logout">Logout</a>
-      <button class="btn btn-error" onclick="modal_delete.showModal()">Delete Account</button>
+    <div class="mt-4 p-4 rounded-lg">
+      <h2 class=" text-xl p-1 text-error">Danger Zone</h2>
+      <div class="p-2 border-b border-dashed border-base-300 sm:grid grid-cols-2"> <span
+          class=" text-warning opacity-90">Logout</span>
+        <p class="block"><a class="btn h-fit w-fit px-2 py-1 btn-warning btn-outline opacity-80 " href="/users/logout"><span
+             class="h-5"  data-feather="log-out"></span>Logout </a></p>
+      </div>
+      <div class="p-2 border-b border-base-300   sm:grid grid-cols-2"> <span class="text-error opacity-90">Delete Your
+          Data</span>
+        <p class="block"><button class="btn btn-error btn-outline px-3 py-1 w-fit h-fit opacity-80"
+            onclick="modal_delete.showModal()"><span class="h-5" data-feather="trash-2"></span>Delete Account</button></p>
+      </div>
     </div>
-    
+
+
     <dialog id="modal_about" class=" modal modal-bottom md:modal-middle">
       <div class=" modal-box bg-base-100">
-        <h2 class=" text-2xl lg:text-3xl p-4  font-bold">Write About YourSelf</h2>
+        <h2 class=" text-xl lg:text-2xl p-4  font-bold">Write About YourSelf</h2>
         <div class="px-4">
           <textarea placeholder=" Minimum 10 charcter required" id="modal_about_textarea"
             class=" textarea  textarea-md w-full "></textarea>
@@ -85,22 +97,26 @@
       <form class=" modal-backdrop" method="dialog">
       </form>
     </dialog>
-    <dialog style="scrollbar-width: thin;" id="modal_delete" class=" modal modal-middle">
-      <div style="scrollbar-width: thin;" class=" modal-box bg-warning-content">
-        <h2 class=" text-2xl lg:text-3xl p-4  font-bold">Permanant Account Delete?</h2>
-        <p class=" text-sm lg:text-lg p-2 pl-4">This will delete account and all your data including
+
+    <dialog style="scrollbar-width: thin;" id="modal_delete" class=" modal modal-bottom sm:modal-middle">
+      <div style="scrollbar-width: thin;" class=" modal-box bg-base-200 text-error outline-1 outline-error">
+        <h2 class=" text-xl lg:text-2xl p-2 sm:p-4  font-bold">Permanant Account Delete?</h2>
+        <p class=" text-sm lg:text-lg p-2 sm:pl-4">This will delete account and all your data including
           <strong>Notes</strong> and <strong>Commments</strong> .
         </p>
-        <p class=" text-sm lg:text-lg font-bold p-2 pl-4">Destructive action, cannot be undone.</p>
+        <p class=" text-sm lg:text-lg font-bold p-2 sm:pl-4">Once you delete your account, there is no going back. Please
+          be certain.</p>
+        <p class=" p-1 pb-2 sm:pl-4">To confirm, type "delete" in the box below
+          <textarea class="input input-error text-error w-full p-2 resize-none" id="input_delete" rows="1" ></textarea>
+        </p>
         <div class=" modal-action">
           <button onclick="modal_delete.close()" class=" btn">Cancel</button>
-          <a class=" btn btn-error" href="/users/destroy">Delete</a>
+          <button id="btn_delete" class=" btn btn-error" disabled><a href="/users/destroy">Delete</a></button>
         </div>
       </div>
-      <form class=" modal-backdrop" method="dialog">
-
-      </form>
+      <form class=" modal-backdrop" method="dialog"></form>
     </dialog>
+
     <dialog id="modal_edit_photo" class=" modal modal-middle">
       <div class=" modal-box ">
         <span class="m-auto h-24 w-24 p-4 rounded-full bg-neutral" id="user_svg" data-feather="user"></span>
@@ -218,16 +234,16 @@
       btn_p_edit.onclick = () => {
         form_personal.hidden = false;
         personal_info.hidden = true;
-        btn_p_edit.innerHTML = ` Editing<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit h-4"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>`
+        btn_p_edit.innerHTML = ` <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit h-4"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>Editing`
       }
       const cancle_p_edit = document.getElementById("cancle_p_edit");
       cancle_p_edit.onclick = () => {
-        form_personal.hidden =true;
+        form_personal.hidden = true;
         personal_info.hidden = false;
-        btn_p_edit.innerHTML =` Edit<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit h-4"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>`
+        btn_p_edit.innerHTML = ` <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit h-4"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>Edit`
       }
-
-      modal_about_textarea.onkeypress = () => {
+      
+      modal_about_textarea.onkeyup = () => {
         const about = modal_about_textarea.value;
         if (about.length < 10) {
           save_about.disabled = true
@@ -253,15 +269,15 @@
         console.log(res.status)
         if (res.status === 200) {
           const resText = await res.text();
-          const udpatedUser = JSON.parse(resText)
-          document.getElementById("display_name").textContent = udpatedUser.displayName
-          document.getElementById("first_name").textContent = udpatedUser.firstName
-          document.getElementById("last_name").textContent = udpatedUser.lastName
-          document.getElementById("about").textContent = udpatedUser.about
+          const udpatedUser = JSON.parse(resText);
+          document.getElementById("display_name").textContent = udpatedUser.displayName;
+          document.getElementById("first_name").textContent = udpatedUser.firstName;
+          document.getElementById("last_name").textContent = udpatedUser.lastName;
+          document.getElementById("about").textContent = udpatedUser.about;
           document.getElementById("p_edit_time").textContent = "Updated At: " + new Date().toLocaleTimeString();
-          btn_p_edit.innerHTML =` Edit<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit h-4"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>`
+          btn_p_edit.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit h-4"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>Edit`
           form_personal.hidden = true;
-          personal_info.hidden =false
+          personal_info.hidden = false
         }
       });
       save_about.onclick = async function () {
@@ -276,6 +292,7 @@
           const resText = await res.text()
           if (resText === modal_about_textarea.value) {
             document.getElementById("about").textContent = resText
+            document.getElementById("input_about").value = resText;
           }
           console.log(resText)
           modal_about.close()
@@ -283,5 +300,16 @@
 
         }
       };
+      const input_delete = document.getElementById("input_delete");
+      const btn_delete = document.getElementById("btn_delete");
+      input_delete.addEventListener("keyup", (event) => {
+        if (input_delete.value === "delete" || input_delete.value === "Delete") {
+          btn_delete.disabled = false;
+        }
+        else {
+          btn_delete.disabled = true;
+        }
+      })
+
     </script>
   </div>
