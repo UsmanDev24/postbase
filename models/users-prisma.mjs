@@ -110,10 +110,6 @@ export class PrismaNotesUsersStore {
         }
       }
     })
-    user.notes = user.notes.map(note => {
-      note.updatedAt = toRelativeTime(note.updatedAt);
-      return note;
-    })
     return user;
   }
   async getPhotoByUserName(userName) {

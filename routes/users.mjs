@@ -169,7 +169,11 @@ router.get('/profile/:username', async (req, res, next) => {
       user: user,
     });
   } else {
-    const user = await notesUsersStore.getPublicData(req.params.username)
+    const user = await notesUsersStore.getPublicData(req.params.username);
+    if (!user) {
+      res.redirect("/")
+      return;
+    }
     res.render("profile", {
       title: "About " + req.params.username,
       user: req.user,
@@ -204,15 +208,12 @@ router.get("/destroy", ensureAuthenticated, async (req, res, next) => {
     await notesUsersStore.destroy(req.user.id)
     const apiRes = await usersModel.destroy(req.user.username);
     userRoutsEvents.emit("userdestroyed")
-    req.logOut((err) => {
-      if (err) console.error(err);
-      req.session.destroy();
       res.clearCookie(sessionCookieName);
+      res.clearCookie("sess_re_Tok")
       res.redirect(
         "/?level=warning&massage=" +
         encodeURIComponent("! User Account Deleted")
       );
-    });
   } catch (error) {
     next(error);
   }
