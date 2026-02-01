@@ -30,7 +30,7 @@ export class PrismaNotesUsersStore {
       data: {
         about
       },
-      omit: {photo: true}
+      omit: { photo: true }
     })
     return user
   }
@@ -44,7 +44,7 @@ export class PrismaNotesUsersStore {
         lastName,
         about,
       },
-      omit: {photo: true, photoType: true, photo_updatedAt: true}
+      omit: { photo: true, photoType: true, photo_updatedAt: true }
     })
     return user
   }
@@ -91,7 +91,9 @@ export class PrismaNotesUsersStore {
           orderBy: { createdAt: "desc" },
           include: { auther: { select: { username: true } } }
         },
-        comments: true
+        comments: {
+          include: { note: { select: { title: true } } }
+        }
       }
     })
     return user

@@ -199,8 +199,18 @@ router.post("/profile/update/personal", ensureAuthenticated, async (req, res, ne
 })
 router.get('/request-data', ensureAuthenticated, async (req, res, next) => {
   const user = await notesUsersStore.getAllData(req.user.username)
-  res.type('applicaltion/json')
-  res.send(user)
+  res.render("user-data", {user, title: user.username, layout: false}, (err, html) => {
+    if (err) {
+      console.error(err)
+    }
+    res.type("text/html");
+    const headers = new Map(Object.entries({"content-disposition": "attachment", "filename": `${user.username}_data.html` }))
+    res.setHeaders(headers)
+    console.log(html)
+    res.end(html)
+    return
+  })
+  new Map()
 
 })
 router.get("/destroy", ensureAuthenticated, async (req, res, next) => {
