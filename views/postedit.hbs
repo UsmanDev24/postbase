@@ -4,18 +4,18 @@
     
     <div class=" px-4 sm:px-8 pt-8 pb-2">
       <h2 class="text-3xl font-bold text-base-content">
-        {{#if docreate}}Create New Note{{else}}Edit Note{{/if}}
+        {{#if docreate}}Create New Post{{else}}Edit Post{{/if}}
       </h2>
-      <p class="text-base-content/60 mt-1">Fill out the details below to save your note.</p>
+      <p class="text-base-content/60 mt-1">Fill out the details below to save your post.</p>
     </div>
 
-    <form class="card-body gap-4 p-4 sm:p-8" method='POST' action='/notes/save'>
+    <form class="card-body gap-4 p-4 sm:p-8" method='POST' action='/posts/save'>
       
       {{#if docreate}}
         <input type='hidden' name='docreate' value="create">
       {{else}}
         <input type='hidden' name='docreate' value="update">
-        <input type='hidden' name='notekey' value='{{#if note }}{{notekey}}{{/if}}' />
+        <input type='hidden' name='postkey' value='{{#if post }}{{postkey}}{{/if}}' />
       {{/if}}
 
       <div class=" w-full">
@@ -23,7 +23,7 @@
           <span class=" font-semibold text-secondary">Title</span>
         </label>
         <input id="title" type='text' name='title' 
-               value='{{#if note }}{{note.title}}{{/if}}' 
+               value='{{#if post }}{{post.title}}{{/if}}' 
                class="input input-bordered w-full text-lg font-bold focus:input-primary transition-all" 
                placeholder="Enter a descriptive title" />
       </div>
@@ -34,14 +34,14 @@
         </label>
          <input id="x" type="hidden" name="body">
         <trix-toolbar class=" md:mr-4  mb-1 mt-2" id="my_toolbar"></trix-toolbar>
-        <trix-editor toolbar="my_toolbar" input="x" class=" prose max-w-full ">{{#if note }}{{{note.body}}}{{/if}}</trix-editor>
+        <trix-editor toolbar="my_toolbar" input="x" class=" prose max-w-full ">{{#if post }}{{{post.body}}}{{/if}}</trix-editor>
       </div>
 
       <div class="card-actions justify-end mt-4 flex items-center gap-4">
         <a href="/" class="btn btn-ghost">Cancel</a>
         
         <button type='submit' class="btn btn-primary px-8 gap-2">
-          <span>{{#if docreate}}Publish Note{{else}}Save Changes{{/if}}</span>
+          <span>{{#if docreate}}Publish Post{{else}}Save Changes{{/if}}</span>
           <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
         </button>
       </div>

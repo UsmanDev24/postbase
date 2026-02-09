@@ -77,7 +77,7 @@
 
         .body-text {
             font-size: 1rem;
-            white-space: pre-wrap; /* Preserves line breaks in notes/comments */
+            white-space: pre-wrap; /* Preserves line breaks in posts/comments */
         }
 
         .label {
@@ -106,8 +106,8 @@
             {{/if}}
         </div>
 
-        <h2 class="section-title">Authored Notes ({{user.notes.length}})</h2>
-        {{#each user.notes}}
+        <h2 class="section-title">Authored Posts ({{user.posts.length}})</h2>
+        {{#each user.posts}}
             <div class="record">
                 <span class="record-title">
                     {{#if title}}{{title}}{{else}}Untitled Record{{/if}}
@@ -120,7 +120,7 @@
                 <div class="body-text">{{{body}}}</div>
             </div>
         {{else}}
-            <p class="metadata">No notes recorded.</p>
+            <p class="metadata">No posts recorded.</p>
         {{/each}}
 
         <h2 class="section-title">Recent Comments & Activity</h2>
@@ -128,7 +128,7 @@
             <div class="record">
                 <div class="metadata">
                     Comment ID: {{id}} | 
-                    In response to Note: <strong>{{#if note.title}}{{note.title}}{{else}}{{noteNotekey}}{{/if}}</strong>
+                    In response to post: <strong>{{#if post.title}}{{post.title}}{{else}}{{postkey}}{{/if}}</strong>
                 </div>
                 <div style="color: rgb(0, 28, 0);" class="body-text">{{body}}</div>
             </div>

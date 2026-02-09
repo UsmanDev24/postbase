@@ -1,6 +1,6 @@
 <div class="max-w-4xl mx-auto p-4 md:p-8">
 
-  {{#if note}}
+  {{#if post}}
   <div class="card bg-base-200 shadow-xl border border-base-300">
     <div class="card-body  p-6 md:p-10">
 
@@ -9,21 +9,21 @@
         <div class="flex items-center gap-3">
           <div class="avatar">
             <div class="w-10 h-10 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
-              <img src="/assets/users/photo/{{note.auther.username}}" alt="{{note.auther.username}}" />
+              <img src="/assets/users/photo/{{post.auther.username}}" alt="{{post.auther.username}}" />
             </div>
           </div>
           <div>
             <p class="font-bold text-lg leading-none">
-              <a href="/users/profile/{{note.auther.username}}"
-                class="link link-hover text-base-content">{{note.auther.username}}</a>
+              <a href="/users/profile/{{post.auther.username}}"
+                class="link link-hover text-base-content">{{post.auther.username}}</a>
             </p>
-            <p class="text-xs text-base-content/60 mt-1"> <span class="updatedAt font-mono">{{note.updatedAt}}</span></p>
+            <p class="text-xs text-base-content/60 mt-1"> <span class="updatedAt font-mono">{{post.updatedAt}}</span></p>
           </div>
         </div>
 
-        {{#if notekey}}
+        {{#if postkey}}
         <div class="join">
-          <a {{#if owner}}{{else}} hidden{{/if}} href="/notes/edit?key={{notekey}}" class="btn btn-sm btn-ghost join-item gap-2" title="Edit Note">
+          <a {{#if owner}}{{else}} hidden{{/if}} href="/posts/edit?key={{postkey}}" class="btn btn-sm btn-ghost join-item gap-2" title="Edit post">
             <span data-feather="edit" class=" h-4 w-4"></span>
             <span class="hidden sm:inline">Edit</span>
           </a>
@@ -36,15 +36,15 @@
       </div>
 
       <article class="prose max-w-none">
-        <h1 id="noteTitle" class="text-3xl font-extrabold text-accent mb-4">{{note.title}}</h1>
-        <p id="noteBody" class="text-lg text-base-content/90 leading-relaxed whitespace-pre-wrap">{{{note.body}}}</p>
+        <h1 id="postTitle" class="text-3xl font-extrabold text-accent mb-4">{{post.title}}</h1>
+        <p id="postBody" class="text-lg text-base-content/90 leading-relaxed whitespace-pre-wrap">{{{post.body}}}</p>
       </article>
 
       <div class="divider mt-8"></div>
 
       <div class="flex justify-between items-center">
         <div class="text-sm opacity-70">
-          <span id="commentsLength" class="font-bold">{{note.commentsLength}}</span> Comments
+          <span id="commentsLength" class="font-bold">{{post.commentsLength}}</span> Comments
         </div>
 
         <button {{#if user}} {{else}} disabled {{/if}} class="btn btn-primary gap-2"
@@ -61,8 +61,8 @@
 
     <h3  class="text-xl font-bold px-1">Comments</h3>
     <div id="liveComments" class=" p-0 flex flex-col-reverse justify-start items-start gap-4"></div>
-    {{#if note.comments}}
-    {{#each note.comments}}
+    {{#if post.comments}}
+    {{#each post.comments}}
     <div id="comment_{{id}}" class=" p-2 rounded-2xl bg-base-200">
       <div class=" flex justify-between">
         <div class=" flex justify-start gap-2 items-center">
@@ -73,7 +73,7 @@
           </p>
         </div>
         <div>
-          <button  id="comment_{{id}}_delete" onclick="fetch('/notes/comment/destroy/{{id}}')" class=" btn btn-ghost  opacity-80 text-error"><span class=" w-4 h-4" data-feather="trash-2"></span></button>
+          <button  id="comment_{{id}}_delete" onclick="fetch('/posts/comment/destroy/{{id}}')" class=" btn btn-ghost  opacity-80 text-error"><span class=" w-4 h-4" data-feather="trash-2"></span></button>
         </div>
       </div>
       <p class=" text-lg p-2 pl-4">{{body}}</p>
@@ -94,7 +94,7 @@
     </svg>
     <div>
       <h3 class="font-bold">Error!</h3>
-      <div class="text-xs">Note not found or key is missing.</div>
+      <div class="text-xs">post not found or key is missing.</div>
     </div>
     <a href="/" class="btn btn-sm">Go Home</a>
   </div>
@@ -104,12 +104,12 @@
 <dialog id="confirm_delete_modal" class=" modal modal-bottom sm:modal-middle">
   <div class=" modal-box">
     <h2 class=" font-bold text-lg">Confirm Deletion</h2>
-    <p class=" text-warning">Do you want to permanently delete <strong>{{note.title}}</strong> and all comments in it?
+    <p class=" text-warning">Do you want to permanently delete <strong>{{post.title}}</strong> and all comments in it?
     </p>
     <div class=" modal-action">
       <button class="btn btn-primary" onclick="confirm_delete_modal.close()">Cancel</button>
       <button class=" btn btn-warning"
-        onclick="delete_note_modal.showModal(); confirm_delete_modal.close()">confirm</button>
+        onclick="delete_post_modal.showModal(); confirm_delete_modal.close()">confirm</button>
     </div>
   </div>
   <form class=" modal-backdrop" method="dialog">
@@ -117,16 +117,16 @@
   </form>
 </dialog>
 
-<dialog id="delete_note_modal" class=" modal modal-bottom sm:modal-middle">
+<dialog id="delete_post_modal" class=" modal modal-bottom sm:modal-middle">
   <div class=" modal-box">
     <h2 class=" font-bold text-lg">Permanently Delete </h2>
-    <p class="">This will permanently delete <span class=" font-bold px-1">{{note.title}}</span> and all comments in it.
+    <p class="">This will permanently delete <span class=" font-bold px-1">{{post.title}}</span> and all comments in it.
       <span class=" text-warning">⚠️ This cannot be undone</span>
     </p>
-    <form class="" method="post" action="/notes/destroy/confirm">
+    <form class="" method="post" action="/posts/destroy/confirm">
       <div class=" modal-action">
-        <input type="hidden" name="notekey" value="{{note.key}}">
-        <button type="button" class="btn btn-primary" onclick="delete_note_modal.close()">Cancel</button>
+        <input type="hidden" name="postkey" value="{{post.key}}">
+        <button type="button" class="btn btn-primary" onclick="delete_post_modal.close()">Cancel</button>
         <button type="submit" class=" btn btn-error">Delete Permanently</button>
       </div>
     </form>
@@ -140,10 +140,10 @@
 <dialog id="comment_modal" class="modal modal-bottom sm:modal-middle">
   <div class="modal-box">
     <h3 class="font-bold text-lg">Add a Comment</h3>
-    <p class="py-4 text-sm opacity-70">Replying to: <span class="font-bold">{{note.title}}</span></p>
+    <p class="py-4 text-sm opacity-70">Replying to: <span class="font-bold">{{post.title}}</span></p>
 
     <form id="commentForm" >
-      <input type="hidden" name="notekey" value="{{notekey}}">
+      <input type="hidden" name="postkey" value="{{postkey}}">
       <input type="hidden" name="autherId" value="{{user.id}}">
       <div class=" w-full">
         <textarea id="commentText" name="commentBody" class="textarea textarea-bordered h-24 w-full"
@@ -164,14 +164,14 @@
   const commentForm = document.getElementById('commentForm');
   const commentText = document.getElementById("commentText");
   const liveComments = document.getElementById("liveComments");
-  const noteBody = document.getElementById("noteBody")
-  const ws = new WebSocket("wss://opennotes.usman-ghani.dev")
+  const postBody = document.getElementById("postBody")
+  const ws = new WebSocket("wss://postbase.usman-ghani.dev")
   ws.addEventListener("message", event => {
     const data = JSON.parse(event.data);
     if (data.type === 'connection') {
       console.log(data)
     } 
-    else if (data.type === 'commentcreated' && data.notekey === "{{notekey}}") {
+    else if (data.type === 'commentcreated' && data.postkey === "{{postkey}}") {
       const commentdiv = document.createElement("div");
       const comment = data.comment;
       const commentsLength = document.getElementById("commentsLength")
@@ -187,18 +187,18 @@
           </p>
         </div>
         <div>
-          <button onclick="fetch('/notes/comment/destroy/${comment.id}')" class=" btn btn-ghost  opacity-80 text-error">⛔</button>
+          <button onclick="fetch('/posts/comment/destroy/${comment.id}')" class=" btn btn-ghost  opacity-80 text-error">⛔</button>
         </div>
       </div>
       <p class=" text-lg p-2 pl-4">${comment.body}</p>
       `;
       commentsLength.textContent = Number(commentsLength.textContent) + 1;
       liveComments.appendChild(commentdiv)
-    } else if ( data.type === "noteupdated" && data.note.key === "{{notekey}}" ) {
-      const noteTitle = document.getElementById("noteTitle");
-      noteTitle.textContent = data.note.title
-      noteBody.textContent = data.note.body
-    } else if (data.type === "commentdestroyed" && data.notekey === "{{notekey}}") {
+    } else if ( data.type === "postupdated" && data.post.key === "{{postkey}}" ) {
+      const postTitle = document.getElementById("postTitle");
+      postTitle.textContent = data.post.title
+      postBody.textContent = data.post.body
+    } else if (data.type === "commentdestroyed" && data.postkey === "{{postkey}}") {
       const commentdiv = document.getElementById("comment_"+ data.id);
       commentdiv.remove()
     }
@@ -209,7 +209,7 @@
       ws.send(JSON.stringify({
         type: "createcomment",
         body: {
-          notekey: "{{notekey}}",
+          postkey: "{{postkey}}",
           autherId: "{{user.id}}",
           commentBody: commentText.value
         }

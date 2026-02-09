@@ -12,25 +12,25 @@ const __dirname = approotdir;
 import {
     normalizePort, onError, onListening, handle404, basicErrorHandler
 } from './appsupport.mjs';
-import { useModel as useNotesModel } from './models/notes-store.mjs';
+import { useModel as usePostsModel } from './models/posts-store.mjs';
 import passport from 'passport';
 import { router as indexRouter, wsHomeListners } from './routes/index.mjs';
-import { router as notesRouter, initSocket as initNotesSocket,  wsNotesListeners } from './routes/notes.mjs';
+import { router as postsRouter, initSocket as initPostsSocket,  wsPostsListeners } from './routes/posts.mjs';
 import { initPassport, router as usersRouter, assetRouter as userAssestRouter } from './routes/users.mjs'
 import { default as DBG } from "debug";
 import * as ws from 'ws';
 import { wsSession } from './models/ws-session.mjs';
 import { restoreSession } from './models/prisma-session.mjs';
 
-const debug = DBG('notes:debug');
-const dbgerror = DBG('notes:error')
+const debug = DBG('posts:debug');
+const dbgerror = DBG('posts:error')
 
-const _noteStore = await useNotesModel(process.env.NOTES_MODEL ? process.env.NOTES_MODEL :
+const _postStore = await usePostsModel(process.env.POSTS_MODEL ? process.env.POSTS_MODEL :
     "memory"
 );
 
 
-export const sessionCookieName = "notesS!d"
+export const sessionCookieName = "postsS!d"
 export const app = express();
 
 // view engine setup
@@ -85,7 +85,7 @@ mainRouter.use(async (req, res, next) => {
 })
 
 mainRouter.use('/', indexRouter);
-mainRouter.use('/notes', notesRouter);
+mainRouter.use('/posts', postsRouter);
 mainRouter.use('/users', usersRouter);
 app.use(mainRouter)
 
@@ -105,13 +105,13 @@ WsServer.on("connection", async (socket, req) => {
     if (rawCookies)
         socket.user = await wsSession(rawCookies);
     socket.send(JSON.stringify({ type: 'connection', message: 'connected '+ JSON.stringify(socket.user) }))
-    initNotesSocket(socket)
+    initPostsSocket(socket)
 })
 addWsListeners()
 
 function addWsListeners() {
     wsHomeListners()
-    wsNotesListeners()
+    wsPostsListeners()
 }
 
 server.on('error', onError);

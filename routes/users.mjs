@@ -8,17 +8,17 @@ import { TextEncoder } from "node:util";
 import debug from "debug";
 import jwt from 'jsonwebtoken';
 import * as usersModel from "../models/user-superagent.mjs";
-import { PrismaNotesUsersStore } from "../models/users-prisma.mjs";
+import { PrismaPostsUsersStore } from "../models/users-prisma.mjs";
 import { sessionCookieName } from "../app.mjs";
 import { genRefTokenHash, addSession } from "../models/prisma-session.mjs";
 
 
-const log = debug("notes:routes_users")
-const logError = debug("notes:routes_users_error")
+const log = debug("posts:routes_users")
+const logError = debug("posts:routes_users_error")
 const LocalStrategy = passportLocal.Strategy;
 const JwtStrategy = passportJwt.Strategy;
 const googleStrategy = passportGoogle.Strategy;
-const notesUsersStore = new PrismaNotesUsersStore()
+const postsUsersStore = new PrismaPostsUsersStore()
 
 export const userRoutsEvents = new EventEmitter()
 export const router = Router();
@@ -35,7 +35,7 @@ export function ensureAuthenticated(req, res, next) {
 
 router.get("/login", (req, res, next) => {
   res.render("login", {
-    title: "Login to Notes",
+    title: "Login to posts",
     user: req.user,
     level: req.query.level,
     massage: req.query.massage,
@@ -163,13 +163,13 @@ router.post("/create", async (req, res, next) => {
 
 router.get('/profile/:username', async (req, res, next) => {
   if (req.user && req.params.username === req.user.username) {
-    const user = await notesUsersStore.readByUserName(req.user.username);
+    const user = await postsUsersStore.readByUserName(req.user.username);
     res.render("about-user", {
       title: "About " + req.user.displayName,
       user: user,
     });
   } else {
-    const user = await notesUsersStore.getPublicData(req.params.username);
+    const user = await postsUsersStore.getPublicData(req.params.username);
     if (!user) {
       res.redirect("/")
       return;
@@ -178,18 +178,18 @@ router.get('/profile/:username', async (req, res, next) => {
       title: "About " + req.params.username,
       user: req.user,
       publicUser: user,
-      notelist: user.notes
+      postlist: user.posts
     })
   }
 
 });
 router.post("/profile/update/about", ensureAuthenticated, async (req, res, next) => {
-  const user =await  notesUsersStore.updateAbout(req.user.id, req.body.about);
+  const user =await  postsUsersStore.updateAbout(req.user.id, req.body.about);
   res.end(user.about);
 })
 router.post("/profile/update/personal", ensureAuthenticated, async (req, res, next) => {
   const body = req.body;
-  const user =await  notesUsersStore.updatePersonal(req.user.id, body.displayName, body.firstName, body.lastName, body.about );
+  const user =await  postsUsersStore.updatePersonal(req.user.id, body.displayName, body.firstName, body.lastName, body.about );
   res.end(JSON.stringify({
     firstName: user.firstName,
     lastName: user.lastName,
@@ -198,7 +198,7 @@ router.post("/profile/update/personal", ensureAuthenticated, async (req, res, ne
   }));
 })
 router.get('/request-data', ensureAuthenticated, async (req, res, next) => {
-  const user = await notesUsersStore.getAllData(req.user.username)
+  const user = await postsUsersStore.getAllData(req.user.username)
   res.render("user-data", {user, title: user.username, layout: false}, (err, html) => {
     if (err) {
       console.error(err)
@@ -206,7 +206,6 @@ router.get('/request-data', ensureAuthenticated, async (req, res, next) => {
     res.type("text/html");
     const headers = new Map(Object.entries({"content-disposition": "attachment", "filename": `${user.username}_data.html` }))
     res.setHeaders(headers)
-    console.log(html)
     res.end(html)
     return
   })
@@ -215,7 +214,7 @@ router.get('/request-data', ensureAuthenticated, async (req, res, next) => {
 })
 router.get("/destroy", ensureAuthenticated, async (req, res, next) => {
   try {
-    await notesUsersStore.destroy(req.user.id)
+    await postsUsersStore.destroy(req.user.id)
     const apiRes = await usersModel.destroy(req.user.username);
     userRoutsEvents.emit("userdestroyed")
       res.clearCookie(sessionCookieName);
@@ -257,11 +256,11 @@ passport.use(
           email: jsonProfile.email,
 
         });
-        const noteUser = await notesUsersStore.read(user.id);
-        if (!noteUser)
-          await notesUsersStore.create(user.id, user.username, user.displayName, user.firstName, user.lastName, user.email, user.provider, photo, user.photoType);
+        const postUser = await postsUsersStore.read(user.id);
+        if (!postUser)
+          await postsUsersStore.create(user.id, user.username, user.displayName, user.firstName, user.lastName, user.email, user.provider, photo, user.photoType);
         else {
-          // await notesUsersStore.update(user.id, user.username, user.displayName, user.firstName,user.lastName, user.email, user.provider, photo, user.photoType)
+          // await postsUsersStore.update(user.id, user.username, user.displayName, user.firstName,user.lastName, user.email, user.provider, photo, user.photoType)
         }
         done(
           null,
@@ -284,11 +283,11 @@ passport.use(
 router.post('/update/photo/:username', ensureAuthenticated, async (req, res, next) => {
 
   try {
-    const noteUser = await notesUsersStore.read(req.user.id);
-    if (noteUser.username === req.params.username) {
+    const postUser = await postsUsersStore.read(req.user.id);
+    if (postUser.username === req.params.username) {
       const type = req.headers.phototype;
       await usersModel.updatePhoto(req.user.id, Buffer.from(req.body).toString("base64"), type)
-      await notesUsersStore.updatePhoto(req.user.id, req.body, type);
+      await postsUsersStore.updatePhoto(req.user.id, req.body, type);
     }
     res.clearCookie("cacheControl")
     res.status(200)
@@ -306,7 +305,7 @@ assetRouter.get('/photo/:username', async (req, res, next) => {
   }
 
   log("Reading Database, Getting Photo of " + req.params.username)
-  const user = await notesUsersStore.getPhotoByUserName(req.params.username)
+  const user = await postsUsersStore.getPhotoByUserName(req.params.username)
   res.type(user.photoType)
   res.send(user.photo)
 })
@@ -376,10 +375,10 @@ passport.use(
         let check = await usersModel.passwordCheck(username, password);
         if (check.check) {
           const user = await usersModel.find(check.id);
-          const noteUser = await notesUsersStore.read(user.id);
-          if (!noteUser) {
+          const postUser = await postsUsersStore.read(user.id);
+          if (!postUser) {
             const photo = Buffer.from(new Uint8Array(Object.values(user.photo)))
-            await notesUsersStore.create(user.id, user.username, user.displayName, user.firstName, user.lastName, user.email, user.provider, photo, user.photoType);
+            await postsUsersStore.create(user.id, user.username, user.displayName, user.firstName, user.lastName, user.email, user.provider, photo, user.photoType);
           }
           done(null, {
             id: user.id,
