@@ -35,13 +35,13 @@
         {{/if}}
       </div>
 
-      <article class="prose max-w-none">
+      <article class="max-w-none">
         <h1 id="postTitle" class="text-3xl font-extrabold text-accent mb-4">{{post.title}}</h1>
-        <p id="postBody" class="text-lg text-base-content/90 leading-relaxed whitespace-pre-wrap">{{{post.body}}}</p>
+        <div id="postBody" class="prose  text-lg text-base-content/90 leading-relaxed whitespace-pre-wrap">{{{post.body}}}</div>
       </article>
 
       <div class="divider mt-8"></div>
-
+ 
       <div class="flex justify-between items-center">
         <div class="text-sm opacity-70">
           <span id="commentsLength" class="font-bold">{{post.commentsLength}}</span> Comments
@@ -165,7 +165,7 @@
   const commentText = document.getElementById("commentText");
   const liveComments = document.getElementById("liveComments");
   const postBody = document.getElementById("postBody")
-  const ws = new WebSocket("wss://postbase.usman-ghani.dev")
+  const ws = new WebSocket("{{wsURL}}")
   ws.addEventListener("message", event => {
     const data = JSON.parse(event.data);
     if (data.type === 'connection') {
@@ -197,7 +197,7 @@
     } else if ( data.type === "postupdated" && data.post.key === "{{postkey}}" ) {
       const postTitle = document.getElementById("postTitle");
       postTitle.textContent = data.post.title
-      postBody.textContent = data.post.body
+      postBody.innerHTML = data.post.body
     } else if (data.type === "commentdestroyed" && data.postkey === "{{postkey}}") {
       const commentdiv = document.getElementById("comment_"+ data.id);
       commentdiv.remove()

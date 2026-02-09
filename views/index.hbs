@@ -64,7 +64,7 @@
 <script>
   const postlist = document.getElementById('postlist');
   const emptyDiv = document.getElementById('emptydiv'); // Reference to hide this if a post comes in
-  const ws = new WebSocket("wss://openposts.usman-ghani.dev")
+  const ws = new WebSocket("{{wsURL}}")
   ws.addEventListener("message", (event) => {
     const data = JSON.parse(event.data);
     if (data.type === 'connection') {

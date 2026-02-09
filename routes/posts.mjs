@@ -96,6 +96,7 @@ router.get('/view', async (req, res, next) => {
       postkey: req.query.key, post: post,
       user: req.user ? req.user : undefined,
       owner,
+      wsURL: process.env.WS_URL
     })
   } catch (err) { next(err) }
 })

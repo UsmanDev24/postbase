@@ -40,7 +40,8 @@ router.get('/', async (req, res, next) => {
         title: 'PostBase', postlist: cachedposts,
         user: req.user ? req.user : undefined,
         level: req.query.level,
-        massage: req.query.massage
+        massage: req.query.massage,
+        wsURL: process.env.WS_URL
       });
       return
     }
