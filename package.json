@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "mongodb-start": "cross-env DEBUG=notes* MONGO_URL=mongodb://localhost/ MONGO_DBNAME=chap07 NOTES_MODEL=mongo REQUEST_LOG_FILE=log.txt nodemon --ext js,mjs,css,json ./app.mjs",
-    "start": "cross-env DEBUG=notes:* nodemon tsx ./app.mjs",
+    "start": "dotenvx run --env-file=.env.production -- cross-env DEBUG=notes:* node tsx ./app.mjs",
+    "dev": "dotenvx run --env-file=.env.development -- cross-env DEBUG=notes:* nodemon tsx ./app.mjs",
     "watch": "npx @tailwindcss/cli -i ./public/assets/stylesheets/input.css -o ./public/assets/stylesheets/styles.css --watch"
   },
   "author": "Usman Ghani",
