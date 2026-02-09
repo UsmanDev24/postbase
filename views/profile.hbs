@@ -14,10 +14,10 @@
   </div>
 </div>
 <div class="max-w-4xl w-full mx-auto p-4 md:p-6">
-  <h2 class=" text-3xl font-bold text-center p-6 pt-0">Public OpenNotes</h2>
-  {{#if notelist}}
-  <div id="notelist" class="flex flex-col gap-6">
-    {{#each notelist}}
+  <h2 class=" text-3xl font-bold text-center p-6 pt-0">Public Posts</h2>
+  {{#if postlist}}
+  <div id="postlist" class="flex flex-col gap-6">
+    {{#each postlist}}
 
     <div id="{{key}}" class="card bg-base-100 shadow-xl border border-base-300 transition-all hover:shadow-2xl">
       <div class="card-body p-6">
@@ -37,7 +37,7 @@
           <span id="{{key}}-info" class="badge badge-ghost badge-sm"></span>
         </div>
 
-        <a id="{{key}}-link" href="/notes/view?key={{key}}" class="group block space-y-2">
+        <a id="{{key}}-link" href="/posts/view?key={{key}}" class="group block space-y-2">
           <h2 id="{{key}}-title" class="card-title text-2xl group-hover:text-primary transition-colors">
             {{title}}
           </h2>

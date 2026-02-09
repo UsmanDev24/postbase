@@ -2,11 +2,11 @@
 import { prisma } from "./prisma.mjs";
 import { toRelativeTime } from "./timeage.js";
 import debug from "debug";
-const log = debug("notes:noteUsers-prisma")
-export class PrismaNotesUsersStore {
+const log = debug("posts:postUsers-prisma")
+export class PrismaPostsUsersStore {
   async create(userId, userName, displayName, firstName, lastName, email, provider, photo, photoType) {
     await prisma.$connect();
-    const user = await prisma.notesUsers.create(
+    const user = await prisma.postUser.create(
       {
         data: {
           id: userId,
@@ -25,7 +25,7 @@ export class PrismaNotesUsersStore {
   }
   async updateAbout(userId, about) {
     await prisma.$connect();
-    const user = await prisma.notesUsers.update({
+    const user = await prisma.postUser.update({
       where: { id: userId },
       data: {
         about
@@ -36,7 +36,7 @@ export class PrismaNotesUsersStore {
   }
   async updatePersonal(userId, displayName, firstName, lastName, about) {
     await prisma.$connect();
-    const user = await prisma.notesUsers.update({
+    const user = await prisma.postUser.update({
       where: { id: userId },
       data: {
         displayName,
@@ -52,7 +52,7 @@ export class PrismaNotesUsersStore {
   async read(userId) {
     await prisma.$connect();
     log(userId)
-    const user = await prisma.notesUsers.findUnique({
+    const user = await prisma.postUser.findUnique({
       where: { id: userId },
       omit: { photo: true }
     })
@@ -62,7 +62,7 @@ export class PrismaNotesUsersStore {
 
   async updatePhoto(userId, photo, photoType) {
     await prisma.$connect()
-    const user = await prisma.notesUsers.update({
+    const user = await prisma.postUser.update({
       where: { id: userId },
       data: { photo, photoType },
       omit: { photo: true }
@@ -72,7 +72,7 @@ export class PrismaNotesUsersStore {
   async readByUserName(userName) {
     log(userName)
     await prisma.$connect();
-    const user = await prisma.notesUsers.findUnique({
+    const user = await prisma.postUser.findUnique({
       where: { username: userName },
       omit: { photo: true }
     })
@@ -83,16 +83,16 @@ export class PrismaNotesUsersStore {
   async getAllData(userName) {
     log(userName)
     await prisma.$connect();
-    const user = await prisma.notesUsers.findUnique({
+    const user = await prisma.postUser.findUnique({
       where: { username: userName },
       omit: { photo: true, email: true, id: true },
       include: {
-        notes: {
+        posts: {
           orderBy: { createdAt: "desc" },
           include: { auther: { select: { username: true } } }
         },
         comments: {
-          include: { note: { select: { title: true } } }
+          include: { post: { select: { title: true } } }
         }
       }
     })
@@ -101,11 +101,11 @@ export class PrismaNotesUsersStore {
   async getPublicData(userName) {
     log(userName)
     await prisma.$connect();
-    let user = await prisma.notesUsers.findUnique({
+    let user = await prisma.postUser.findUnique({
       where: { username: userName },
       omit: { photo: true, email: true, id: true },
       include: {
-        notes: {
+        posts: {
           orderBy: { createdAt: "desc" },
           where: { public: true },
           include: { auther: { select: { username: true } } }
@@ -116,14 +116,14 @@ export class PrismaNotesUsersStore {
   }
   async getPhotoByUserName(userName) {
     await prisma.$connect();
-    const user = await prisma.notesUsers.findUnique({
+    const user = await prisma.postUser.findUnique({
       where: { username: userName },
     })
     return user;
   }
   async destroy(userId) {
     await prisma.$connect()
-    await prisma.notesUsers.delete({
+    await prisma.postUser.delete({
       where: { id: userId }
     })
   }

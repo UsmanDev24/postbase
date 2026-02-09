@@ -11,7 +11,7 @@
         </span>{{user.username}}</a>
     </p>
     <p class="">
-      <a class="btn  btn-primary ml-1" href="/notes/add"><span class="h-5" data-feather="edit-2"></span>ADD Note</a>
+      <a class="btn  btn-primary ml-1" href="/posts/add"><span class="h-5" data-feather="edit-2"></span>Create Post</a>
     </p>
   </div>
   {{else }}
@@ -27,7 +27,7 @@
         <a class="btn rounded-2xl w-full" href="/users/profile/{{user.username}}"><span
             class=""><img class="bg-pink-200 dark:bg-neutral rounded-full w-8 h-8 " src="/assets/users/photo/{{user.username}}" alt="">
           </span>{{user.username}}</a>
-        <a class="btn btn-outline rounded-full text-primary w-max mt-2" href="/notes/add"><span class="h-5" data-feather="edit-2"></span>ADD Note</a>
+        <a class="btn btn-outline rounded-full text-primary w-max mt-2" href="/posts/add"><span class="h-5" data-feather="edit-2"></span>Create Post</a>
       </p>
     </div>
     {{else }}

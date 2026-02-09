@@ -7,7 +7,7 @@ datasource db {
   provider = "postgresql"
 }
 
-model notesUsers {
+model postUser {
   id              String     @id @unique
   username        String     @unique @db.VarChar(255)
   provider        String     @db.VarChar(255)
@@ -19,12 +19,12 @@ model notesUsers {
   photo           Bytes?
   photoType       String?    @db.VarChar(255)
   photo_updatedAt DateTime?  @updatedAt @db.Timestamptz(6)
-  notes           Notes[]
+  posts            posts[]
   comments        comments[]
   sessions        session[]
 }
 
-model Notes {
+model posts {
   title     String?    @db.VarChar(255)
   body      String?
   createdAt DateTime   @default(now()) @db.Timestamptz(6)
@@ -33,25 +33,25 @@ model Notes {
   public    Boolean    @default(true)
   autherId  String     @db.VarChar(255)
   key       String     @id @db.VarChar(255)
-  auther    notesUsers @relation(fields: [autherId], references: [id], onDelete: Cascade)
+  auther    postUser   @relation(fields: [autherId], references: [id], onDelete: Cascade)
   comments  comments[]
 }
 
 model comments {
-  id          Int        @id @default(autoincrement())
-  body        String     @db.VarChar(1024)
-  createdAt   DateTime   @default(now()) @db.Timestamptz(6)
-  noteNotekey String     @db.VarChar(255)
-  autherId    String
-  auther      notesUsers @relation(fields: [autherId], references: [id], onDelete: Cascade)
-  note        Notes      @relation(fields: [noteNotekey], references: [key], onDelete: Cascade)
+  id        Int      @id @default(autoincrement())
+  body      String   @db.VarChar(1024)
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
+  postkey   String   @db.VarChar(255)
+  autherId  String
+  auther    postUser @relation(fields: [autherId], references: [id], onDelete: Cascade)
+  post      posts     @relation(fields: [postkey], references: [key], onDelete: Cascade)
 }
 
 model session {
-  id     String     @id
-  user   notesUsers @relation(fields: [userid], references: [id], onDelete: Cascade)
-  userid String
-  expire DateTime   @db.Timestamp(6)
+  id     String   @id
+  user   postUser @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String
+  expire DateTime @db.Timestamp(6)
 
   @@index([expire], map: "IDX_session_expire")
 }

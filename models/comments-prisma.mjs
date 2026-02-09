@@ -3,17 +3,17 @@ import EventEmitter from "events";
 import { prisma } from "./prisma.mjs";
 
 export class PrismaCommentsStore extends EventEmitter {
-  async create(notekey, autherId, body) {
+  async create(postkey, autherId, body) {
     await prisma.$connect()
     const comment = await prisma.comments.create({
       data : {
-        noteNotekey: notekey,
+        postkey: postkey,
         autherId: autherId,
         body: body
       },
       include: {auther: {select: {username: true}}}
     })
-    this.emit("commentcreated", notekey, comment)
+    this.emit("commentcreated", postkey, comment)
     return comment
   }
   async read(id) {
@@ -24,9 +24,9 @@ export class PrismaCommentsStore extends EventEmitter {
     })
     return comment
   }
-  async destroy(id, notekey) {
+  async destroy(id, postkey) {
     await prisma.$connect()
     await prisma.comments.delete({ where : {id}})
-    this.emit("commentdestroyed",notekey, id)
+    this.emit("commentdestroyed",postkey, id)
   }
 }

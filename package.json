@@ -1,6 +1,6 @@
 {
-  "name": "open-notes",
-  "version": "0.1.0",
+  "name": "postbase",
+  "version": "0.2.0",
   "private": true,
   "type": "module",
   "scripts": {
@@ -8,6 +8,8 @@
     "start": "cross-env DEBUG=notes:* nodemon tsx ./app.mjs",
     "watch": "npx @tailwindcss/cli -i ./public/assets/stylesheets/input.css -o ./public/assets/stylesheets/styles.css --watch"
   },
+  "author": "Usman Ghani",
+  "license": "",
   "dependencies": {
     "@dotenvx/dotenvx": "^1.52.0",
     "@prisma/adapter-pg": "^7.3.0",

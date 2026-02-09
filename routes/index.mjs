@@ -1,10 +1,10 @@
 import * as express from 'express';
-import { NotesStore as notes } from '../models/notes-store.mjs';
+import { postsStore as posts } from '../models/posts-store.mjs';
 import { WsServer } from '../app.mjs';
-import { commentStore } from './notes.mjs';
+import { commentStore } from './posts.mjs';
 import { userRoutsEvents } from './users.mjs';
 
-let cachedNotes;
+let cachedposts;
 let changed = true;
 
 export const router = express.Router();
@@ -13,21 +13,21 @@ export function wsHomeListners() {
   userRoutsEvents.on("userdestroyed", () => {changed = true } )
   commentStore.on("commentcreated", () => { changed = true })
   commentStore.on("commentdestroyed", () => { changed = true })
-  notes.on('notecreated', (note) => {
+  posts.on('postcreated', (post) => {
     changed = true
     WsServer.clients.forEach((socket) => {
       if (socket.readyState === socket.OPEN)
-        socket.send(JSON.stringify({ type: "notecreated", note: note }))
+        socket.send(JSON.stringify({ type: "postcreated", post: post }))
     })
   })
-  notes.on('notedestroyed', (key) => {
+  posts.on('postdestroyed', (key) => {
     changed = true
     WsServer.clients.forEach((socket) => {
       if (socket.readyState === socket.OPEN)
-        socket.send(JSON.stringify({ type: 'notedestroyed', key: key }));
+        socket.send(JSON.stringify({ type: 'postdestroyed', key: key }));
     })
   })
-  notes.on("noteupdated", () => {
+  posts.on("postupdated", () => {
     changed = true
   })
 
@@ -37,7 +37,7 @@ router.get('/', async (req, res, next) => {
   try {
     if (!changed) {
       res.render('index', {
-        title: 'OpenNotes', notelist: cachedNotes,
+        title: 'PostBase', postlist: cachedposts,
         user: req.user ? req.user : undefined,
         level: req.query.level,
         massage: req.query.massage
@@ -45,19 +45,19 @@ router.get('/', async (req, res, next) => {
       return
     }
 
-    const keylist = await notes.keylist();
+    const keylist = await posts.keylist();
     const keyPromises = keylist.map(key => {
-      return notes.read(key);
+      return posts.read(key);
     });
 
-    let notelist = await Promise.all(keyPromises);
-    cachedNotes = notelist;
+    let postlist = await Promise.all(keyPromises);
+    cachedposts = postlist;
     changed = false;
-    if (notelist.length === 0) {
-      notelist = false;
+    if (postlist.length === 0) {
+      postlist = false;
     }
     res.render('index', {
-      title: 'OpenNotes', notelist: notelist,
+      title: 'PostBase', postlist: postlist,
       user: req.user ? req.user : undefined,
       level: req.query.level,
       massage: req.query.massage

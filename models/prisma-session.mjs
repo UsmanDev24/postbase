@@ -6,12 +6,12 @@ import debug from "debug";
 
 const log = debug("notes:prisma-session")
 
-export async function addSession(hash, userid) {
+export async function addSession(hash, userId) {
   await prisma.$connect();
   const sess = await prisma.session.create({
     data: {
       id: hash,
-      userid,
+      userId,
       expire: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30)
     }
   });
