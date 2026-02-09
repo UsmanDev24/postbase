@@ -8,6 +8,8 @@
     "start": "cross-env DEBUG=notes:* nodemon tsx ./app.mjs",
     "watch": "npx @tailwindcss/cli -i ./public/assets/stylesheets/input.css -o ./public/assets/stylesheets/styles.css --watch"
   },
+  "author": "Usman Ghani",
+  "license": "",
   "dependencies": {
     "@dotenvx/dotenvx": "^1.52.0",
     "@prisma/adapter-pg": "^7.3.0",
