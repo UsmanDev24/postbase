@@ -67,3 +67,24 @@ router.get('/', async (req, res, next) => {
     next(err);
   }
 });
+
+router.get("/privacy", (req, res, next) => {
+  res.render('privacy', {
+    title: 'Privacy Policy', postlist: cachedposts,
+    user: req.user ? req.user : undefined,
+  })
+})
+
+router.get("/terms", (req, res, next) => {
+  res.render('terms', {
+    title: 'Terms of Services', postlist: cachedposts,
+    user: req.user ? req.user : undefined,
+  })
+})
+
+router.get("/about-postbase", (req, res, next) => {
+  res.render('about-postbase', {
+    title: 'What is PostBase?', postlist: cachedposts,
+    user: req.user ? req.user : undefined,
+  })
+})
