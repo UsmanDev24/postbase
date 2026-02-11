@@ -68,14 +68,14 @@ router.get('/', async (req, res, next) => {
   }
 });
 
-router.get("/privacy", (req, res, next) => {
+router.get("/privacy_policy", (req, res, next) => {
   res.render('privacy', {
     title: 'Privacy Policy', postlist: cachedposts,
     user: req.user ? req.user : undefined,
   })
 })
 
-router.get("/terms", (req, res, next) => {
+router.get("/terms-of-services", (req, res, next) => {
   res.render('terms', {
     title: 'Terms of Services', postlist: cachedposts,
     user: req.user ? req.user : undefined,
