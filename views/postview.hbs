@@ -44,7 +44,7 @@
  
       <div class="flex justify-between items-center">
         <div class="text-sm opacity-70">
-          <span id="commentsLength" class="font-bold">{{post.commentsLength}}</span> Comments
+          <span id="commentsLength" class="font-bold">{{post._count.comments}}</span> Comments
         </div>
 
         <button {{#if user}} {{else}} disabled {{/if}} class="btn btn-primary gap-2"

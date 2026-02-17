@@ -12,14 +12,14 @@ export const commentStore = new PrismaCommentsStore()
 export const router = express.Router();
 
 export function wsPostsListeners() {
-  commentStore.on("commentcreated", (postkey, comment) => {
+  commentStore.events.on("commentcreated", (postkey, comment) => {
     WsServer.clients.forEach(socket => {
       if (socket.readyState === socket.OPEN) {
         socket.send(JSON.stringify({ type: "commentcreated", postkey, comment }))
       }
     })
   })
-  commentStore.on("commentdestroyed", (postkey, id) => {
+  commentStore.events.on("commentdestroyed", (postkey, id) => {
     WsServer.clients.forEach(socket => {
       if (socket.readyState === socket.OPEN) {
         socket.send(JSON.stringify({ type: "commentdestroyed", postkey, id }))
