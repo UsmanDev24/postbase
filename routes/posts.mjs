@@ -86,6 +86,7 @@ router.post('/save', ensureAuthenticated, async (req, res, next) => {
 router.get('/view', async (req, res, next) => {
   try {
     let post = await posts.read(req.query.key);
+    if (!post) res.redirect("/")
     let owner = false
     if (req.user)
       if (req.user.id === post.autherId) {

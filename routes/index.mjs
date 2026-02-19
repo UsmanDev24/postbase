@@ -7,22 +7,19 @@ export const router = express.Router();
 export function wsHomeListners() {
   
   posts.on('postcreated', (post) => {
-    changed = true
     WsServer.clients.forEach((socket) => {
       if (socket.readyState === socket.OPEN)
         socket.send(JSON.stringify({ type: "postcreated", post: post }))
     })
   })
   posts.on('postdestroyed', (key) => {
-    changed = true
+  
     WsServer.clients.forEach((socket) => {
       if (socket.readyState === socket.OPEN)
         socket.send(JSON.stringify({ type: 'postdestroyed', key: key }));
     })
   })
-  posts.on("postupdated", () => {
-    changed = true
-  })
+ 
 
 }
 /* GET home page. */

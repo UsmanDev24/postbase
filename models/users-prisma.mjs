@@ -78,6 +78,7 @@ export class PrismaPostsUsersStore {
       where: { id: userId },
       omit: { photo: true }
     })
+    if (!user) return null
     await userCache.set(userId, user)
     await userCache.set(user.username, user)
     return user;
@@ -102,7 +103,7 @@ export class PrismaPostsUsersStore {
       where: { username: userName },
       omit: { photo: true }
     })
-    
+    if (!user) return null
     await userCache.set(user.id, user)
     await userCache.set(userName, user)
     return user;
@@ -110,7 +111,8 @@ export class PrismaPostsUsersStore {
 
   async getAllData(userName) {
     
-    const user = await this.readByUserName(userName) 
+    const user = await this.readByUserName(userName)
+    if (!user)  return null;
     user.posts = await postStore.getUserPosts(user.id, false)
     user.comments = await commentStore.getAllByUser(user.id)
     return user
@@ -119,6 +121,7 @@ export class PrismaPostsUsersStore {
   async getPublicData(userName) {
 
     const user = await this.readByUserName(userName)
+    if (!user) return null;
     const posts = await postStore.getUserPosts(user.id, true)
     user.posts = posts
     return user;

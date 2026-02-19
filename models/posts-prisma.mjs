@@ -150,6 +150,7 @@ export default class PrismaPostsStore extends AbstractPostsStore {
             _count: { select: { comments: true, likes: true } }
           },
         });
+        if (!post) return null;
         postCache.setPost(key, post)
         return post
 
@@ -167,8 +168,8 @@ export default class PrismaPostsStore extends AbstractPostsStore {
 
   async read(key) {
     const post = await this.readMin(key)
+    if (!post) return null
     const comments = await commentStore.readByPost(key, 0)
-
     post.comments = comments
     return post
   }

@@ -99,7 +99,7 @@ export class PrismaCommentsStore {
         auther: { select: { username: true, displayName: true } }
       }
     });
-
+    
     await commentCache.addNew(postkey, comment, 0)
     PrismaCommentsStore.#events.emit("commentcreated", postkey, comment)
     return comment
@@ -155,6 +155,7 @@ export class PrismaCommentsStore {
       where: {autherId},
       include: {post: {select: {title: true}}}
     })
+    return comments
   }
   async clearCacheByPost(postkey, totalComments) {
     const collections = Math.ceil(totalComments/take) ;
