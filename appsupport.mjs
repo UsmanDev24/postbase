@@ -1,8 +1,8 @@
 import { port } from './app.mjs';
 import { default as DBG } from "debug";
 
-const debug =  DBG('notes:debug');
-const dbgerror = DBG('notes:error');
+const debug =  DBG('posts:debug');
+const dbgerror = DBG('posts:error');
 
 /**
  * Normalize a port into a number, string, or false.
@@ -46,8 +46,8 @@ export function onError(error) {
             console.error(`${bind} is already in use`);
             process.exit(1);
             break;
-        case 'ENOTESSTORE':
-            console.error(`Notes date store initialization failure because
+        case 'EpostSSTORE':
+            console.error(`posts date store initialization failure because
                 ${error.error}`)
         default:
             throw error;
@@ -68,9 +68,12 @@ export function onListening() {
 
 
 export function handle404(req, res, next) {
-    const err = new Error('Not Found');
-    err.status = 404;
-    next(err);
+    res.status(404)
+    res.render("404", {
+        user: req.user,
+        title: "404"
+    })
+    
 }
 
 export function basicErrorHandler(err, req, res, next) {
@@ -92,6 +95,7 @@ process.on('uncaughtException', function (error) {
     console.error(`I have crached!!! - ${(error.stack || error)}`)
 })
 import * as util from 'util'
+import { title } from 'process';
 process.on('unhandledRejection', (reason, p) => {
     console.error(`Unhandeled rejection at: ${util.inspect(p)} reason: ${reason}`)
 });

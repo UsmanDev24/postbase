@@ -91,7 +91,7 @@ app.use(mainRouter)
 
 // error handlers
 // catch 404 and forward to error handler
-
+app.use(handle404)
 
 export const port = normalizePort(process.env.PORT || '3000');
 app.set('port', port);
