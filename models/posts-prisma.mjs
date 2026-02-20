@@ -2,6 +2,7 @@ import { AbstractPostsStore } from "./Posts.mjs";
 import { default as DBG } from "debug";
 import { prisma } from "./prisma.mjs";
 import { PrismaCommentsStore } from "./comments-prisma.mjs";
+import { PrimsaLikesStore } from "./likes-prisma.mjs";
 import Keyv from "keyv";
 import { cacheStore } from "./cache.mjs";
 
@@ -12,12 +13,14 @@ class PostCache {
   #locks;
   #cache;
   #inFlight;
-  constructor(store, commentStore) {
+  constructor(store, commentStore, likeStore) {
     this.#locks = new Map(); //Map<String, Promice<void>>
     this.#inFlight = new Map();
     this.#cache = new Keyv(store, { namespace: "postCache" });
     this.commentStore = commentStore;
+    this.likeStore = new PrimsaLikesStore()
     this.attachEvents()
+
   }
   attachEvents() {
     this.commentStore.events.on("commentcreated", (postkey, comment) => {
@@ -34,6 +37,24 @@ class PostCache {
         const post = await this.getPost(postkey);
         if (post) {
           post._count.comments -= 1
+          return this.set(postkey, post)
+        }
+      })
+    })
+    this.likeStore.events.on("likecreated", (postkey, userId) => {
+      return this.lock(postkey, async () => {
+        const post = await this.getPost(postkey);
+        if (post) {
+          post._count.likes += 1
+          return this.set(postkey, post)
+        }
+      })
+    })
+    this.likeStore.events.on("likedestroyed", (postkey, userId) => {
+      return this.lock(postkey, async () => {
+        const post = await this.getPost(postkey);
+        if (post) {
+          post._count.likes -= 1
           return this.set(postkey, post)
         }
       })
@@ -236,7 +257,7 @@ export default class PrismaPostsStore extends AbstractPostsStore {
     });
     return Promise.all(posts)
   }
-
+  
   async count() {
     return await prisma.posts.count();
   }

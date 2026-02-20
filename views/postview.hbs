@@ -2,7 +2,7 @@
 
   {{#if post}}
   <div class="card bg-base-200 shadow-xl border border-base-300">
-    <div class="card-body  p-6 md:p-10">
+    <div class="card-body  p-4 md:p-10">
 
       <div class="flex flex-row justify-between items-center gap-4 mb-6 border-b border-base-300 pb-4">
 
@@ -43,23 +43,34 @@
       <div class="divider mt-8"></div>
  
       <div class="flex justify-between items-center">
-        <div class="text-sm opacity-70">
-          <span id="commentsLength" class="font-bold">{{post._count.comments}}</span> Comments
-        </div>
+        <div class=" flex gap-2  sm:gap-4 text-sm  ">
+          <button data-postkey="{{post.key}}" class="like-btn btn btn-ghost btn-sm gap-2 text-success">
 
-        <button {{#if user}} {{else}} disabled {{/if}} class="btn btn-primary gap-2"
-          onclick="comment_modal.showModal()">
-          <span data-feather="message-circle" class=" h-5 w-5"></span>
-          Add Comment
-        </button>
+              <span id="{{post.key}}-likes">{{post._count.likes}}</span>
+              <span id="{{post.key}}-likeLogo" data-feather="thumbs-up" class=" transition-colors duration-200 h-4 w-4"></span>
+              <span hidden class=" btn-active fill-primary"></span>
+            </button>
+            <button disabled class="comment-btn btn btn-ghost btn-sm gap-2 text-info">
+              <span id="commentsLength">{{post._count.comments}}</span>
+              <span data-feather="message-circle" class=" h-4 w-4"></span>
+
+            </button>
+        </div>
       </div>
 
     </div>
   </div>
 
   <div class="mt-6 space-y-4">
-
-    <h3  class="text-xl font-bold px-1">Comments</h3>
+    <div class=" flex flex-row justify-between">
+      <h3  class="text-xl font-bold px-1">Comments</h3>
+      <button {{#if user}} {{else}} disabled {{/if}} class="btn btn-sm sm:btn-md btn-primary gap-2"
+          onclick="comment_modal.showModal()">
+          <span data-feather="message-circle" class=" h-5 w-5"></span>
+          Add Comment
+        </button>
+    </div>
+    
     <div id="liveComments" class=" p-0 flex flex-col-reverse justify-start items-start gap-4"></div>
     {{#if post.comments}}
     {{#each post.comments}}
@@ -231,4 +242,108 @@
   window.addEventListener("beforeunload", () => {
     clearInterval(updateTime)
   })
+  {{#if user }}
+  class LikesControl {
+    constructor() {
+      this.likeButtons = document.querySelectorAll(".like-btn")
+      console.log(this.likeButtons)
+    }
+    async init() {
+      await this.setLikes()
+      this.attachEvents()
+    }
+    async setLikes() {
+      const res = await fetch('/users/likes/keys').then(async res => await res.text())
+      if (!res) return
+      const likeKeys = JSON.parse(res);
+      Array.from(this.likeButtons).forEach(btn => {
+        const postkey = btn.getAttribute("data-postkey")
+        if (likeKeys.includes(postkey)) {
+          btn.className = "like-btn btn btn-ghost btn-sm gap-2 text-primary";
+          btn.setAttribute("data-isliked", "true");
+          document.getElementById(postkey + "-likeLogo").setAttribute("class", "fill-primary h-4 w-4 ")
+        }
+      })
+
+    }
+    attachEvents() {
+      Array.from(this.likeButtons).forEach((btn, i) => {
+        btn.addEventListener("click", async (event) => {
+          const postkey = btn.getAttribute("data-postkey")
+          const userId = "{{user.id}}";
+
+          if (btn.getAttribute("data-isliked") === "true") {
+            const postkey = btn.getAttribute("data-postkey")
+            const userId = "{{user.id}}";
+            
+            btn.disabled = true;
+            btn.classList.replace("btn-ghost","btn-active")
+            try {
+              const res = await this.fetchApi("/posts/likes/destroy", "POST", JSON.stringify({
+                postkey: postkey,
+                userId: userId
+              }))
+              if (res === "Ok") {
+                this.toUnLiked(btn, postkey)
+              }
+            } catch (err) {
+              console.error(err)
+            } finally {
+              setTimeout(() => {
+              btn.disabled = false
+            }, 500)
+            }
+          } else {
+            const postkey = btn.getAttribute("data-postkey")
+            const userId = "{{user.id}}";
+
+            btn.classList.replace("btn-ghost","btn-active")
+            btn.disabled = true;
+            try {
+              const res = await this.fetchApi("/posts/likes/add", "POST", JSON.stringify({
+                postkey: postkey,
+                userId: userId
+              }))
+              if (res === "Ok") {
+                this.toLiked(btn, postkey)
+              }
+            } catch (err) {
+              console.error(err)
+            } finally {
+              setTimeout(() => {
+              btn.disabled = false
+            }, 500)
+            }
+          }
+        })
+      })
+    }
+    async fetchApi(url, method, body) {
+      const res = await fetch(url, {
+        body,
+        method,
+        headers: { "content-type": "application/json" }
+      })
+      return await res.text()
+    }
+    toLiked(btn, postkey) {
+      btn.setAttribute("data-isliked", "true")
+      btn.className = "like-btn btn btn-ghost btn-sm gap-2 text-primary";
+      let totalLikes = document.getElementById(postkey + "-likes").textContent
+      document.getElementById(postkey + "-likes").textContent = Number(totalLikes) + 1;
+      document.getElementById(postkey + "-likeLogo").setAttribute("class", "h-4 w-4 fill-primary")
+    }
+    toUnLiked(btn, postkey) {
+      btn.setAttribute("data-isliked", "false")
+      btn.className = "like-btn btn btn-ghost btn-sm gap-2 text-success";
+      document.getElementById(postkey + "-likes").textContent -= 1;
+      document.getElementById(postkey + "-likeLogo").setAttribute("class", "h-4 w-4")
+
+    }
+
+  }
+  window.addEventListener("load", () => {
+    new LikesControl().init()
+  })
+{{/if}}
 </script>

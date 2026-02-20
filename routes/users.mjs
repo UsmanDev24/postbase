@@ -28,7 +28,7 @@ export function initPassport(app) {
 }
 
 export function ensureAuthenticated(req, res, next) {
-  if (req.user) next();
+  if (req.user) return next();
   else res.redirect("/users/login");
   return;
 }
@@ -183,6 +183,12 @@ router.get('/profile/:username', async (req, res, next) => {
   }
 
 });
+router.get("/likes/keys/", ensureAuthenticated, async (req, res , next) => {
+  const likeKeys = await postsUsersStore.getLikedPosts(req.user.username, true)
+  console.log(likeKeys)
+  res.type('application/json')
+  res.send(likeKeys)
+})
 router.post("/profile/update/about", ensureAuthenticated, async (req, res, next) => {
   const user =await  postsUsersStore.updateAbout(req.user.id, req.body.about);
   res.end(user.about);

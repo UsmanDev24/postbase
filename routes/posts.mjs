@@ -4,11 +4,13 @@ import { default as DBG } from "debug";
 import { ensureAuthenticated } from "./users.mjs";
 import { WsServer } from "../app.mjs"
 import { PrismaCommentsStore } from "../models/comments-prisma.mjs";
+import { PrimsaLikesStore } from "../models/likes-prisma.mjs";
 import * as crpto from 'node:crypto';
 
 const debug = DBG('posts:routs_posts.mjs')
 const dbgerror = DBG('posts:error')
 export const commentStore = new PrismaCommentsStore()
+export const likeStore = new PrimsaLikesStore()
 export const router = express.Router();
 
 export function wsPostsListeners() {
@@ -173,3 +175,25 @@ router.get('/comment/destroy/:id', ensureAuthenticated, async (req, res, next) =
     next(error)
   }
 })
+
+router.post('/likes/add', ensureAuthenticated, async (req, res, next) => {
+  const postkey = req.body?.postkey;
+  const userId = req.body?.userId
+  if (postkey, userId) {
+    const like = await likeStore.create(postkey, userId)
+    res.status(200)
+    res.end("Ok")
+  }
+})
+
+router.post('/likes/destroy', ensureAuthenticated, async (req, res, next) => {
+  const postkey = req.body?.postkey;
+  const userId = req.body?.userId
+  if (postkey, userId) {
+    const like = await likeStore.destroy(postkey, userId)
+    res.status(200)
+    res.end("Ok")
+  }
+})
+
+
