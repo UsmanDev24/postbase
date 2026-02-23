@@ -1,34 +1,51 @@
 import * as express from 'express';
-import { postsStore as posts } from '../models/posts-store.mjs';
 import { WsServer } from '../app.mjs';
+import { catgsStore } from './posts.mjs';
+import PrismaPostsStore from "../models/posts-prisma.mjs"
+import { totalmem } from 'os';
 
 export const router = express.Router();
+export const postsStore = new PrismaPostsStore()
 
 export function wsHomeListners() {
-  
-  posts.on('postcreated', (post) => {
+
+  PrismaPostsStore.Events.on('postcreated', (post) => {
     WsServer.clients.forEach((socket) => {
       if (socket.readyState === socket.OPEN)
         socket.send(JSON.stringify({ type: "postcreated", post: post }))
     })
   })
-  posts.on('postdestroyed', (key) => {
-  
+  PrismaPostsStore.Events.on('postdestroyed', (key) => {
+
     WsServer.clients.forEach((socket) => {
       if (socket.readyState === socket.OPEN)
         socket.send(JSON.stringify({ type: 'postdestroyed', key: key }));
     })
   })
- 
+
 
 }
+router.get("/explore/:catgName", async (req, res, next) => {
+  const keylist = await catgsStore.getPostKeysByCatg(req.params.catgName)
+  const postlist = await Promise.all(keylist.map(key => postsStore.read(key)))
+  res.render("index", {
+    title: req.params.catgName,
+    postlist: postlist,
+    catgName: req.params.catgName,
+    total: postlist.length,
+    
+    user: req.user ? req.user : undefined,
+    level: req.query.level
+  })
+
+})
 /* GET home page. */
 router.get('/', async (req, res, next) => {
   try {
-    
-    const keylist = await posts.keylist();
+
+    const keylist = await postsStore.keylist();
     const keyPromises = keylist.map(key => {
-      return posts.read(key);
+      return postsStore.read(key);
     });
 
     let postlist = await Promise.all(keyPromises);
@@ -49,7 +66,7 @@ router.get('/', async (req, res, next) => {
 
 router.get("/privacy_policy", (req, res, next) => {
   res.render('privacy', {
-    title: 'Privacy Policy', 
+    title: 'Privacy Policy',
     user: req.user ? req.user : undefined,
   })
 })
