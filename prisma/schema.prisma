@@ -47,7 +47,8 @@ model categoryToPosts {
   catgName String
   post     posts      @relation(fields: [postkey], references: [key], onDelete: Cascade)
   category categories @relation(fields: [catgName], references: [name], onDelete: Cascade)
-
+  createdAt DateTime  @db.Timestamptz(6) @default(now())
+  
   @@id([catgName, postkey])
   @@index([postkey])
 }
@@ -63,7 +64,7 @@ model posts {
   key       String            @id @db.VarChar(255)
   auther    postUser          @relation(fields: [autherId], references: [id], onDelete: Cascade)
   comments  comments[]
-  cataories categoryToPosts[]
+  catgs categoryToPosts[]
 
   @@index([autherId])
   @@index([autherId, public])
