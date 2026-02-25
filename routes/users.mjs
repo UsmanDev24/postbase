@@ -18,7 +18,7 @@ const logError = debug("posts:routes_users_error")
 const LocalStrategy = passportLocal.Strategy;
 const JwtStrategy = passportJwt.Strategy;
 const googleStrategy = passportGoogle.Strategy;
-const postsUsersStore = new PrismaPostsUsersStore()
+export const postsUsersStore = new PrismaPostsUsersStore()
 
 export const userRoutsEvents = new EventEmitter()
 export const router = Router();
@@ -188,6 +188,11 @@ router.get("/likes/keys/", ensureAuthenticated, async (req, res , next) => {
   console.log(likeKeys)
   res.type('application/json')
   res.send(likeKeys)
+})
+router.post("/profile/update/feed", ensureAuthenticated, async (req, res, next) => {
+    await postsUsersStore.updateFeed(req.user.id, JSON.stringify(Object.keys(req.body)));
+    res.redirect("/your-feed")
+
 })
 router.post("/profile/update/about", ensureAuthenticated, async (req, res, next) => {
   const user =await  postsUsersStore.updateAbout(req.user.id, req.body.about);

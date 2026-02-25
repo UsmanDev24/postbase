@@ -19,6 +19,7 @@ model postUser {
   photo           Bytes?
   photoType       String?    @db.VarChar(255)
   photo_updatedAt DateTime?  @updatedAt @db.Timestamptz(6)
+  feedCatgs       String?
   likes           like[]
   posts           posts[]
   comments        comments[]

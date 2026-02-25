@@ -9,14 +9,16 @@ class PostCatgCache {
   constructor(cacheStore) {
     this.#locks = new Map(); // Map<String, Promise>
     this.cache = new Keyv(cacheStore, { namespace: "postCatgCache" });
+    this.feedCache = new Keyv(cacheStore, {namespace: "feedCache"});
     this.attachEvents();
   }
   attachEvents() {
     PrismaPostsStore.Events.on("catgcreated", (catgName, postkey) => {
       return this.lock(catgName, async () => {
-        const keylist = await this.get(catgName)
+        const keylist = await this.get(catgName); 
         if (!keylist) return;
         keylist.unshift(postkey);
+        await this.feedCache.clear()
         return this.set(catgName, keylist)
       })
     })
@@ -28,6 +30,7 @@ class PostCatgCache {
         const updatedList = keylist.filter(key => {
           return key !== postkey
         })
+        await this.feedCache.clear()
         return this.set(catgName, updatedList)
       })
     })
@@ -52,7 +55,8 @@ class PostCatgCache {
   set(key, value) {
     return this.cache.set(key, value);
   }
-  get(key) {
+  get(key, isfeed) {
+    if (isfeed) return this.feedCache.get(key);
     return this.cache.get(key);
   }
 }
@@ -63,8 +67,8 @@ export class PrismaPostCatgStore {
   static events = new EventEmitter();
   static inFlight = new Map(); // Map<String, Promice>
 
-  async setFlight(key, task) {
-    const cached = await postCatgCache.get(key);
+  async setFlight(key, task, isfeed) {
+    const cached = await postCatgCache.get(key, isfeed);
     if (cached) return cached;
 
     if (PrismaPostCatgStore.inFlight.get(key)) {
@@ -97,7 +101,7 @@ export class PrismaPostCatgStore {
         } else {
           const postkeys = await prisma.categoryToPosts
             .findMany({
-              where: { catgName },
+              where: {catgName },
               orderBy: { createdAt: "desc" },
             })
             .then((v) => v.map((c) => c.postkey));
@@ -112,7 +116,25 @@ export class PrismaPostCatgStore {
       }
     });
   }
+  /** @param {String} feedlist  */
+  async getFeed(feedlist) {
+    return this.setFlight(feedlist, async () => {
+      try {
+        const postkeys = await prisma.categoryToPosts
+            .findMany({
+              where: {catgName: {in: JSON.parse(feedlist)} },
+              orderBy: { createdAt: "desc" },
+            })
+            .then((v) => v.map((c) => c.postkey));
 
+          postCatgCache.set(feedlist, postkeys);
+
+          return postkeys;
+      } catch (error) {
+        console.log(error)
+      }
+    }, true)
+  }
   async getCategoriesNames() {
     return this.setFlight("allCatgsNames", async () => {
       try {
