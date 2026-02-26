@@ -1,22 +1,37 @@
-<footer class="mt-auto bg-base-200 border-t border-base-300">
-  <div class="max-w-7xl mx-auto px-6 py-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+<footer class="mt-20 mx-auto w-full border-t border-base-300/50 bg-base-100">
+  <div class=" mx-auto w-full px-6 pt-12 pb-28 md:pb-12">
+    <div class="flex flex-col md:flex-row justify-between items-center gap-8">
+      
+      <div class="flex flex-col items-center md:items-start">
+        <div class="flex items-center gap-2 mb-2">
+          <img class="h-6 w-auto grayscale opacity-80" src="/assets/img/text-logo.png" alt="PostBase" />
+          <span class="text-lg font-bold tracking-tighter opacity-70">PostBase</span>
+        </div>
+        <p class="text-xs font-medium opacity-70 uppercase tracking-widest">
+          Personal Portfolio Project by <span class="text-base-content opacity-100">Usman Ghani</span>
+        </p>
+      </div>
 
-    <!-- Brand -->
-    <div>
-      <span class="font-medium">Postbase</span>
-      <p class="text-xs text-base-content/60 mt-1 max-w-sm">
-         © 2026 Usman Ghani
-      </p>
+      <div class="flex gap-4">
+        <a href="https://github.com/yourusername" target="_blank" class="btn btn-ghost btn-sm btn-circle opacity-80 hover:opacity-100">
+          <span data-feather="github" class="h-4 w-4"></span>
+        </a>
+        <a href="mailto:your@email.com" class="btn btn-ghost btn-sm btn-circle opacity-80 hover:opacity-100">
+          <span data-feather="mail" class="h-4 w-4"></span>
+        </a>
+      </div>
+
+      <nav class="flex gap-8 text-xs font-black uppercase tracking-widest opacity-70">
+        <a href="/about-postbase" class="hover:text-primary transition-colors">About</a>
+        <a href="/privacy_policy" class="hover:text-primary transition-colors">Privacy</a>
+        <a href="/terms-of-services" class="hover:text-primary transition-colors">Terms</a>
+      </nav>
     </div>
 
-    <!-- Links -->
-    <nav class="flex gap-6 text-base-content text-sm">
-      <a href="/privacy_policy" class="hover:text-primary transition">Privacy Policy</a>
-      <a href="/terms-of-services" class="hover:text-primary transition">Terms</a>
-      <a href="/about-postbase" class="hover:text-primary transition">About</a>
-    </nav>
-
+    <div class="mt-10 pt-6 border-t border-base-300/20 text-center">
+      <p class="text-[10px] font-bold opacity-60 uppercase tracking-[0.2em]">
+        &copy; 2026 &bull; All Rights Reserved
+      </p>
+    </div>
   </div>
-
-  
 </footer>
