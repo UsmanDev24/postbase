@@ -198,6 +198,11 @@ export class PrismaPostsUsersStore {
     user.posts = posts
     return user;
   }
+  async getUserPosts(username, onlyKeys) {
+    const user = await this.readByUserName(username)
+    if (!user) return null;
+    return postStore.getUserPosts(user.id, false)
+  }
   async getLikedPosts(username, onlyKeys) {
     const user = await this.readByUserName(username)
     if (!user) return null;
@@ -218,7 +223,7 @@ export class PrismaPostsUsersStore {
     const likedPosts = likesKeys.map(key => {
       return postStore.readMin(key)
     })
-    return Promise.all(likedPosts)
+    return await Promise.all(likedPosts)
   }
   
   async getPhotoByUserName(userName) {

@@ -1,70 +1,226 @@
-<div class=" p-8 m-auto max-w-4xl bg-base-100">
-  <div class="">
-    <img id="photo" class="m-auto bg-pink-300 dark:bg-black w-30 h-30 rounded-full" src="/assets/users/photo/{{publicUser.username}}">
-    <h1 class="p-2 text-center text-2xl"> {{publicUser.displayName}}</h1>
-    <p class="p-2 text-center text-lg">{{publicUser.about}}</p>
-    <div class="  mt-4 p-4 rounded-lg ">
-      <h2 class=" text-xl p-1">Acount info</h2>
-      <p class="p-2 border-b dark:border-b-gray-600 border-b-gray-400  sm:grid grid-cols-2">username <span
-          class="text-lg  block font-semibold  ">{{publicUser.username}}</span></p>
-      <p class="p-2 border-b dark:border-b-gray-600 border-b-gray-400 sm:grid grid-cols-2">Bio <span
-          class="text-lg block font-semibold">{{publicUser.about}}</span></p>
-    
-    </div>
-  </div>
-</div>
-<div class="max-w-4xl w-full mx-auto p-4 md:p-6">
-  <h2 class=" text-3xl font-bold text-center p-6 pt-0">Public Posts</h2>
-  {{#if postlist}}
-  <div id="postlist" class="flex flex-col gap-6">
-    {{#each postlist}}
 
-    <div id="{{key}}" class="card bg-base-100 shadow-xl border border-base-300 transition-all hover:shadow-2xl">
-      <div class="card-body p-6">
-        
-        <div class="flex items-center justify-between mb-2">
-          <div class="flex items-center gap-3">
-            <div class="avatar placeholder">
-              <div class="">
-                <img class="bg-purple-300 rounded-full dark:bg-neutral w-10 h-10" src="/assets/users/photo/{{auther.username}}">
-              </div>
-            </div>
-            <div class="flex flex-col">
-              <span class="font-bold text-base">{{auther.username}}</span>
-              <span class="text-xs text-base-content/60">{{updatedAt}}</span> 
-            </div>
-          </div>
-          <span id="{{key}}-info" class="badge badge-ghost badge-sm"></span>
+<div class="max-w-4xl mx-auto p-6 md:p-12">
+  
+  <header class="flex flex-col items-center text-center mb-6">
+    <div class="relative mb-6">
+      <div class="avatar">
+        <div class="w-32 h-32  rounded-full ring ring-primary ring-offset-base-100 ring-offset-4 shadow-2xl">
+          <img src="/assets/users/photo/{{publicUser.username}}" alt="{{publicUser.username}}" />
         </div>
+      </div>
+      <div class="absolute -z-10 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 bg-primary/10 blur-3xl rounded-full"></div>
+    </div>
 
-        <a id="{{key}}-link" href="/posts/view?key={{key}}" class="group block space-y-2">
-          <h2 id="{{key}}-title" class="card-title text-2xl group-hover:text-primary transition-colors">
-            {{title}}
-          </h2>
-          <div id="{{key}}-body" class="prose line-clamp-4">
-            {{{body}}}
+    <h1 class="text-4xl md:text-5xl font-black tracking-tighter mb-4 text-base-content">
+      {{publicUser.displayName}}
+    </h1>
+    
+    <div class="flex flex-wrap justify-center gap-3 mb-6">
+      <span class="badge badge-lg bg-base-200 border-none font-black text-[11px] uppercase tracking-widest px-4 py-4">
+        @{{publicUser.username}}
+      </span>
+      <span class="badge badge-lg bg-primary/10 text-primary border-none font-black text-[11px] uppercase tracking-widest px-4 py-4">
+        {{postlist.length}} Posts
+      </span>
+    </div>
+
+    <p class="max-w-2xl text-lg md:text-xl text-base-content/70 leading-relaxed font-medium">
+      {{publicUser.about}}
+    </p>
+  </header>
+
+  <div class="divider opacity-50 mb-10"></div>
+
+  <section class="space-y-8">
+    <div class="flex items-center justify-between mb-6">
+      <h2 class="text-2xl font-black tracking-tight uppercase  text-base-content/30">Recent Work</h2>
+      <div class="h-px flex-1 bg-base-200 ml-6"></div>
+    </div>
+
+    {{#if postlist}}
+    <div id="postlist" class="flex flex-col gap-8">
+      {{#each postlist}}
+      <div id="{{key}}" class=" group card bg-base-100 border border-base-300 shadow-sm overflow-hidden cursor-pointer">
+        <div class="card-body p-6 md:p-8">
+          
+          <div class="flex flex-wrap gap-2 mb-4">
+            {{#each catgs}}
+            <span class="text-[10px] font-black uppercase tracking-widest px-3 py-1 bg-base-200 rounded-md group-hover:bg-primary group-hover:text-primary-content transition-colors">
+              {{catgName}}
+            </span>
+            {{/each}}
           </div>
-        </a>
 
-        <div class="card-actions justify-between items-center mt-4 pt-4 border-t border-base-200">
-          <div class="flex gap-4">
-            <button class="btn btn-ghost btn-sm gap-2 text-success">
+          <a href="/posts/view?key={{key}}" class="block">
+            <h2 class="text-2xl md:text-3xl font-black tracking-tight leading-tight mb-3 transition-colors line-clamp-2">
+              {{title}}
+            </h2>
+            <div class="text-base-content/60 text-sm md:text-base line-clamp-3 mb-6">
+              {{{body}}}
+            </div>
+          </a>
+
+          <div class="flex items-center justify-between pt-6 border-t border-base-200/60">
+            <div class="flex items-center gap-1">
+                  <button data-postkey="{{key}}" class="like-btn btn btn-ghost btn-sm rounded-xl gap-2 text-success ">
+                    <span id="{{key}}-likeLogo" data-feather="thumbs-up" class="h-4 w-4"></span>
+                    <span id="{{key}}-likes" class="font-black text-xs">{{_count.likes}}</span>
+                  </button>
+
+                  <div class="btn btn-ghost btn-sm rounded-xl gap-2 text-info pointer-events-none opacity-80">
+                    <span data-feather="message-circle" class="h-4 w-4"></span>
+                    <span id="{{key}}-comments" class="font-black text-xs">{{_count.comments}}</span>
+                  </div>
+            </div>
+
+            <div data-time="{{updatedAt}}" class=" updatedAt text-xs font-bold opacity-30 uppercase tracking-widest">
               
-              <span id="{{key}}-likes">0</span>
-              <span data-feather="thumbs-up" class=" h-4 w-4"></span>
-            </button>
-            <button class="btn btn-ghost btn-sm gap-2 text-info">
-              <span id="{{key}}-comments">{{commentsLength}}</span>
-              <span data-feather="message-circle" class=" h-4 w-4"></span>
-              
-            </button>
+            </div>
           </div>
         </div>
       </div>
+      {{/each}}
     </div>
-
-    {{/each}}
-  </div>
-  {{/if}}
+    {{else}}
+    <div class="text-center py-20 bg-base-200/30 rounded-[3rem] border-2 border-dashed border-base-300">
+      <p class="font-black opacity-20 uppercase tracking-[0.3em]">No public posts yet</p>
+    </div>
+    {{/if}}
+  </section>
 </div>
+<script>
+  class Times {
+    constructor() {
+      this.timesElements = Array.from(document.querySelectorAll(".updatedAt").values());
+      this.dataTimesList = [];
+    }
+    main() {
 
+      this.setRelativeTimes();
+      const updateTimeInterval = setInterval(() => {
+        this.setRelativeTimes(true)
+      }, 1000 * 29)
+
+      window.addEventListener("beforeunload", e => {
+        clearInterval(updateTimeInterval)
+      })
+    }
+
+    setRelativeTimes(interval) {
+      this.timesElements.forEach(ele => {
+        const dataTime = ele.getAttribute("data-time")
+        if (!interval)
+          this.dataTimesList.push(dataTime);
+        ele.textContent = toRelativeTime(new Date(dataTime))
+      })
+    }
+  }
+  window.addEventListener("load", e => {
+    new Times().main()
+  })
+
+  {{#if user }}
+  class LikesControl {
+    constructor() {
+      this.likeButtons = document.querySelectorAll(".like-btn")
+      console.log(this.likeButtons)
+    }
+    async init() {
+      await this.setLikes()
+      this.attachEvents()
+    }
+    async setLikes() {
+      const res = await fetch('/users/likes/keys').then(async res => await res.text())
+      if (!res) return
+      const likeKeys = JSON.parse(res);
+      Array.from(this.likeButtons).forEach(btn => {
+        const postkey = btn.getAttribute("data-postkey")
+        if (likeKeys.includes(postkey)) {
+          btn.className = "like-btn btn btn-ghost btn-sm gap-2 text-primary";
+          btn.setAttribute("data-isliked", "true");
+          document.getElementById(postkey + "-likeLogo").setAttribute("class", "fill-primary h-4 w-4 ")
+        }
+      })
+
+    }
+    attachEvents() {
+      Array.from(this.likeButtons).forEach((btn, i) => {
+        btn.addEventListener("click", async (event) => {
+          const postkey = btn.getAttribute("data-postkey")
+          const userId = "{{user.id}}";
+
+          if (btn.getAttribute("data-isliked") === "true") {
+            const postkey = btn.getAttribute("data-postkey")
+            const userId = "{{user.id}}";
+
+            btn.disabled = true;
+            btn.classList.replace("btn-ghost", "btn-active")
+            try {
+              const res = await this.fetchApi("/posts/likes/destroy", "POST", JSON.stringify({
+                postkey: postkey,
+                userId: userId
+              }))
+              if (res === "Ok") {
+                this.toUnLiked(btn, postkey)
+              }
+            } catch (err) {
+              console.error(err)
+            } finally {
+              setTimeout(() => {
+                btn.disabled = false
+              }, 500)
+            }
+          } else {
+            const postkey = btn.getAttribute("data-postkey")
+            const userId = "{{user.id}}";
+
+            btn.classList.replace("btn-ghost", "btn-active")
+            btn.disabled = true;
+            try {
+              const res = await this.fetchApi("/posts/likes/add", "POST", JSON.stringify({
+                postkey: postkey,
+                userId: userId
+              }))
+              if (res === "Ok") {
+                this.toLiked(btn, postkey)
+              }
+            } catch (err) {
+              console.error(err)
+            } finally {
+              setTimeout(() => {
+                btn.disabled = false
+              }, 500)
+            }
+          }
+        })
+      })
+    }
+    async fetchApi(url, method, body) {
+      const res = await fetch(url, {
+        body,
+        method,
+        headers: { "content-type": "application/json" }
+      })
+      return await res.text()
+    }
+    toLiked(btn, postkey) {
+      btn.setAttribute("data-isliked", "true")
+      btn.className = "like-btn btn btn-ghost btn-sm gap-2 text-primary";
+      let totalLikes = document.getElementById(postkey + "-likes").textContent
+      document.getElementById(postkey + "-likes").textContent = Number(totalLikes) + 1;
+      document.getElementById(postkey + "-likeLogo").setAttribute("class", "h-4 w-4 fill-primary")
+    }
+    toUnLiked(btn, postkey) {
+      btn.setAttribute("data-isliked", "false")
+      btn.className = "like-btn btn btn-ghost btn-sm gap-2 text-success";
+      document.getElementById(postkey + "-likes").textContent -= 1;
+      document.getElementById(postkey + "-likeLogo").setAttribute("class", "h-4 w-4")
+
+    }
+
+  }
+  window.addEventListener("load", () => {
+    new LikesControl().init()
+  })
+  {{/if }}
+</script>

@@ -1,342 +1,694 @@
-<div class=" p-4 md:p-8 m-auto max-w-4xl bg-base-100">
-  <div class="">
-    <img id="photo" class="m-auto bg-pink-300 dark:bg-black w-30 h-30 rounded-full"
-      src="/assets/users/photo/{{user.username}}">
-    <span class=" relative -top-8 left-14 block m-auto btn w-fit h-6 p-0.5 " onclick="modal_edit_photo.showModal()"
-      data-feather="edit"></span>
-    <h1 class="p-4 text-center text-2xl">Welcome {{user.displayName}}</h1>
-    <p class="text-lg text-center">View your info and manage account and take decision about your account</p>
-    <div class="  mt-4 p-4 rounded-lg ">
-      <h2 class=" text-xl p-1">Acount info</h2>
-      <p class="p-2 border-b dark:border-b-gray-600 border-b-gray-400  sm:grid grid-cols-2">username <span
-          class="text-lg  block font-semibold  ">{{user.username}}</span></p>
-      <p class="p-2 border-b dark:border-b-gray-600 border-b-gray-400 sm:grid grid-cols-2">Provider <span
-          class="text-lg block font-semibold">{{user.provider}}</span></p>
-      <p class="p-2 border-b dark:border-b-gray-600 border-b-gray-400 sm:grid grid-cols-2">Email <span
-          class="text-lg block font-semibold">{{user.email}}</span></p>
-    </div>
-    <div class=" mt-4 p-4 rounded-lg ">
-      <div
-        class="p-1 mb-2 flex flex-row justify-items-start justify-start items-center-safe gap-2 sm:grid sm:grid-cols-3 sm:gap-0 ">
-        <h2 class=" text-xl">Personal info</h2>
-        <button class="btn h-fit px-1 " id="btn_p_edit"><span class="h-4" data-feather="edit"></span>Edit</button>
-        <span class="btn btn-sm   h-fit px-1" id="p_edit_time"></span>
-      </div>
-      <div class="" id="personal_info">
-        <p class="p-2 border-b dark:border-b-gray-600 border-b-gray-400  sm:grid grid-cols-2">Display Name <span
-            id="display_name" class="text-lg  block font-semibold  ">{{user.displayName}}</span></p>
-        <p class="p-2 border-b dark:border-b-gray-600 border-b-gray-400  sm:grid grid-cols-2">First Name <span
-            id="first_name" class="text-lg  block font-semibold  ">{{user.firstName}}</span></p>
-        <p class="p-2 border-b dark:border-b-gray-600 border-b-gray-400  sm:grid grid-cols-2">Last Name <span
-            id="last_name" class="text-lg  block font-semibold  ">{{user.lastName}}</span></p>
-        <p class="p-2 border-b dark:border-b-gray-600 border-b-gray-400  sm:grid grid-cols-2">About You<span
-            class="text-lg  block font-semibold  " id="about">{{user.about}}</span></p>
+<div class="  m-auto lg:w-4xl max-w-4xl bg-base-100">
+  <div class=" mx-auto p-4 md:p-6 pb-32">
+
+    <header class="relative mb-12 text-center md:text-left flex flex-col md:flex-row items-center gap-6">
+      <div class="relative group">
+        <img id="photo"
+          class="w-32 h-32 md:w-40 md:h-40 rounded-[2.5rem] object-cover ring-4 ring-base-200 shadow-2xl transition-transform group-hover:scale-105"
+          src="/assets/users/photo/{{user.username}}">
+        <button onclick="modal_edit_photo.showModal()"
+          class="absolute -bottom-2 -right-2 btn btn-primary btn-circle btn-sm shadow-lg">
+          <span data-feather="camera" class="w-4 h-4"></span>
+        </button>
       </div>
 
-      <form hidden action="" class="md:pl-2 md:w-[70%]" method="" id="form_personal">
-        <label class="p-2 block "> Display Name
-          <input class="input block w-full  text-lg font-semibold" type="text" required id="input_display_name"
-            value="{{user.displayName}}">
-        </label>
-        <label class="p-2 block ">First Name
-          <input class="input block w-full  text-lg font-semibold" type="text" required id="input_first_name"
-            value="{{user.firstName}}">
-        </label>
-        <label class="p-2 block ">Last Name
-          <input class="input block w-full  text-lg font-semibold" type="text" required id="input_last_name"
-            value="{{user.lastName}}">
-        </label>
-        <label class="p-2 block ">About You
-          <textarea class="textarea w-full  block text-lg font-semibold" type="text" required
-            id="input_about">{{user.about}}</textarea>
-        </label>
+      <div class="flex-1">
+        <h1 class="text-3xl md:text-5xl font-black tracking-tighter mb-2">Welcome, {{user.displayName}}</h1>
+        <p class="text-base-content/60 font-medium">Manage your portfolio, posts, and account preferences.</p>
 
-        <div class=" flex justify-end gap-2 px-2">
-          <button id="cancle_p_edit" class=" btn btn-ghost">Cancel</button>
-          <input class=" btn btn-primary" value="Save" type="submit" form="form_personal">
+        <div class="flex flex-wrap justify-center md:justify-start gap-4 mt-4">
+          <div class="badge badge-lg py-4 px-4 bg-base-200 border-none font-bold gap-2">
+            <span class="w-3 h-3 rounded-full bg-success"></span> @{{user.username}}
+          </div>
+          <div
+            class="badge badge-lg py-4 px-4 bg-base-200 border-none font-bold gap-2 uppercase text-[10px] tracking-widest">
+            {{user.provider}} account
+          </div>
         </div>
-      </form>
-    </div>
-    <div class=" mt-2 p-4 rounded-lg ">
+      </div>
+    </header>
 
-    </div>
-    <div class=" mt-4 p-4 rounded-lg">
-      <h2 class=" text-xl p-1">Your Data</h2>
-      <div class="p-2 border-b dark:border-b-gray-600 border-b-gray-400  sm:grid grid-cols-2"> <span class="">Get Your
-          Data (Posts, Comments)</span>
-        <p class="block"><button class="btn h-fit w-fit px-3 py-1 "  onclick="modal_data.showModal()"><span
-              data-feather="download"></span>Request Data</button></p>
-      </div>
-    </div>
-    <div class="mt-4 p-4 rounded-lg">
-      <h2 class=" text-xl p-1 text-error">Danger Zone</h2>
-      <div class="p-2 border-b border-dashed border-base-300 sm:grid grid-cols-2"> <span
-          class=" text-warning opacity-90">Logout</span>
-        <p class="block"><button class="btn h-fit w-fit px-2 py-1 btn-warning btn-outline opacity-80 " onclick="modal_logout.showModal()"><span
-             class="h-5"  data-feather="log-out"></span>Logout </button></p>
-      </div>
-      <div class="p-2 border-b border-base-300   sm:grid grid-cols-2"> <span class="text-error opacity-90">Delete Your
-          Data</span>
-        <p class="block"><button class="btn btn-error btn-outline px-3 py-1 w-fit h-fit opacity-80"
-            onclick="modal_delete.showModal()"><span class="h-5" data-feather="trash-2"></span>Delete Account</button></p>
-      </div>
+    <div role="tablist"
+      class="tabs tabs-box bg-base-200/95 sticky top-18 z-10  transition-all text-success  p-1 mb-8 rounded-2xl max-w-md mx-auto md:mx-0">
+      <a role="tab" class="tab   font-black uppercase text-[11px]   tracking-widest"
+        onclick="switchTab(event, 'settings')"> Settings</a>
+      <a role="tab" class="tab tab-active  font-black uppercase text-[11px] tracking-widest"
+        onclick="switchTab(event, 'my-posts')">My Posts</a>
+      <a role="tab" class="tab  font-black uppercase text-[11px] tracking-widest"
+        onclick="switchTab(event, 'liked-posts')">Liked</a>
     </div>
 
+    <div id="settings" class=" tab-content space-y-6">
 
-    <dialog id="modal_about" class=" modal modal-bottom md:modal-middle">
-      <div class=" modal-box bg-base-100">
-        <h2 class=" text-xl lg:text-2xl p-4  font-bold">Write About YourSelf</h2>
-        <div class="px-4">
-          <textarea placeholder=" Minimum 10 charcter required" id="modal_about_textarea"
-            class=" textarea  textarea-md w-full "></textarea>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+        <div class="card bg-base-100 border border-base-200 shadow-sm">
+          <div class="card-body p-6">
+            <div class="flex justify-between items-center mb-6">
+              <h2 class="text-xl font-black tracking-tight">Personal Identity</h2>
+              <button class="btn btn-sm btn-ghost rounded-xl gap-2 text-primary" id="btn_p_edit">
+                <span class="h-4 w-4" data-feather="edit-3"></span> Edit
+              </button>
+            </div>
+
+            <div id="personal_info" class="space-y-4">
+              <div class="flex flex-col">
+                <span class="text-[10px] font-black uppercase tracking-widest opacity-40">Display Name</span>
+                <span id="display_name" class="font-bold text-lg">{{user.displayName}}</span>
+              </div>
+              <div class="grid grid-cols-2 gap-4">
+                <div class="flex flex-col">
+                  <span class="text-[10px] font-black uppercase tracking-widest opacity-40">First Name</span>
+                  <span id="first_name" class="font-bold">{{user.firstName}}</span>
+                </div>
+                <div class="flex flex-col">
+                  <span class="text-[10px] font-black uppercase tracking-widest opacity-40">Last Name</span>
+                  <span id="last_name" class="font-bold">{{user.lastName}}</span>
+                </div>
+              </div>
+              <div class="flex flex-col">
+                <span class="text-[10px] font-black uppercase tracking-widest opacity-40">About</span>
+                <span id="about" class="text-sm opacity-80 leading-relaxed">{{user.about}}</span>
+              </div>
+              <p id="p_edit_time" class="text-[10px] font-bold text-success uppercase tracking-widest mt-2"></p>
+            </div>
+
+            <form hidden id="form_personal" class="space-y-4">
+              <div class="form-control">
+                <label class="label"><span class="label-text font-bold">Display Name</span></label>
+                <input type="text" id="input_display_name" value="{{user.displayName}}"
+                  class="input input-bordered rounded-xl font-bold">
+              </div>
+              <div class="grid grid-cols-2 gap-4">
+                <div class="form-control">
+                  <label class="label"><span class="label-text font-bold">First Name</span></label>
+                  <input type="text" id="input_first_name" value="{{user.firstName}}"
+                    class="input input-bordered rounded-xl font-bold">
+                </div>
+                <div class="form-control">
+                  <label class="label"><span class="label-text font-bold">Last Name</span></label>
+                  <input type="text" id="input_last_name" value="{{user.lastName}}"
+                    class="input input-bordered rounded-xl font-bold">
+                </div>
+              </div>
+              <div class="form-control">
+                <label class="label"><span class="label-text font-bold">About You</span></label>
+                <textarea id="input_about"
+                  class="textarea textarea-bordered rounded-xl h-24 font-bold">{{user.about}}</textarea>
+              </div>
+              <div class="flex justify-end gap-2 pt-2">
+                <button type="button" id="cancle_p_edit" class="btn btn-ghost rounded-xl">Cancel</button>
+                <button type="submit" class="btn btn-primary rounded-xl px-8">Save</button>
+              </div>
+            </form>
+          </div>
         </div>
-        <div class=" modal-action px-4">
-          <button class=" btn btn-primary" disabled id="save_about" onclick="modal_about.close()">Save</button>
+
+        <div class="card bg-base-100 border border-base-200 shadow-sm">
+          <div class="card-body p-6">
+            <h2 class="text-xl font-black tracking-tight mb-6">Account Metadata</h2>
+            <div class="space-y-4">
+              <div class="flex justify-between items-center py-2 border-b border-base-200/50">
+                <span class="text-xs font-bold opacity-50 uppercase tracking-widest">Email Address</span>
+                <span class="font-bold text-sm">{{user.email}}</span>
+              </div>
+              <div class="flex justify-between items-center py-2 border-b border-base-200/50">
+                <span class="text-xs font-bold opacity-50 uppercase tracking-widest">Username</span>
+                <span class="font-bold text-sm">@{{user.username}}</span>
+              </div>
+              <div class="flex justify-between items-center py-2">
+                <span class="text-xs font-bold opacity-50 uppercase tracking-widest">Request Backup</span>
+                <button class="btn btn-sm btn-ghost gap-2 rounded-lg" onclick="modal_data.showModal()">
+                  <span data-feather="download" class="w-3 h-3"></span> Export JSON
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-      <form class=" modal-backdrop" method="dialog">
-      </form>
-    </dialog>
 
-    <dialog style="scrollbar-width: thin;" id="modal_delete" class=" modal modal-bottom sm:modal-middle">
-      <div style="scrollbar-width: thin;" class=" modal-box bg-red-200 dark:bg-warning-content">
-        <h2 class=" text-xl lg:text-2xl p-2 sm:p-4  font-bold">Permanant Account Delete?</h2>
-        <p class=" text-sm lg:text-lg p-2 sm:pl-4">This will delete account and all your data including
-          <strong>Posts</strong> and <strong>Commments</strong> .
-        </p>
-        <p class=" text-sm lg:text-lg font-bold p-2 sm:pl-4">Once you delete your account, there is no going back. Please
-          be certain.</p>
-        <p class=" p-1 sm:pl-4"> <span class="pb-2 block">To confirm, type "delete" in the box below</span>
-          <textarea class="input text-error w-full p-2 resize-none" id="input_delete" rows="1" ></textarea>
-        </p>
-        <div class=" modal-action">
-          <button onclick="modal_delete.close()" class=" btn">Cancel</button>
-          <button id="btn_delete" class=" btn btn-error" disabled><a href="/users/destroy">Delete</a></button>
+      <div class="card bg-error/5 border border-error/20 mt-8">
+        <div class="card-body p-6 flex flex-col md:flex-row justify-between items-center gap-4">
+          <div>
+            <h2 class="text-xl font-black text-error tracking-tight">Danger Zone</h2>
+            <p class="text-sm opacity-60">Permanently delete your data or end your session.</p>
+          </div>
+          <div class="flex gap-2 flex-wrap">
+            <button class="btn btn-ghost text-warning rounded-xl" onclick="modal_logout.showModal()">
+              <span data-feather="log-out" class="w-4 h-4"></span> Logout
+            </button>
+            <button class="btn btn-error rounded-xl shadow-lg shadow-error/20" onclick="modal_delete.showModal()">
+              <span data-feather="trash-2" class="w-4 h-4"></span> Delete Account
+            </button>
+          </div>
         </div>
       </div>
-      <form class=" modal-backdrop" method="dialog"></form>
-    </dialog>
+    </div>
 
-    <dialog id="modal_logout" class=" modal modal-middle">
-      <div class=" modal-box text-warning ">
-        <h2 class="text-xl lg:text-2xl p-4">Confirm Logout...</h2>
-        <p class="pl-4">Are you realy want to logout?</p>
-        <div class=" modal-action ">
-          <button class=" btn" onclick="modal_logout.close()">Cancel</button>
-          <a class="btn btn-warning  " href="/users/logout"><span
-             class="h-5"  data-feather="log-out"></span>Logout </a>
+    <div id="my-posts" class="tab-content block">
+      <div class="grid grid-cols-1 gap-4">
+        {{#if postlist}}
+        <h2 class="text-sm opacity-70 font-semibold px-2  tracking-widest mb-5 flex items-center gap-4">
+          <span>
+            Recently Added
+          </span>
+
+          {{#if postLength}}
+          <span class="opacity-80 text-[10px] font-mono">Total: {{postLength}}</span>
+          {{/if}}
+        </h2>
+        <div id="postlist" class="flex flex-col gap-4">
+          {{#each postlist}}
+          <div id="{{key}}"
+            class=" group card bg-base-100 border transition-colors border-base-300 shadow-sm sm:shadow-none hover:shadow-md shadow-success/50  mb-4 overflow-hidden cursor-pointer">
+            <div class="card-body p-5 md:p-7">
+
+              <div class="flex items-start justify-between mb-4">
+                <div class="flex items-center gap-3">
+                  <div class="avatar">
+                    <div class="w-10 h-10 rounded-full ring-2 ring-base-200">
+                      <img src="/assets/users/photo/{{auther.username}}" alt="{{auther.username}}">
+                    </div>
+                  </div>
+                  <div class="flex flex-col">
+                    <span class="font-black text-sm tracking-tight leading-none">{{auther.username}}</span>
+                    <span data-time="{{updatedAt}}"
+                      class="updatedAt text-[10px] font-bold uppercase tracking-widest opacity-40 mt-1"></span>
+                  </div>
+                </div>
+
+                <div id="{{key}}-info-container" class="flex flex-col items-end gap-1">
+                  <span id="{{key}}-info"
+                    class="badge badge-success badge-outline border-2 text-[10px] font-black uppercase px-2 py-3 rounded-lg hidden">
+
+                  </span>
+                </div>
+              </div>
+
+              <div class="flex flex-wrap gap-2 mb-4">
+                {{#each catgs}}
+                <a href="/explore/{{catgName}}"
+                  class=" btn sm:btn-sm  btn-xs hover:btn-success p-0  px-2 sm:px-4 rounded-full ">
+                  #{{catgName}}
+                </a>
+                {{/each}}
+              </div>
+
+              <a id="{{key}}-link" href="/posts/view?key={{key}}" class="block ">
+                <h2 id="{{key}}-title"
+                  class="title text-success sm:text-base-content text-2xl md:text-3xl font-black tracking-tight leading-[1.1] mb-3 group-hover:text-success transition-colors line-clamp-2">
+                  {{title}}
+                </h2>
+                <div id="{{key}}-body" class="text-base-content/90 text-sm md:text-base line-clamp-3 leading-relaxed">
+                  {{{body}}}
+                </div>
+              </a>
+
+              <div class="card-actions justify-between items-center mt-6 pt-5 border-t border-base-200/60">
+                <div class="flex items-center gap-1">
+                  <button data-postkey="{{key}}" class="like-btn btn btn-ghost btn-sm rounded-xl gap-2 text-success ">
+                    <span id="{{key}}-likeLogo" data-feather="thumbs-up" class="h-4 w-4"></span>
+                    <span id="{{key}}-likes" class="font-black text-xs">{{_count.likes}}</span>
+                  </button>
+
+                  <div class="btn btn-ghost btn-sm rounded-xl gap-2 text-info pointer-events-none opacity-80">
+                    <span data-feather="message-circle" class="h-4 w-4"></span>
+                    <span id="{{key}}-comments" class="font-black text-xs">{{_count.comments}}</span>
+                  </div>
+                </div>
+
+                <a href="/posts/view?key={{key}}"
+                  class="btn  btn-sm sm:btn-md btn-ghost p-0 px-2 text-base-content group-hover:text-success ">
+                  Read <span data-feather="arrow-right" class="h-5 w-9"></span>
+                </a>
+              </div>
+            </div>
+          </div>
+          {{/each}}
+        </div>
+        {{else}}
+        <div class="text-center py-20 bg-base-200/30 rounded-[3rem] border-2 border-dashed border-base-300">
+          <p class="font-black opacity-20 uppercase tracking-[0.3em]">No posts found</p>
+          <a href="/posts/add" class="btn btn-primary btn-sm mt-4 rounded-full">Create your first</a>
+        </div>
+        {{/if}}
+      </div>
+    </div>
+
+    <div id="liked-posts" class="tab-content">
+      <div class="grid grid-cols-1 gap-4">
+        {{#if likedPostList}}
+        <h2 class="text-sm  opacity-70 font-semibold px-2  tracking-widest mb-5 flex items-center gap-4">
+          <span>
+            Recently Liked
+          </span>
+
+          {{#if likedPostLength}}
+          <span class="opacity-80 text-[10px] font-mono">Total: {{likedPostLength}}</span>
+          {{/if}}
+        </h2>
+        <div id="postlist" class="flex flex-col gap-4">
+          {{#each likedPostList}}
+          <div id="{{key}}"
+            class=" group card bg-base-100 border transition-colors border-base-300 shadow-sm sm:shadow-none hover:shadow-md shadow-success/50  mb-4 overflow-hidden cursor-pointer">
+            <div class="card-body p-5 md:p-7">
+
+              <div class="flex items-start justify-between mb-4">
+                <div class="flex items-center gap-3">
+                  <div class="avatar">
+                    <div class="w-10 h-10 rounded-full ring-2 ring-base-200">
+                      <img src="/assets/users/photo/{{auther.username}}" alt="{{auther.username}}">
+                    </div>
+                  </div>
+                  <div class="flex flex-col">
+                    <span class="font-black text-sm tracking-tight leading-none">{{auther.username}}</span>
+                    <span data-time="{{updatedAt}}"
+                      class="updatedAt text-[10px] font-bold uppercase tracking-widest opacity-40 mt-1"></span>
+                  </div>
+                </div>
+
+                <div id="{{key}}-info-container" class="flex flex-col items-end gap-1">
+                  <span id="{{key}}-info"
+                    class="badge badge-success badge-outline border-2 text-[10px] font-black uppercase px-2 py-3 rounded-lg hidden">
+
+                  </span>
+                </div>
+              </div>
+
+              <div class="flex flex-wrap gap-2 mb-4">
+                {{#each catgs}}
+                <a href="/explore/{{catgName}}"
+                  class=" btn sm:btn-sm  btn-xs hover:btn-success p-0  px-2 sm:px-4 rounded-full ">
+                  #{{catgName}}
+                </a>
+                {{/each}}
+              </div>
+
+              <a id="{{key}}-link" href="/posts/view?key={{key}}" class="block ">
+                <h2 id="{{key}}-title"
+                  class="title text-success sm:text-base-content text-2xl md:text-3xl font-black tracking-tight leading-[1.1] mb-3 group-hover:text-success transition-colors line-clamp-2">
+                  {{title}}
+                </h2>
+                <div id="{{key}}-body" class="text-base-content/90 text-sm md:text-base line-clamp-3 leading-relaxed">
+                  {{{body}}}
+                </div>
+              </a>
+
+              <div class="card-actions justify-between items-center mt-6 pt-5 border-t border-base-200/60">
+                <div class="flex items-center gap-1">
+                  <button data-postkey="{{key}}" class="like-btn btn btn-ghost btn-sm rounded-xl gap-2 text-success ">
+                    <span id="{{key}}-likeLogo" data-feather="thumbs-up" class="h-4 w-4"></span>
+                    <span id="{{key}}-likes" class="font-black text-xs">{{_count.likes}}</span>
+                  </button>
+
+                  <div class="btn btn-ghost btn-sm rounded-xl gap-2 text-info pointer-events-none opacity-80">
+                    <span data-feather="message-circle" class="h-4 w-4"></span>
+                    <span id="{{key}}-comments" class="font-black text-xs">{{_count.comments}}</span>
+                  </div>
+                </div>
+
+                <a href="/posts/view?key={{key}}"
+                  class="btn  btn-sm sm:btn-md btn-ghost p-0 px-2 text-base-content group-hover:text-success ">
+                  Read <span data-feather="arrow-right" class="h-5 w-9"></span>
+                </a>
+              </div>
+            </div>
+          </div>
+          {{/each}}
+        </div>
+
+
+        {{else}}
+        <div class="text-center py-20 bg-base-200/30 rounded-[3rem] border-2 border-dashed border-base-300">
+          <p class="font-black opacity-20 uppercase tracking-[0.3em]">No liked posts</p>
+        </div>
+        {{/if}}
+      </div>
+    </div>
+
+  </div>
+
+  <dialog id="modal_about" class="modal modal-bottom sm:modal-middle">
+  <div class="modal-box bg-base-100 p-0 overflow-hidden border border-base-200 shadow-2xl">
+    
+    <div class="bg-primary/5 p-6 border-b border-base-200">
+      <div class="flex items-center gap-4">
+        <div class="bg-primary/10 text-primary p-3 rounded-2xl">
+          <span data-feather="user" class="w-6 h-6"></span>
+        </div>
+        <div>
+          <h2 class="text-xl font-black tracking-tight">Personal Bio</h2>
+          <p class="text-xs font-bold opacity-50 uppercase tracking-widest">Tell the community who you are</p>
         </div>
       </div>
-      <form class=" modal-backdrop" method="dialog"></form>
-    </dialog>
+    </div>
 
-    <dialog id="modal_data" class=" modal modal-middle">
-      <div class=" modal-box bg-base-200 ">
-        <h2 class="text-xl lg:text-2xl p-4">Request your Data...</h2>
-        <p class="pl-4">Do you want to get your Data? <br>
-        <strong>You can only request once after every 5 minutes.</strong></p>
-        <div class=" modal-action ">
-          <button class=" btn" onclick="modal_data.close()">Cancel</button>
-          <a class="btn btn-primary btn-outline " onclick="modal_data.close()" href="/users/request-data"><span
-             class="h-5"  data-feather="download"></span>Download</a>
+    <div class="p-6 space-y-4">
+      <div class="relative">
+        <textarea 
+          placeholder="I am a student ..." 
+          id="modal_about_textarea"
+          class="textarea textarea-bordered w-full h-40 rounded-2xl font-medium leading-relaxed focus:border-primary transition-all text-base p-4"
+        ></textarea>
+        
+        <div class="flex justify-between mt-2 px-1">
+          
+          <span id="char_count" class="text-[10px] font-black opacity-30 uppercase tracking-widest">
+            Minimum 10 characters required
+          </span>
         </div>
       </div>
-      <form class=" modal-backdrop" method="dialog"></form>
-    </dialog>
+    </div>
 
-    <dialog id="modal_edit_photo" class=" modal modal-middle">
-      <div class=" modal-box ">
-        <span class="m-auto h-24 w-24 p-4 rounded-full bg-neutral" id="user_svg" data-feather="user"></span>
-        <img hidden class=" m-auto h-24 w-24  rounded-full" id="preview_photo" src="">
-        <p id="edit_info" class=" p-4 opacity-90 text-center text-sm ">* Image size must be less than 3MB</p>
-        <label class="p-4 pt-2">
-          <input id="photo_input" class="block m-auto file-input" type="file">
-        </label>
-        <div class=" modal-action ">
-          <button class=" btn btn-ghost" onclick="modal_edit_photo.close()">Cancel</button>
-          <button id="btn_save_photo" class=" btn btn-primary">Save </button>
+    <div class="modal-action bg-base-200/30 p-4 border-t border-base-200 flex justify-end gap-3">
+      <button class="btn btn-ghost rounded-xl font-bold" onclick="modal_about.close()">Cancel</button>
+      <button 
+        class="btn btn-primary rounded-xl px-8 font-black shadow-lg shadow-primary/20" 
+        disabled 
+        id="save_about">
+        Save Profile
+      </button>
+    </div>
+  </div>
+
+  <form class="modal-backdrop backdrop-blur-sm bg-base-100/30" method="dialog">
+    <button>close</button>
+  </form>
+</dialog>
+
+  <dialog id="modal_delete" class="modal modal-bottom sm:modal-middle">
+    <div class="modal-box bg-base-100 border border-error/30 p-0 overflow-hidden">
+      <div class="bg-error/10 p-6">
+        <h2 class="text-2xl font-black text-error flex items-center gap-3">
+          <span data-feather="alert-triangle"></span> Are you sure?
+        </h2>
+      </div>
+      <div class="p-6">
+        <p class="font-bold opacity-70 mb-4">This action will erase all posts, comments, and profile data from our
+          servers. There is no undo.</p>
+        <div class="form-control">
+          <label class="label"><span class="label-text-alt uppercase font-black opacity-50 tracking-widest">Type
+              "delete" to confirm</span></label>
+          <input type="text" id="input_delete" class="input input-bordered border-error/30 w-full font-black text-error"
+            placeholder="delete">
+        </div>
+        <div class="modal-action">
+          <button onclick="modal_delete.close()" class="btn btn-ghost rounded-xl">Go Back</button>
+          <button id="btn_delete" class="btn btn-error rounded-xl px-10 shadow-lg shadow-error/20" disabled>
+            <a href="/users/destroy">Erase Everything</a>
+          </button>
         </div>
       </div>
-      <form class=" modal-backdrop" method="dialog"></form>
-    </dialog>
-    <script>
-      const photoInput = document.getElementById("photo_input");
-      photoInput.addEventListener("change", async (event) => {
-        const preview = document.getElementById("preview_photo");
-        const userSvg = document.getElementById("user_svg");
-        const saveBtn = document.getElementById("btn_save_photo");
-        const edit_info = document.getElementById("edit_info");
-        const newPhoto = photoInput.files[0];
-        if (!newPhoto.type.startsWith("image")) {
-          edit_info.textContent = "❗Please select a image.";
-          saveBtn.disabled = true;
-          return
-        }
+    </div>
+    <form class="modal-backdrop" method="dialog"></form>
+  </dialog>
 
-        const awater = await cropCenterResize(newPhoto);
-        userSvg.style.display = "none";
-        preview.hidden = false;
-        const prePhotoURL = URL.createObjectURL(awater);
-        preview.src = prePhotoURL
-        preview.addEventListener("load", (event) => {
-          URL.revokeObjectURL(prePhotoURL)
-        })
-        console.log(awater)
-        if (newPhoto.size / 1000 * 1000 > 3 * 1000 * 1000) {
-          edit_info.textContent = "❗This image size is bigger than 3MB"
-          saveBtn.disabled = true
-        } else {
-          edit_info.textContent = "✅ You can Save this."
-          saveBtn.disabled = false
-        }
-        saveBtn.addEventListener("click", async (event) => {
-          edit_info.textContent = "Uploading image..."
+  <dialog id="modal_logout" class="modal modal-middle">
+    <div class="modal-box text-center p-10">
+      <div class="w-16 h-16 bg-warning/10 text-warning rounded-full flex items-center justify-center mx-auto mb-6">
+        <span data-feather="log-out" class="w-8 h-8"></span>
+      </div>
+      <h2 class="text-2xl font-black mb-2">End your session?</h2>
+      <p class="opacity-60 mb-8 font-medium">You'll need to sign back in with Google to access your dashboard.</p>
+      <div class="flex gap-3 justify-center">
+        <button class="btn btn-ghost px-8" onclick="modal_logout.close()">Cancel</button>
+        <a class="btn btn-warning px-8 rounded-xl" href="/users/logout">Logout</a>
+      </div>
+    </div>
+    <form class="modal-backdrop" method="dialog"></form>
+  </dialog>
 
-          const req = await fetch("/users/update/photo/{{user.username}}", {
-            method: "POST",
-            body: await awater.arrayBuffer(),
-            headers: {
-              "content-type": "application/octet-stream",
-              "phototype": awater.type
-            }
-          })
-          const res = await req.text();
-          if (res === 'success') {
-            console.log("ok")
-            const reloadLink = document.createElement("a");
-            reloadLink.href = "/users/profile/{{user.username}}"
-            reloadLink.click();
-          }
-          modal_edit_photo.close()
-        })
+  <dialog id="modal_data" class=" modal modal-middle">
+    <div class=" modal-box bg-base-200 ">
+      <h2 class="text-xl lg:text-2xl p-4">Request your Data...</h2>
+      <p class="pl-4">Do you want to get your Data? <br>
+        <strong>You can only request once after every 5 minutes.</strong>
+      </p>
+      <div class=" modal-action ">
+        <button class=" btn" onclick="modal_data.close()">Cancel</button>
+        <a class="btn btn-primary btn-outline " onclick="modal_data.close()" href="/users/request-data"><span
+            class="h-5" data-feather="download"></span>Download</a>
+      </div>
+    </div>
+    <form class=" modal-backdrop" method="dialog"></form>
+  </dialog>
+
+  <dialog id="modal_edit_photo" class="modal modal-bottom sm:modal-middle">
+  <div class="modal-box p-0 bg-base-100 border border-base-200 shadow-2xl">
+    
+    <div class="bg-primary/5 p-6 border-b border-base-200">
+      <div class="flex items-center gap-4">
+        <div class="bg-primary/10 text-primary p-3 rounded-2xl">
+          <span data-feather="camera" class="w-6 h-6"></span>
+        </div>
+        <div>
+          <h2 class="text-xl font-black tracking-tight">Update Photo</h2>
+          <p class="text-xs font-bold opacity-50 uppercase tracking-widest">Personalize your profile</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="p-8 flex flex-col items-center">
+      <div class="relative group mb-6">
+        <div class="w-32 h-32 md:w-40 md:h-40 rounded-[2.5rem] bg-base-200 flex items-center justify-center border-4 border-base-100 shadow-inner overflow-hidden">
+          <span id="user_svg" data-feather="user" class="w-16 h-16 opacity-10"></span>
+          <img hidden id="preview_photo" class="w-full h-full object-cover">
+        </div>
+      </div>
+
+      <div id="edit_info" class="text-[10px] font-black uppercase tracking-[0.15em] text-center mb-8 px-6 py-2 bg-base-200/50 rounded-lg opacity-90">
+        * Image size must be less than 3MB
+      </div>
+
+      <div class="form-control w-full max-w-xs">
+        <input 
+          type="file" 
+          id="photo_input" 
+          class="file-input file-input-bordered file-input-primary w-full rounded-xl font-bold" 
+          accept="image/*"
+        />
+      </div>
+    </div>
+
+    <div class="modal-action bg-base-200/30 p-4 border-t border-base-200 flex justify-end gap-3">
+      <button class="btn btn-ghost rounded-xl font-bold" onclick="modal_edit_photo.close()">Cancel</button>
+      <button 
+        id="btn_save_photo" 
+        class="btn btn-primary rounded-xl px-10 font-black shadow-lg shadow-primary/20" 
+        disabled>
+        Save Photo
+      </button>
+    </div>
+  </div>
+
+  <form class="modal-backdrop backdrop-blur-sm bg-base-100/10" method="dialog">
+    <button>close</button>
+  </form>
+</dialog>
+  <script>
+    function switchTab(event, tabId) {
+      // 1. Remove active state from all tabs
+      document.querySelectorAll('.tab').forEach(t => {
+        t.classList.remove('tab-active');
       });
-      async function cropCenterResize(file) {
-        const img = await loadImage(file);
 
-        const size = Math.min(img.width, img.height);
+      // 2. Hide all content sections
+      document.querySelectorAll('.tab-content').forEach(c => {
+        c.classList.remove('block');
+      });
 
-        // Center crop coordinates
-        const sx = Math.floor((img.width - size) / 2);
-        const sy = Math.floor((img.height - size) / 2);
+      // 3. Show the selected content and set tab to active
+      event.currentTarget.classList.add('tab-active')
 
-        const canvas = document.createElement("canvas");
-        canvas.width = 200;
-        canvas.height = 200;
-
-        const ctx = canvas.getContext("2d");
-
-        ctx.drawImage(img, sx, sy, size, size, 0, 0, 200, 200);
-
-        return new Promise((resolve) => {
-          canvas.toBlob(
-            resolve,
-            "image/jpeg",
-            0.9 // safe quality, still tiny
-          );
-        });
+      const activeContent = document.getElementById(tabId);
+      activeContent.classList.add('block');
+      const header = document.getElementsByTagName("header")[0]
+      console.log(header.clientHeight)
+      window.scrollTo({
+        top: header.clientHeight,
+        behavior: 'smooth'
+      });
+      // 4. IMPORTANT: Re-run Feather icons and Scroll Observer 
+      // so icons show up in the newly visible tab
+      if (typeof feather !== 'undefined') feather.replace();
+    }
+    const photoInput = document.getElementById("photo_input");
+    photoInput.addEventListener("change", async (event) => {
+      const preview = document.getElementById("preview_photo");
+      const userSvg = document.getElementById("user_svg");
+      const saveBtn = document.getElementById("btn_save_photo");
+      const edit_info = document.getElementById("edit_info");
+      const newPhoto = photoInput.files[0];
+      if (!newPhoto.type.startsWith("image")) {
+        edit_info.textContent = "❗Please select a image.";
+        saveBtn.disabled = true;
+        return
       }
 
-      function loadImage(file) {
-        return new Promise((resolve, reject) => {
-          const img = new Image();
-          img.onload = () => {
-            URL.revokeObjectURL(img.src)
-            resolve(img);
-          }
-          img.onerror = reject;
-          img.src = URL.createObjectURL(file);
-        });
+      const awater = await cropCenterResize(newPhoto);
+      userSvg.style.display = "none";
+      preview.hidden = false;
+      const prePhotoURL = URL.createObjectURL(awater);
+      preview.src = prePhotoURL
+      preview.addEventListener("load", (event) => {
+        URL.revokeObjectURL(prePhotoURL)
+      })
+      console.log(awater)
+      if (newPhoto.size / 1000 * 1000 > 3 * 1000 * 1000) {
+        edit_info.textContent = "❗This image size is bigger than 3MB"
+        saveBtn.disabled = true
+      } else {
+        edit_info.textContent = "✅ You can Save this."
+        saveBtn.disabled = false
       }
-      const modal_about = document.getElementById("modal_about");
-      const save_about = document.getElementById("save_about");
-      const modal_about_textarea = document.getElementById("modal_about_textarea");
+      saveBtn.addEventListener("click", async (event) => {
+        edit_info.textContent = "Uploading image..."
 
-      const personal_info = document.getElementById("personal_info")
-      const btn_p_edit = document.getElementById("btn_p_edit");
-      const form_personal = document.getElementById("form_personal");
-      const about = document.getElementById("about");
-      if (about.textContent.length < 10) modal_about.showModal()
-
-      btn_p_edit.onclick = () => {
-        form_personal.hidden = false;
-        personal_info.hidden = true;
-        btn_p_edit.innerHTML = ` <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit h-4"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>Editing`
-      }
-      const cancle_p_edit = document.getElementById("cancle_p_edit");
-      cancle_p_edit.onclick = () => {
-        form_personal.hidden = true;
-        personal_info.hidden = false;
-        btn_p_edit.innerHTML = ` <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit h-4"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>Edit`
-      }
-      
-      modal_about_textarea.onkeyup = () => {
-        const about = modal_about_textarea.value;
-        if (about.length < 10) {
-          save_about.disabled = true
-        } else save_about.disabled = false
-
-      }
-
-      form_personal.addEventListener("submit", async (event) => {
-        event.preventDefault();
-        if (form_personal.hidden) return;
-        const res = await fetch("/users/profile/update/personal", {
+        const req = await fetch("/users/update/photo/{{user.username}}", {
           method: "POST",
-          body: JSON.stringify({
-            about: document.getElementById("input_about").value,
-            displayName: document.getElementById("input_display_name").value,
-            firstName: document.getElementById("input_first_name").value,
-            lastName: document.getElementById("input_last_name").value
-          }),
+          body: await awater.arrayBuffer(),
+          headers: {
+            "content-type": "application/octet-stream",
+            "phototype": awater.type
+          }
+        })
+        const res = await req.text();
+        if (res === 'success') {
+          console.log("ok")
+          const reloadLink = document.createElement("a");
+          reloadLink.href = "/users/profile/{{user.username}}"
+          reloadLink.click();
+        }
+        modal_edit_photo.close()
+      })
+    });
+    async function cropCenterResize(file) {
+      const img = await loadImage(file);
+
+      const size = Math.min(img.width, img.height);
+
+      // Center crop coordinates
+      const sx = Math.floor((img.width - size) / 2);
+      const sy = Math.floor((img.height - size) / 2);
+
+      const canvas = document.createElement("canvas");
+      canvas.width = 200;
+      canvas.height = 200;
+
+      const ctx = canvas.getContext("2d");
+
+      ctx.drawImage(img, sx, sy, size, size, 0, 0, 200, 200);
+
+      return new Promise((resolve) => {
+        canvas.toBlob(
+          resolve,
+          "image/jpeg",
+          0.9 // safe quality, still tiny
+        );
+      });
+    }
+
+    function loadImage(file) {
+      return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.onload = () => {
+          URL.revokeObjectURL(img.src)
+          resolve(img);
+        }
+        img.onerror = reject;
+        img.src = URL.createObjectURL(file);
+      });
+    }
+    const modal_about = document.getElementById("modal_about");
+    const save_about = document.getElementById("save_about");
+    const modal_about_textarea = document.getElementById("modal_about_textarea");
+
+    const personal_info = document.getElementById("personal_info")
+    const btn_p_edit = document.getElementById("btn_p_edit");
+    const form_personal = document.getElementById("form_personal");
+    const about = document.getElementById("about");
+    if (about.textContent.length < 10) modal_about.showModal()
+
+    btn_p_edit.onclick = () => {
+      form_personal.hidden = false;
+      personal_info.hidden = true;
+      btn_p_edit.innerHTML = ` <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit h-4"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>Editing`
+    }
+    const cancle_p_edit = document.getElementById("cancle_p_edit");
+    cancle_p_edit.onclick = () => {
+      form_personal.hidden = true;
+      personal_info.hidden = false;
+      btn_p_edit.innerHTML = ` <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit h-4"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>Edit`
+    }
+
+    modal_about_textarea.onkeyup = () => {
+      const about = modal_about_textarea.value;
+      if (about.length < 10) {
+        save_about.disabled = true
+      } else save_about.disabled = false
+
+    }
+
+    form_personal.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      if (form_personal.hidden) return;
+      const res = await fetch("/users/profile/update/personal", {
+        method: "POST",
+        body: JSON.stringify({
+          about: document.getElementById("input_about").value,
+          displayName: document.getElementById("input_display_name").value,
+          firstName: document.getElementById("input_first_name").value,
+          lastName: document.getElementById("input_last_name").value
+        }),
+        headers: {
+          "Content-type": "application/json"
+        }
+      });
+      console.log(res.status)
+      if (res.status === 200) {
+        const resText = await res.text();
+        const udpatedUser = JSON.parse(resText);
+        document.getElementById("display_name").textContent = udpatedUser.displayName;
+        document.getElementById("first_name").textContent = udpatedUser.firstName;
+        document.getElementById("last_name").textContent = udpatedUser.lastName;
+        document.getElementById("about").textContent = udpatedUser.about;
+        document.getElementById("p_edit_time").textContent = "Updated At: " + new Date().toLocaleTimeString();
+        btn_p_edit.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit h-4"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>Edit`
+        form_personal.hidden = true;
+        personal_info.hidden = false
+      }
+    });
+    save_about.onclick = async function () {
+      try {
+        const res = await fetch("/users/profile/update/about", {
+          method: "POST",
+          body: JSON.stringify({ about: modal_about_textarea.value }),
           headers: {
             "Content-type": "application/json"
           }
         });
-        console.log(res.status)
-        if (res.status === 200) {
-          const resText = await res.text();
-          const udpatedUser = JSON.parse(resText);
-          document.getElementById("display_name").textContent = udpatedUser.displayName;
-          document.getElementById("first_name").textContent = udpatedUser.firstName;
-          document.getElementById("last_name").textContent = udpatedUser.lastName;
-          document.getElementById("about").textContent = udpatedUser.about;
-          document.getElementById("p_edit_time").textContent = "Updated At: " + new Date().toLocaleTimeString();
-          btn_p_edit.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit h-4"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>Edit`
-          form_personal.hidden = true;
-          personal_info.hidden = false
+        const resText = await res.text()
+        if (resText === modal_about_textarea.value) {
+          document.getElementById("about").textContent = resText
+          document.getElementById("input_about").value = resText;
         }
-      });
-      save_about.onclick = async function () {
-        try {
-          const res = await fetch("/users/profile/update/about", {
-            method: "POST",
-            body: JSON.stringify({ about: modal_about_textarea.value }),
-            headers: {
-              "Content-type": "application/json"
-            }
-          });
-          const resText = await res.text()
-          if (resText === modal_about_textarea.value) {
-            document.getElementById("about").textContent = resText
-            document.getElementById("input_about").value = resText;
-          }
-          console.log(resText)
-          modal_about.close()
-        } catch (err) {
+        console.log(resText)
+        modal_about.close()
+      } catch (err) {
 
-        }
-      };
-      const input_delete = document.getElementById("input_delete");
-      const btn_delete = document.getElementById("btn_delete");
-      input_delete.addEventListener("keyup", (event) => {
-        if (input_delete.value === "delete" || input_delete.value === "Delete") {
-          btn_delete.disabled = false;
-        }
-        else {
-          btn_delete.disabled = true;
-        }
-      })
+      }
+    };
+    const input_delete = document.getElementById("input_delete");
+    const btn_delete = document.getElementById("btn_delete");
+    input_delete.addEventListener("keyup", (event) => {
+      if (input_delete.value === "delete" || input_delete.value === "Delete") {
+        btn_delete.disabled = false;
+      }
+      else {
+        btn_delete.disabled = true;
+      }
+    })
 
-    </script>
-  </div>
+  </script>
+</div>
 </div>

@@ -164,9 +164,15 @@ router.post("/create", async (req, res, next) => {
 router.get('/profile/:username', async (req, res, next) => {
   if (req.user && req.params.username === req.user.username) {
     const user = await postsUsersStore.readByUserName(req.user.username);
+    const postlist = await postsUsersStore.getUserPosts(req.params.username,false)
+    const likedPostList = await postsUsersStore.getLikedPosts(req.params.username, false)
     res.render("about-user", {
       title: "About " + req.user.displayName,
       user: user,
+      postlist: postlist,
+      likedPostList: likedPostList,
+      likedPostLength: likedPostList.length,
+      postLength : postlist.length,
     });
   } else {
     const user = await postsUsersStore.getPublicData(req.params.username);
