@@ -46,7 +46,7 @@ export async function getNewToken(refreshToken) {
 export async function restoreSession(req, res, next) {
   if (req.cookies["sess_re_Tok"]) {
     const [newToken, user] = await getNewToken(req.cookies["sess_re_Tok"]);
-    if (!newToken) next();
+    if (!newToken) { next() ; return}
     req.user = user;
     res.cookie(sessionCookieName, newToken, {
       secure: true, sameSite: "lax", httpOnly: true, path: "/",
