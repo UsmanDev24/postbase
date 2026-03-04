@@ -31,14 +31,14 @@
     <div role="tablist"
       class="tabs tabs-box bg-base-300 dark:bg-base-200 border border-base-300 sticky top-18 z-10 transition-all text-success mb-8 rounded-2xl max-w-md mx-auto md:mx-0">
 
-      <a role="tab" class="tab font-black uppercase text-[11px] tracking-widest inline-flex items-center gap-1"
+      <a role="tab" class="tab tab-active font-black uppercase text-[11px] tracking-widest inline-flex items-center gap-1"
         onclick="switchTab(event, 'settings')">
         <span data-feather="settings" class="w-4 h-4 mb-1"></span>
         Settings
       </a>
 
       <a role="tab"
-        class="tab tab-active font-black uppercase text-[11px] tracking-widest inline-flex items-center gap-1"
+        class="tab font-black uppercase text-[11px] tracking-widest inline-flex items-center gap-1"
         onclick="switchTab(event, 'my-posts')">
         <span data-feather="grid" class="w-4 h-4 mb-1"></span>
         My Posts
@@ -52,7 +52,7 @@
 
     </div>
 
-    <div id="settings" class=" tab-content space-y-6">
+    <div id="settings" class=" tab-content block">
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
@@ -159,7 +159,7 @@
       </div>
     </div>
 
-    <div id="my-posts" class="tab-content block">
+    <div id="my-posts" class="tab-content">
       <div class="grid grid-cols-1 gap-4">
         {{#if postlist}}
         <h2 class="text-sm opacity-70 font-semibold px-2  tracking-widest mb-5 flex items-center gap-4">

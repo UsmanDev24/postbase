@@ -60,7 +60,7 @@ class PostCache {
         }
       })
     })
-    
+
   }
   async lock(key, task) {
     const previous = this.#locks.get(key) || Promise.resolve()
@@ -93,7 +93,7 @@ class PostCache {
   async updateKeyList() {
     return this.#cache.delete("keyList")
   }
-  
+
   async get(key) {
     return this.#cache.get(key)
   }
@@ -109,7 +109,7 @@ export async function connectDB() {
 const commentStore = new PrismaCommentsStore();
 const postCache = new PostCache(cacheStore, commentStore);
 
-export default  class PrismaPostsStore  {
+export default class PrismaPostsStore {
   static #inFlight = new Map()  // Map<String, Promice<void>> Post which are being fetched from db.
   static Events = new EventEmitter()
 
@@ -125,9 +125,13 @@ export default  class PrismaPostsStore  {
 
   async create(key, title, body, autherId, ...catgs) {
     const catgsData = [];
+    const uniqeCatgs = new Set()
     catgs.forEach(catg => {
       if (catg) {
-        catgsData.push({ catgName: catg })
+        if (!uniqeCatgs.has(catg)) {
+          uniqeCatgs.add(catg)
+          catgsData.push({ catgName: catg })
+        }
       }
     })
     const post = await prisma.posts.create({
