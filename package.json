@@ -9,7 +9,7 @@
     "watch": "tailwindcss -i ./public/assets/stylesheets/input.css -o ./public/assets/stylesheets/styles.css --watch",
     "prisma": "dotenvx run --env-file=.env.development -- prisma",
     "init-catg": "dotenvx run --env-file=.env.development -- node ./models/init-categories.mjs",
-    "build": "pnpm run pris-dbpull-pro; pnpm run pris-gen-pro; pnpm run copy-assets; tsc; pnpm run init-catg-pro",
+    "build": "pnpm run pris-dbpull-pro; pnpm run pris-gen-pro; tsc; pnpm run copy-assets;  pnpm run init-catg-pro",
     "copy-assets": "cp -r src/public/assets dist/public; cp -r src/views dist/; cp -r src/partials dist/",
     "pris-dbpull-pro": "dotenvx run --env-file=.env.production -- prisma db push --config=./src/prisma.config.ts",
     "pris-gen-pro": "dotenvx run --env-file=.env.production -- prisma generate --config=./src/prisma.config.ts",
