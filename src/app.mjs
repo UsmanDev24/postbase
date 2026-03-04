@@ -58,7 +58,7 @@ const mainRouter = express.Router()
 mainRouter.use((req, res , next) => {
     const cookie = req.cookies;
     if (!cookie.cacheControl) {
-        res.cookie("cacheControl", " ", {maxAge: 1000 * 60 * 30, httpOnly: true, path: '/', sameSite: 'lax'})
+        res.cookie("cacheControl", " ", {maxAge: 1000 * 60 * 90, httpOnly: true, path: '/', sameSite: 'lax'})
         res.cookie("cacheRefresh", " ", {maxAge: 1000 * 30 , httpOnly: true, path: '/', sameSite: 'lax' });
     }                
     next()

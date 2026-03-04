@@ -12,7 +12,7 @@
     "build": "pnpm run pris-dbpull-pro; pnpm run pris-gen-pro; pnpm run copy-assets; tsc; pnpm run init-catg-pro",
     "copy-assets": "cp -r src/public/assets dist/public; cp -r src/views dist/; cp -r src/partials dist/",
     "pris-dbpull-pro": "dotenvx run --env-file=.env.production -- prisma db push --config=./src/prisma.config.ts",
-    "pris-gen-pro": "dotenvx run --env-file=.env.production -- prisma db push --config=./src/prisma.config.ts",
+    "pris-gen-pro": "dotenvx run --env-file=.env.production -- prisma generate --config=./src/prisma.config.ts",
     "init-catg-pro": "dotenvx run --env-file=.env.production -- node ./dist/models/init-categories.mjs "
   },
   "author": "Usman Ghani",
