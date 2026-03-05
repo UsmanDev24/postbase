@@ -78,7 +78,16 @@ mainRouter.use(async (req, res, next) => {
     })(req, res, next)
     
 })
-
+mainRouter.use((req, res, next) => {
+    if (process.env.RAILWAY_ENVIRONMENT_NAME) {
+        if (req.headers['x-worker'] !== process.env.X_WORKER)  {
+            res.status(403)
+            res.end("Forbidden");
+            return
+        }
+    } 
+    next()
+})
 mainRouter.use('/', indexRouter);
 mainRouter.use('/posts', postsRouter);
 mainRouter.use('/users', usersRouter);
@@ -114,3 +123,4 @@ server.on('listening', onListening);
 server.on('request', (req, res) => {
     //debug(`${new Date().toISOString()} request ${req.method} ${req.url}`)
 })
+
