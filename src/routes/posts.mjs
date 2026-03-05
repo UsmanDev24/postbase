@@ -7,6 +7,7 @@ import { PrismaCommentsStore } from "../models/comments-prisma.mjs";
 import { PrimsaLikesStore } from "../models/likes-prisma.mjs";
 import { PrismaPostCatgStore } from "../models/catg-prisma.mjs";
 import * as crpto from 'node:crypto';
+import sanitizeHtml from 'sanitize-html';
 
 const debug = DBG('posts:routs_posts.mjs')
 const dbgerror = DBG('posts:error')
@@ -56,7 +57,7 @@ export async function initSocket(socket) {
 //Add posts.
 router.get('/add', ensureAuthenticated, async (req, res, next) => {
   const catgNameList = (await catgsStore.getCategoriesNames()).map(v => {
-    return {catgName: v}
+    return { catgName: v }
   })
   res.render('postedit', {
     title: "Add a post",
@@ -73,10 +74,24 @@ router.post('/save', ensureAuthenticated, async (req, res, next) => {
   try {
     let post;
     let postkey;
+    const cleanHtml = sanitizeHtml(req.body.body, {
+      allowedTags: [
+        'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'span', 'strong', 'b', 'em', 'i', 'small',
+        'sub', 'sup', 'mark', 'ul', 'ol', 'li', 'dl', 'dt', 'dd', 'a', 'blockquote',
+        'code', 'pre', 'table', 'thead', 'tbody', 'tfoot', 'tr', 'th', 'td', 'caption',
+        'img', 'figure', 'figcaption', 'video', 'audio', 'hr', 'br'
+      ],
+      allowedAttributes: {
+        a: ['href', 'name', 'target', 'rel', 'title'],
+        img: ['src', 'alt', 'title', 'width', 'height'],
+        '*': ['class', 'id', 'title'] // global attributes
+      },
+      allowedSchemes: ['http', 'https', 'mailto', 'tel'],
+    })
     debug(req.body.docreate);
     if (req.body.docreate === "create") {
       postkey = crpto.randomUUID();
-      post = await posts.create(postkey, req.body.title, req.body.body, req.user.id, req.body.catg1, req.body.catg2, req.body.catg3)
+      post = await posts.create(postkey, req.body.title,cleanHtml, req.user.id, req.body.catg1, req.body.catg2, req.body.catg3)
     } else {
       postkey = req.body.postkey
       post = await posts.read(postkey)
@@ -84,7 +99,7 @@ router.post('/save', ensureAuthenticated, async (req, res, next) => {
         res.redirect("/")
         return
       }
-      post = await posts.update(postkey, req.body.title, req.body.body, req.user.id)
+      post = await posts.update(postkey, req.body.title, cleanHtml, req.user.id)
     }
     res.redirect('/posts/view?key=' + postkey)
   } catch (err) {
@@ -174,10 +189,10 @@ router.get('/comment/destroy/:id', ensureAuthenticated, async (req, res, next) =
       await commentStore.destroy(comment.id, comment.postkey);
       res.status(200)
       res.send("success")
-    } else { 
+    } else {
       res.send("Not allowed")
     }
-    
+
   } catch (error) {
     next(error)
   }
