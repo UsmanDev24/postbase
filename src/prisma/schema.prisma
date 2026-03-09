@@ -58,7 +58,7 @@ model categoryToPosts {
 model posts {
   title      String?           @db.VarChar(255)
   body       String?
-  coverImage String?
+  coverPic   String?
   createdAt  DateTime          @default(now()) @db.Timestamptz(6)
   updatedAt  DateTime          @updatedAt @db.Timestamptz(6)
   likes      like[]
@@ -87,8 +87,8 @@ model comments {
   @@index([autherId])
 }
 
-model images {
-  id        Int      @id @default(autoincrement())
+model picture {
+  id        String   @id
   blob      Bytes
   url       String   @unique
   createdAt DateTime @default(now()) @db.Timestamptz(6)
