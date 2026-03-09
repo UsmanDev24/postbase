@@ -108,7 +108,7 @@ router.get('/', async (req, res, next) => {
   }
 });
 
-router.get("/privacy_policy", (req, res, next) => {
+router.get("/privacy-policy", (req, res, next) => {
   res.render('privacy', {
     title: 'Privacy Policy',
     user: req.user ? req.user : undefined,

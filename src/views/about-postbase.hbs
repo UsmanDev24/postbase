@@ -1,47 +1,106 @@
-<!-- views/about.hbs -->
-<div class="max-w-3xl mx-auto px-6 py-12 space-y-12">
+<div class="max-w-4xl mx-auto px-4 md:px-12 py-12 pb-24 space-y-12">
 
-  <!-- Page Header -->
-  <header class="text-center space-y-2">
-    <p class="text-base-content/70">
-      A learning project and portfolio showcase built by me, focusing on clarity, speed, and hands-on backend/frontend experience.
+  <header class="space-y-4">
+    <h1 class="text-4xl md:text-5xl font-black tracking-tighter">About Postbase</h1>
+    <p class="text-base-content/80 font-medium text-lg max-w-2xl">
+      A project built for clarity, speed, and hands-on engineering.
     </p>
   </header>
 
-  <!-- Project Description -->
-  <section class="bg-base-200 p-6 rounded-lg shadow-md space-y-4">
-    <h2 class="text-xl font-semibold">What is Postbase?</h2>
-    <p class="text-base-content/80">
-      Postbase is a minimal content platform where you can:
-    </p>
-    <ul class="list-disc list-inside text-base-content/80 space-y-1">
-      <li>Create posts and organize them by categories.</li>
-      <li>Explore posts from other users.</li>
-      <li>Log in to manage your own content.</li>
-    </ul>
-    <p class="text-base-content/80">
-      This project is primarily for learning and demonstrating my skills in <strong>Node.js, Express, databases, and frontend integration</strong>.
-    </p>
-  </section>
+  <div class="flex flex-col gap-8">
 
-  <!-- Developer / Portfolio Info -->
-  <section class="bg-base-100 p-6 rounded-lg shadow-md space-y-4">
-    <h2 class="text-xl font-semibold">About the Developer</h2>
-    <p class="text-base-content/80">
-      I’m <strong> <a href="https://usman-ghani.dev" class=" link link-success">Usman Ghani</a></strong>, currently learning backend development with Node.js and building projects to showcase practical skills. This project reflects my approach to creating clean, functional, and scalable web applications.
-    </p>
-    <p class="text-base-content/80">
-      You can see my other projects or reach me on <a href="https://github.com/usmandev24" target="_blank" class="text-primary hover:underline">GitHub</a>.
-    </p>
-  </section>
+    <section class="p-6 md:p-10 rounded-4xl bg-base-200/50 border border-base-200 space-y-4">
+      <h2 class="text-xl font-black uppercase tracking-widest opacity-80">The Platform</h2>
+      <p class="text-base-content/90 leading-relaxed font-medium">
+        Postbase is a minimal content platform where you can create posts, organize them by categories, and explore
+        content from other users. This project reflects my approach to creating clean, functional web applications.
+      </p>
+      <div class="flex flex-wrap gap-2 pt-2">
+        <span
+          class="px-3 py-1 bg-base-100 rounded-lg text-[10px] font-black uppercase tracking-wider shadow-sm">Node.js</span>
+        <span
+          class="px-3 py-1 bg-base-100 rounded-lg text-[10px] font-black uppercase tracking-wider shadow-sm">Express</span>
+        <span
+          class="px-3 py-1 bg-base-100 rounded-lg text-[10px] font-black uppercase tracking-wider shadow-sm">Tailwind
+          CSS</span>
+      </div>
+    </section>
 
-  <!-- Call to Action -->
-  <section class="text-center space-y-2">
+    <section class="p-6 md:p-10 rounded-4xl bg-success/5 border border-success/20 space-y-6">
+      <div class="flex items-center gap-3">
+        <div class="bg-success/10 text-success p-2 rounded-lg">
+          <span data-feather="terminal" class="w-5 h-5"></span>
+        </div>
+        <h2 class="text-xl font-black uppercase tracking-widest text-success">DevOps Sandbox</h2>
+      </div>
+
+      <p class="text-base-content/90 leading-relaxed font-medium">
+        This project is now my <strong>sandbox for learning DevOps</strong>. I am using it to learn DevOps by managing
+        the infrastructure and deployment lifecycle myself.
+      </p>
+
+      <div class="flex flex-wrap gap-3">
+        <div class="flex items-center gap-2 px-4 py-2 bg-base-100 rounded-xl border border-success/20 shadow-sm">
+          <span class="w-2 h-2 rounded-full bg-success"></span>
+          <span class="text-[11px] font-black uppercase tracking-widest opacity-90">CI/CD Pipelines</span>
+        </div>
+        <div class="flex items-center gap-2 px-4 py-2 bg-base-100 rounded-xl border border-success/20 shadow-sm">
+          <span class="w-2 h-2 rounded-full bg-success"></span>
+          <span class="text-[11px] font-black uppercase tracking-widest opacity-90">Docker</span>
+        </div>
+        <div class="flex items-center gap-2 px-4 py-2 bg-base-100 rounded-xl border border-success/20 shadow-sm">
+          <span class="w-2 h-2 rounded-full bg-success"></span>
+          <span class="text-[11px] font-black uppercase tracking-widest opacity-90">Monitoring</span>
+        </div>
+        <div id="usman-ghani" class="flex items-center gap-2 px-4 py-2 bg-base-100 rounded-xl border border-success/20 shadow-sm">
+          <span class="w-2 h-2 rounded-full bg-success"></span>
+          <span class="text-[11px] font-black uppercase tracking-widest opacity-90">Automation</span>
+        </div>
+      </div>
+    </section>
+
+    <section  class="p-6 md:p-10 rounded-4xl bg-base-100 border border-base-200 space-y-6">
+      <div class="flex flex-col md:flex-row gap-6 items-start md:items-center">
+        <div class="avatar">
+          <div class="w-40 h-40 rounded-3xl ring-4 ring-primary/5 shadow-lg">
+            <img src="https://github.com/usmandev24.png" alt="Usman Ghani" />
+          </div>
+        </div>
+
+        <div class="flex-1 space-y-2">
+          <h2 class="text-xl font-black uppercase tracking-widest opacity-90">About Me</h2>
+          <p class="text-base-content/90 leading-relaxed font-medium">
+            I’m <strong><a href="https://usman-ghani.dev" class="text-primary hover:underline transition-all">Usman
+                Ghani</a></strong>, a developer focused on building scalable backend systems. You can view my other
+            projects or reach me via the links below.
+          </p>
+          <div class="flex flex-wrap gap-4 pt-2">
+        <a href="https://github.com/usmandev24" target="_blank"
+          class="btn btn-sm rounded-xl font-black uppercase text-[10px] tracking-widest gap-2">
+          <span data-feather="github" class="w-4 h-4"></span> GitHub
+        </a>
+        <a href="https://usman-ghani.dev"
+          class="btn btn-sm btn-primary rounded-xl font-black uppercase text-[10px] tracking-widest px-6 shadow-md shadow-primary/10">
+          Portfolio
+        </a>
+      </div>
+        </div>
+        
+      </div>
+
+      
+    </section>
+
+  </div>
+
+  <div class="text-center pt-8">
     {{#if user}}
-    <a href="/" class="btn btn-primary btn-md">Explore Postbase</a>
+    <a href="/" class="btn btn-ghost rounded-2xl font-black uppercase tracking-widest text-xs">Back to feed</a>
     {{else}}
-    <a href="/users/login" class="btn btn-primary btn-md">Join Postbase</a>
+    <a href="/users/login"
+      class="btn btn-primary px-10 rounded-2xl font-black uppercase tracking-widest text-xs shadow-lg shadow-primary/20">Join
+      Postbase</a>
     {{/if}}
-  </section>
+  </div>
 
 </div>
