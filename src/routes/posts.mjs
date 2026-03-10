@@ -124,10 +124,11 @@ router.post('/save', ensureAuthenticated, upload.single("imageFile"), async (req
         const fileBuffer = new Uint8Array(req.file.buffer)
         const pic = await picStore.add(fileBuffer, "/assets/posts/pictures/", req.file.mimetype.replace("image/", ""))
         imageURL = pic.url;
-        await picStore.remove(post.coverPic)
+        if (post.coverPic) await picStore.remove(post.coverPic)
+
       } else if (req.body.imageURL != post.coverPic) {
         imageURL = req.body.imageURL
-        await picStore.remove(post.coverPic)
+        if (post.coverPic) await picStore.remove(post.coverPic)
       } else {
         imageURL = post.coverPic
       }
