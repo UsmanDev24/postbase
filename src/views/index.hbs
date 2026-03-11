@@ -5,15 +5,6 @@
 
       <div class="lg:w-1/2 flex flex-col items-center lg:items-start text-center lg:text-left lg:pr-6">
 
-        <div
-          class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-[11px] font-black uppercase tracking-[0.15em] text-primary mb-8 shadow-sm">
-          <span class="relative flex h-2 w-2">
-            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
-            <span class="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
-          </span>
-          Developer Portfolio Showcase
-        </div>
-
         <h1 class="text-4xl md:text-6xl font-black leading-[1.1] mb-8 tracking-tighter text-base-content">
           Share Ideas, <br class="hidden lg:block" />
           <span class="text-transparent bg-clip-text bg-linear-to-r from-green-500 to-purple-600">Showcase
@@ -21,9 +12,8 @@
         </h1>
 
         <p class="text-lg opacity-80 leading-relaxed mb-12 max-w-md font-medium">
-          A modern content platform engineered by <a
-            class="text-base-content font-bold underline decoration-success/50" href="/about-postbase#usman-ghani"
-            target="_blank">Usman Ghani</a> to demonstrate
+          A modern content platform engineered by <a class="text-base-content font-bold underline decoration-success/50"
+            href="/about-postbase#usman-ghani" target="_blank">Usman Ghani</a> to demonstrate
           excellence in full-stack architecture, real-time interactions, and modern UI design.
         </p>
 
@@ -272,8 +262,33 @@
 
   {{#if postlist}}
 
-  <h2 class="text-sm font-bold opacity-70 uppercase px-2 tracking-widest mb-5">
-    {{#if homepage}}Recent Posts{{else}} <span class=" opacity-45">Sort by:</span> Latest Posts{{/if}}
+  <h2 class=" text-sm font-bold opacity-80 uppercase sm:px-2 tracking-widest mb-5">
+    {{#if homepage}}Recent Posts{{else}}
+    <span class=" hidden md:inline">Sort: </span>
+    <select class="select select-sm md:select-md  select-bordered rounded-2xl w-fit bg-base-100 focus:border-success">
+
+      <a href="{{baseUrl}}?sort=latest&limit={{limit}}&page={{current}}">
+        <option {{#if latest}} selected {{/if}}>
+          Latest </option>
+      </a>
+      <a href="{{baseUrl}}?sort=oldest&limit={{limit}}&page={{current}}">
+        <option {{#unless latest}} selected {{/unless}}>
+          Oldest</option>
+      </a>
+
+    </select>
+    <span class="inline text-xs md:text:sm pl-2 md:pl-4">Limit: </span>
+    <select class="select select-bordered select-sm md:select-md rounded-2xl w-max bg-base-100 focus:border-success">
+      {{#each limitList}}
+      <a href="{{@root.baseUrl}}?sort={{@root.sort}}&limit={{limits}}&page=1">
+        <option {{#if checked}} selected {{/if}}>{{limits}}</option>
+      </a>
+      {{/each}}
+    </select>
+    <span class=" text-xs md:text-sm tracking-wide  pl-2 sm:pl-4 p-4 ">
+      page: {{current}}
+    </span>
+    {{/if}}
   </h2>
 
   <div id="postlist" class="flex flex-col gap-6">
@@ -345,8 +360,7 @@
 
         <div class="flex items-center justify-between mt-2">
           <div class="flex items-center gap-1">
-            <button data-postkey="{{key}}"
-              class="like-btn btn btn-ghost btn-sm rounded-xl gap-2 text-success ">
+            <button data-postkey="{{key}}" class="like-btn btn btn-ghost btn-sm rounded-xl gap-2 text-success ">
               <span id="{{key}}-likeLogo" data-feather="thumbs-up" class="h-4 w-4"></span>
               <span id="{{key}}-likes" class="font-black text-xs">{{_count.likes}}</span>
             </button>
@@ -368,15 +382,6 @@
     {{/each}}
   </div>
 
-  {{#if homepage}}
-  <div class="mt-14 mb-16 flex justify-center">
-    <a class="btn btn-outline btn-wide rounded-full border-base-300 hover:bg-base-200 hover:text-base-content group"
-      href="/explore/All%20Posts">
-      Explore All Posts
-      <span data-feather="chevron-right" class="h-4 w-4 transition-transform group-hover:translate-x-1"></span>
-    </a>
-  </div>
-  {{/if}}
 </div>
 
 {{else}}
@@ -405,6 +410,19 @@
   {{/if}}
 </div>
 {{/if}}
+{{#if homepage}}
+<div class="mt-14 mb-16 flex justify-center">
+  <a class="btn btn-outline btn-wide rounded-full border-base-300 hover:bg-base-200 hover:text-base-content group"
+    href="/explore/All%20Posts">
+    Explore All Posts
+    <span data-feather="chevron-right" class="h-4 w-4 transition-transform group-hover:translate-x-1"></span>
+  </a>
+</div>
+{{else}}
+<div id="pagination" class="flex flex-col items-center gap-4 mt-12 mb-8">
+
+</div>
+{{/if}}
 </div>
 
 <script>
@@ -419,3 +437,17 @@
 
 <script src="/assets/javascripts/like-control.js"></script>
 {{/if }}
+{{#unless homepage}}
+<script>
+
+  const container = document.getElementById('pagination');
+
+  container.innerHTML = PaginationUI.render({
+    total: "{{total}}",       // Total posts in your DB
+    limit: "{{limit}}",        // Items per page
+    current: "{{current}}",       // Current page from URL params
+    baseUrl: "{{baseUrl}}" + "?sort=latest&limit={{limit}}&page="
+  });
+
+</script>
+{{/unless}}

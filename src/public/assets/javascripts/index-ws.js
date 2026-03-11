@@ -144,3 +144,51 @@ ws.addEventListener("message", (event) => {
     infoSpan.textContent = "Updated"
   }
 });
+class PaginationUI {
+  static render({ total, limit, current, baseUrl }) {
+    const totalPages = Math.ceil(total / limit) || 1;
+    const curr = parseInt(current) || 1;
+
+    // 1. Calculate Prev/Next links
+    const pre = curr > 1 ? `${baseUrl}${curr - 1}` : "#";
+    const next = curr < totalPages ? `${baseUrl}${curr + 1}` : "#";
+
+    // 2. Calculate "Showing X to Y"
+    const start = total === 0 ? 0 : (curr - 1) * limit + 1;
+    const end = Math.min(curr * limit, total);
+
+    // 3. Simple Logic for Page Buttons (Shows 5 pages around current)
+    let pagesHtml = '';
+    for (let i = 1; i <= totalPages; i++) {
+      // Only show first, last, and pages near current to keep it clean
+      if (i === 1 || i === totalPages || (i >= curr - 1 && i <= curr + 1)) {
+        const activeClass = i === curr ? 'btn-primary' : 'btn-ghost';
+        pagesHtml += `<a href="${baseUrl}${i}" class="join-item btn btn-sm md:btn-md ${activeClass} font-black">${i}</a>`;
+      } else if (i === curr - 2 || i === curr + 2) {
+        pagesHtml += `<button class="join-item btn btn-sm md:btn-md btn-ghost font-black cursor-default">...</button>`;
+      }
+    }
+
+    return `
+    
+      <div class="join border border-base-200 shadow-sm bg-base-100 rounded-2xl overflow-hidden">
+        
+        <a href="${pre}" class="join-item btn btn-sm md:btn-md btn-ghost gap-2 font-black uppercase text-[10px] tracking-widest ${curr === 1 ? 'btn-disabled opacity-30' : ''}">
+          <span data-feather="chevron-left" class="w-4 h-4"></span>
+          <span class="hidden sm:inline">Prev</span>
+        </a>
+
+        ${pagesHtml}
+
+        <a href="${next}" class="join-item btn btn-sm md:btn-md btn-ghost gap-2 font-black uppercase text-[10px] tracking-widest ${curr === totalPages ? 'btn-disabled opacity-30' : ''}">
+          <span class="hidden sm:inline">Next</span>
+          <span data-feather="chevron-right" class="w-4 h-4"></span>
+        </a>
+      </div>
+
+      <p class="text-[10px] font-black uppercase tracking-[0.2em] opacity-70">
+        Showing <span>${start}</span> to <span>${end}</span> of <span>${total}</span> entries
+      </p>
+    `;
+  }
+}
