@@ -4,91 +4,118 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User_Report_{{user.username}}</title>
+    <base href="{{baseUrl}}/"> 
     <style>
-        /* PDF-like styling defaults */
         :root {
             --text-color: #1a1a1a;
-            --muted-color: #555555;
-            --border-color: #dddddd;
-            --bg-color: #f0f0f0;
+            --muted-color: #666666;
+            --border-color: #eeeeee;
+            --accent-green: #2e7d32;
             --page-bg: #ffffff;
+            --bg-color: #f4f7f6;
         }
 
         body {
             background-color: var(--bg-color);
             color: var(--text-color);
-            font-family: "Segoe UI", "Helvetica", "Arial", sans-serif;
+            font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             margin: 0;
-            padding: 20px 10px;
-            line-height: 1.6;
+            padding: 40px 15px;
+            line-height: 1.5;
         }
 
-        /* The "A4" Page Container */
         .page {
-            max-width: 800px;
+            max-width: 850px;
             margin: 0 auto;
             background: var(--page-bg);
-            padding: 20px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-            border: 1px solid #ccc;
+            padding: 40px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            border-radius: 8px;
         }
 
-        /* Typography */
-        h1, h2, h3 { 
-            margin-top: 0; 
-            border-bottom: 2px solid var(--text-color);
-            padding-bottom: 5px;
+        /* Header Layout */
+        .report-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            border-bottom: 3px solid var(--accent-green);
+            padding-bottom: 20px;
+            margin-bottom: 30px;
         }
-        
-        .report-header { margin-bottom: 40px; }
-        .report-header p { margin: 5px 0; font-size: 0.95rem; }
-        
-        /* Data Tables/Lists */
+
+        .profile-info h1 { margin: 0; color: var(--accent-green); font-size: 1.8rem; }
+        .user-photo {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: #eee;
+            object-fit: cover;
+            border: 2px solid var(--border-color);
+        }
+
+        /* Typography & Components */
         .section-title {
             text-transform: uppercase;
-            letter-spacing: 1px;
-            font-size: 1.1rem;
-            margin-top: 30px;
+            font-size: 0.9rem;
+            font-weight: 700;
             color: var(--muted-color);
-            color: rgb(3, 16, 3);
+            margin-top: 40px;
             border-bottom: 1px solid var(--border-color);
+            padding-bottom: 5px;
+            letter-spacing: 1px;
         }
 
         .record {
-            margin: 20px 0;
-            padding-bottom: 15px;
-            background:
-            border-radius: 10px;
-            border-bottom: 1px dashed var(--border-color);
+            padding: 15px 0;
+            border-bottom: 1px solid #f9f9f9;
         }
 
         .record-title {
-            font-weight: bold;
+            font-weight: 600;
             font-size: 1.1rem;
-            color: green;
-            display: block;
+            color: var(--accent-green);
+            text-decoration: none;
         }
 
         .metadata {
             font-size: 0.8rem;
-            color: var(--muted-color);
-            margin-bottom: 8px;
+            color: #888;
+            margin: 4px 0 10px 0;
+        }
+
+        .post-content {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .cover-thumb {
+            width: 120px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 4px;
+            background: #eee;
         }
 
         .body-text {
-            font-size: 1rem;
-            white-space: pre-wrap; /* Preserves line breaks in posts/comments */
+            font-size: 0.95rem;
+            min-width: 50vw;
+            
         }
 
-        .label {
+        .badge {
+            font-size: 0.7rem;
+            padding: 2px 6px;
+            border-radius: 4px;
+            background: #eee;
             font-weight: bold;
-            color: #333;
         }
 
-        /* Print optimization */
+        .label { font-weight: 600; color: #444; }
+
         @media print {
             body { background: none; padding: 0; }
-            .page { box-shadow: none; border: none; width: 100%; max-width: none; }
+            .page { box-shadow: none; width: 100%; border: none; }
         }
     </style>
 </head>
@@ -97,53 +124,94 @@
 {{#if user}}
     <div class="page">
         <div class="report-header">
-            <h1>Complete User Profile Data</h1>
-            <p><span class="label">Display Name:</span> {{user.displayName}}</p>
-            <p><span class="label">Username:</span> @{{user.username}}</p>
-            <p><span class="label">Identity:</span> {{user.firstName}} {{user.lastName}} (via {{user.provider}})</p>
-            {{#if user.about}}
-                <p style="margin-top: 15px;"><span class="label">About:</span> {{user.about}}</p>
+            <div class="profile-info">
+                <h1>{{user.displayName}}</h1>
+                <p><strong>@{{user.username}}</strong> | {{user.email}}</p>
+                <p class="metadata">Account ID: {{user.id}} | Provider: {{user.provider}}</p>
+            </div>
+            {{#if user.photoURL}}
+                <img src="{{user.photoURL}}" alt="Profile" class="user-photo">
             {{/if}}
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+            <div>
+                <span class="label">Bio/About:</span>
+                <p style="font-size: 0.9rem;">{{#if user.about}}{{user.about}}{{else}}No bio provided.{{/if}}</p>
+            </div>
+            <div>
+                <span class="label">Feed Categories:</span>
+                <p style="font-size: 0.9rem;">{{#if user.feedCatgs}}
+                    {{#each user.feedCatgs}}{{this}}{{#unless @last}}, {{/unless}}{{/each}}
+                    {{else}}General{{/if}}</p>
+            </div>
         </div>
 
         <h2 class="section-title">Authored Posts ({{user.posts.length}})</h2>
         {{#each user.posts}}
             <div class="record">
-                <span class="record-title">
-                    {{#if title}}{{title}}{{else}}Untitled Record{{/if}}
-                </span>
-                <div class="metadata">
-                    Key: {{key}} | 
-                    Status: {{#if public}}Public{{else}}Private{{/if}} | 
-                    Likes: {{#if likes}}{{likes}}{{else}}0{{/if}}
+                <div class="record-title">
+                    {{#if title}}{{title}}{{else}}Untitled Post{{/if}}
+                    <span class="badge">{{#if public}}Public{{else}}Private{{/if}}</span>
                 </div>
-                <div class="body-text">{{{body}}}</div>
+                <div class="metadata">
+                    Created: {{createdAt}} | Key: {{key}}
+                </div>
+                <div class="post-content">
+                    {{#if coverPic}}
+                        <img src="{{coverPic}}" class="cover-thumb" alt="Cover">
+                    {{/if}}
+                    <div class="body-text">{{body}}</div>
+                </div>
             </div>
         {{else}}
-            <p class="metadata">No posts recorded.</p>
+            <p class="metadata">This user hasn't published any posts yet.</p>
         {{/each}}
 
-        <h2 class="section-title">Recent Comments & Activity</h2>
+        <h2 class="section-title">Recent Comments ({{user.comments.length}})</h2>
         {{#each user.comments}}
             <div class="record">
                 <div class="metadata">
-                    Comment ID: {{id}} | 
-                    In response to post: <strong>{{#if post.title}}{{post.title}}{{else}}{{postkey}}{{/if}}</strong>
+                    On Post: <strong>{{postkey}}</strong> | Date: {{createdAt}}
                 </div>
-                <div style="color: rgb(0, 28, 0);" class="body-text">{{body}}</div>
+                <div class="body-text" style="color: #333; border-left: 3px solid #eee; padding-left: 10px;">{{body}}</div>
             </div>
         {{else}}
-            <p class="metadata">No comment history available.</p>
+            <p class="metadata">No comment history recorded.</p>
         {{/each}}
 
-        <div style="margin-top: 50px; text-align: center; font-size: 0.7rem; color: #aaa; border-top: 1px solid #eee; padding-top: 10px;">
-            Generated on {{#if user.photo_updatedAt}}{{user.photo_updatedAt}}{{else}}2026{{/if}} | User Database System
+        <h2 class="section-title">Liked Content ({{user.likes.length}})</h2>
+        <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 15px;">
+            {{#each user.likes}}
+                <div class="record">
+                <div class="record-title"  style="color: #00e632;">
+                    {{#if title}}{{title}}{{else}}Untitled Post{{/if}}
+                    
+                </div>
+                <div class="metadata">
+                    Created: {{createdAt}} | Key: {{key}}
+                </div>
+                <div class="post-content">
+                    {{#if coverPic}}
+                        <img src="{{coverPic}}" class="cover-thumb" alt="Cover">
+                    {{/if}}
+                    <div class="body-text">{{body}}</div>
+                </div>
+            </div>
+            {{else}}
+                <p class="metadata">No likes recorded.</p>
+            {{/each}}
+        </div>
+
+        <div style="margin-top: 60px; text-align: center; font-size: 0.75rem; color: #bbb; border-top: 1px solid #f0f0f0; padding-top: 20px;">
+            Report generated for {{user.username}} | System Date: {{date}}
+            {{#if user.photo_updatedAt}}<br>Profile Last Updated: {{user.photo_updatedAt}}{{/if}}
         </div>
     </div>
 {{else}}
-    <div class="page" style="text-align: center;">
-        <h1>Error</h1>
-        <p>No user data was provided for this report.</p>
+    <div class="page" style="text-align: center; padding: 100px 0;">
+        <h1 style="color: #cc0000;">User Not Found</h1>
+        <p>The requested user object is null or undefined.</p>
     </div>
 {{/if}}
 

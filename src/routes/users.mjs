@@ -214,8 +214,14 @@ router.post("/profile/update/personal", ensureAuthenticated, async (req, res, ne
   }));
 })
 router.get('/request-data', ensureAuthenticated, async (req, res, next) => {
-  const user = await postsUsersStore.getAllData(req.user.username)
-  res.render("user-data", { user, title: user.username, layout: false }, (err, html) => {
+  const user = await postsUsersStore.getAllData(req.user.username);
+  const protocol = req.protocol;
+
+  const host = req.get('host');
+  const baseUrl = `${protocol}://${host}`;
+  res.render("user-data", {
+    user, title: user.username, layout: false, baseUrl: baseUrl, date: new Date().toTimeString()
+  }, (err, html) => {
     if (err) {
       console.error(err)
     }
@@ -301,7 +307,7 @@ passport.use(
 router.post('/update/photo/:username', ensureAuthenticated, async (req, res, next) => {
   const type = req.headers.phototype;
   const pic = await picStore.add(req.body, "/assets/users/pictures/", type);
-  
+
   await usersModel.updatePhoto(req.user.id, pic.url, type)
   await postsUsersStore.updatePhoto(req.user.id, pic.url, type);
   await picStore.remove(req.user.photoURL)

@@ -2,7 +2,7 @@
   {{#if post}}
   <article class="bg-base-100 max-w-4xl mx-auto">
     <header
-      class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-8 pb-6 border-b border-base-200/60">
+      class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 sm:gap-6 mb-8 pb-2 sm:pb-6 border-b border-base-200/60">
       <div class="flex items-center gap-4">
         <div class="avatar">
           <div class="w-14 h-14 rounded-2xl bg-base-200 shadow-sm overflow-hidden">
@@ -15,8 +15,9 @@
             {{post.auther.username}}
           </a>
           <div class="flex items-center gap-3 mt-1 flex-wrap">
-            <span data-time="{{post.createdAt}}"
-              class="updatedAt text-[10px] font-bold opacity-50 uppercase tracking-widest"></span>
+            <p class="text-[10px] font-bold opacity-50 uppercase tracking-widest">
+              created : <span id="createSpan" class="updatedAt " data-time="{{post.createdAt}}"></span>
+            </p>
             <div class="hidden sm:flex gap-2  flex-wrap">
               {{#each post.catgs}}
               <a href="/explore/{{catgName}}"
@@ -27,11 +28,11 @@
         </div>
       </div>
       <div class="flex sm:hidden gap-2  flex-wrap">
-              {{#each post.catgs}}
-              <a href="/explore/{{catgName}}"
-                class="text-[10px] uppercase tracking-widest font-black text-primary/70 hover:text-primary">#{{catgName}}</a>
-              {{/each}}
-            </div>
+        {{#each post.catgs}}
+        <a href="/explore/{{catgName}}"
+          class="text-[10px] uppercase tracking-widest font-black text-primary/90 hover:text-primary">#{{catgName}}</a>
+        {{/each}}
+      </div>
       {{#if postkey}}
       <div class="flex gap-2 w-auto">
         <a {{#if owner}}{{else}} hidden{{/if}} href="/posts/edit?key={{postkey}}"
@@ -47,7 +48,9 @@
       {{/if}}
 
     </header>
-
+    <p id="updateDiv" class="text-[10px] -mt-4 mb-4 font-bold opacity-50 uppercase tracking-widest">
+      Last Update : <span id="updateSpan" class="updatedAt " data-time="{{post.updatedAt}}"></span>
+    </p>
     {{#if post.coverPic}}
     <figure class="mb-10 rounded-2xl overflow-hidden border border-base-200 bg-base-200/30 shadow-inner">
       <img src="{{post.coverPic}}" alt="{{post.title}}" class="w-full max-h-120 object-cover" />
@@ -292,9 +295,19 @@
       }));
     }
   });
+  const Events = new EventTarget()
+  const updateDiv = document.getElementById("updateDiv");
+  const updateSpan = document.getElementById("updateSpan");
+  const createSpan = document.getElementById("createSpan");
+  Events.addEventListener("timeset", () => {
+    if (updateSpan.textContent == createSpan.textContent) {
+      updateDiv.classList.add("hidden")
+    }
+  })
 </script>
 {{> welcome }}
 <script src="/assets/javascripts/relative-time.js"></script>
+
 {{#if user}}
 <script src="/assets/javascripts/like-control.js"></script>
 {{/if}}

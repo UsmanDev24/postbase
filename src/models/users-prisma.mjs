@@ -182,6 +182,8 @@ export class PrismaPostsUsersStore {
     if (!user) return null;
     user.posts = await postStore.getUserPosts(user.id, false)
     user.comments = await commentStore.getAllByUser(user.id)
+    user.likes = await this.getLikedPosts(userName, false)
+    user.feedCatgs = JSON.parse(user.feedCatgs)
     return user
   }
 
@@ -223,7 +225,7 @@ export class PrismaPostsUsersStore {
     const likedPosts = likesKeys.map(key => {
       return postStore.readMin(key)
     })
-    return await Promise.all(likedPosts)
+    return  Promise.all(likedPosts)
   }
   
 

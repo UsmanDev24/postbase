@@ -1,3 +1,4 @@
+
 const rtf = new Intl.RelativeTimeFormat("en", { numeric: "always", style: "long" });
 function toRelativeTime(date) {
   const diffMs = date - new Date();
@@ -48,4 +49,10 @@ class Times {
 }
 window.addEventListener("load", e => {
   new Times().main()
+  try {
+    Events.dispatchEvent(new Event("timeset"))
+  } catch (error) {
+    console.log(error)
+  }
+  
 })
