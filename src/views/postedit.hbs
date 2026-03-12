@@ -106,22 +106,27 @@
       </section>
 
       <section class="space-y-4">
-        <div class="flex items-center gap-2">
-          <span class="p-2 bg-purple-500/10 rounded-lg text-purple-500">
-            <span data-feather="align-left" class="h-4 w-4"></span>
-          </span>
-          <h3 class="font-bold text-lg tracking-tight">Content</h3>
-        </div>
+  <div class="flex flex-col gap-1">
+    <div class="flex items-center gap-2">
+      <span class="p-2 bg-purple-500/10 rounded-lg text-purple-500">
+        <span data-feather="align-left" class="h-4 w-4"></span>
+      </span>
+      <h3 class="font-bold text-lg tracking-tight">Content</h3>
+    </div>
+    <p class="text-sm text-base-content/80 p-0.5 ml-1">
+     <span data-feather="info" class="h-4 w-4 px-0.5 inline-flex"></span> To paste content: Long press in the editor, then tap “Paste”.
+    </p>
+  </div>
 
-        <div
-          class="prose-container bg-base-100 border border-base-300 rounded-xl overflow-hidden focus-within:border-success/50 transition-all">
-          <input required id="x" type="hidden" name="body">
-          <trix-toolbar class="border-b border-base-200 bg-base-200/30 p-2" id="my_toolbar"></trix-toolbar>
-          <trix-editor toolbar="my_toolbar" input="x"
-            class="prose max-w-full p-6 md:p-8 min-h-100 focus:outline-none">{{#if
-            post}}{{{post.body}}}{{/if}}</trix-editor>
-        </div>
-      </section>
+  <div class="prose-container bg-base-100 border border-base-300 rounded-xl overflow-hidden focus-within:border-success/50 transition-all">
+    <input required id="x" type="hidden" name="body">
+    <trix-toolbar class="border-b border-base-200 bg-base-200/30 p-2" id="my_toolbar"></trix-toolbar>
+    <trix-editor toolbar="my_toolbar" input="x"
+      class="prose max-w-full p-6 md:p-8 min-h-100 focus:outline-none">
+      {{#if post}}{{{post.body}}}{{/if}}
+    </trix-editor>
+  </div>
+</section>
 
       <div class="flex flex-col sm:flex-row justify-end items-center gap-4 pt-6 border-t border-base-200">
         <a href="/" class="btn btn-ghost rounded-full px-8 order-2 sm:order-1">Discard Draft</a>
