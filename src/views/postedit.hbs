@@ -226,38 +226,5 @@
       submit.disabled = false;
     }
   }
-  const customize = (fragment) => {
-
-    // 2. Remove <br> tags that are the ONLY child of a block (div/p)
-    // Tailwind Prose adds margin to the block, so the <br> is redundant spacing.
-    
-    const blocks = fragment.querySelectorAll("div, p");
-    blocks.forEach(block => {
-      if (block.children.length === 1 && block.firstElementChild.tagName === "BR" && !block.textContent.trim()) {
-        block.firstElementChild.remove();
-      }
-    });
-
-    // 3. Remove trailing breaks at the end of blocks
-    blocks.forEach(block => {
-      if (block.lastChild && block.lastChild.nodeName === "BR") {
-        block.lastChild.remove();
-      }
-    });
-    
-  };
-
-
-  document.addEventListener("trix-before-render", (event) => {
-    const defaultRender = event.render
-
-    event.render = function (editorElement, documentFragment) {
-      // modify the documentFragment…
-      customize(documentFragment)
-
-      // render it with the default rendering function
-      defaultRender(editorElement, documentFragment)
-    }
-  })
-
+  
 </script>
