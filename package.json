@@ -44,7 +44,7 @@
     "pg": "^8.20.0",
     "quick-lru": "^7.3.0",
     "rotating-file-stream": "^3.2.9",
-    "sanitize-html": "^2.17.1",
+    "sanitize-html": "^2.17.2",
     "serve-favicon": "^2.5.1",
     "superagent": "^10.3.0",
     "trix": "^2.1.17",
