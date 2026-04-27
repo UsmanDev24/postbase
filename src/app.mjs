@@ -2,7 +2,7 @@ import '@dotenvx/dotenvx/config.js'
 import { default as express } from 'express';
 import { default as hbs } from 'hbs';
 import * as path from 'path';
-import serveFavicon from'serve-favicon';
+import serveFavicon from 'serve-favicon';
 import { default as logger } from 'morgan';
 import { default as cookieParser } from 'cookie-parser';
 import * as http from 'http';
@@ -15,7 +15,7 @@ import {
 
 import passport from 'passport';
 import { router as indexRouter, wsHomeListners } from './routes/index.mjs';
-import { router as postsRouter, initSocket as initPostsSocket,  wsPostsListeners } from './routes/posts.mjs';
+import { router as postsRouter, initSocket as initPostsSocket, wsPostsListeners } from './routes/posts.mjs';
 import { initPassport, router as usersRouter, assetRouter as userAssestRouter } from './routes/users.mjs'
 import { default as DBG } from "debug";
 import * as ws from 'ws';
@@ -45,7 +45,7 @@ app.use(logger(process.env.REQUEST_LOG_FORMAT || 'dev', {
 
 app.use(express.json());
 app.use(express.urlencoded());
-app.use(express.raw({type: "application/octet-stream", limit: "3mb"}))
+app.use(express.raw({ type: "application/octet-stream", limit: "3mb" }))
 app.use(cookieParser(process.env.SESSION_COOKIE_SECRET));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/assets/vendor/feather-icons', express.static(path.join(__dirname.replace(/\/src|\/dist/ig, ""), 'node_modules', 'feather-icons', 'dist')));
@@ -57,24 +57,24 @@ const mainRouter = express.Router()
 initPassport(mainRouter)
 
 mainRouter.use(async (req, res, next) => {
-    passport.authenticate('jwt', {session: false}, async (err, user, info) => {
-        if (user){
-            passport.authenticate('jwt', {session:false,})(req, res, next)
+    passport.authenticate('jwt', { session: false }, async (err, user, info) => {
+        if (user) {
+            passport.authenticate('jwt', { session: false, })(req, res, next)
         }
         else {
             restoreSession(req, res, next)
         }
     })(req, res, next)
-    
+
 })
 mainRouter.use((req, res, next) => {
     if (process.env.RAILWAY_ENVIRONMENT_NAME) {
-        if (req.headers['x-worker'] !== process.env.X_WORKER)  {
+        if (req.headers['x-worker'] !== process.env.X_WORKER) {
             res.status(403)
             res.end("Forbidden");
             return
         }
-    } 
+    }
     next()
 })
 mainRouter.use('/', indexRouter);
@@ -97,7 +97,7 @@ WsServer.on("connection", async (socket, req) => {
     const rawCookies = req.headers.cookie;
     if (rawCookies)
         socket.user = await wsSession(rawCookies);
-    socket.send(JSON.stringify({ type: 'connection', message: 'connected '+ JSON.stringify(socket.user) }))
+    socket.send(JSON.stringify({ type: 'connection', message: 'connected ' + JSON.stringify(socket.user) }))
     initPostsSocket(socket)
 })
 addWsListeners()

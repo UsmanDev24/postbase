@@ -64,17 +64,16 @@ export class PrismaPostCatgStore {
   static inFlight = new Map(); // Map<String, Promice>
 
   async setFlight(key, task) {
-    const cached = await postCatgCache.get(key);
-    if (cached) return cached;
-
-    if (PrismaPostCatgStore.inFlight.get(key)) {
-      return PrismaPostCatgStore.inFlight.get(key);
-    }
-    const fetchTask = task();
-    PrismaPostCatgStore.inFlight.set(key, fetchTask);
-    return fetchTask;
+      const cached = await postCatgCache.get(key);
+      if (cached) return cached;
+      
+      if (PrismaPostCatgStore.inFlight.get(key)) {
+        return PrismaPostCatgStore.inFlight.get(key)
+      }
+      const fetchTask = task();
+      PrismaPostCatgStore.inFlight.set(key, fetchTask);
+      return fetchTask;
   }
-
 
 
   async getPostKeysByCatg(catgName) {
@@ -108,7 +107,8 @@ export class PrismaPostCatgStore {
         }
 
       } catch (error) {
-        console.error(error);
+        console.error(error)
+        PrismaPostCatgStore.inFlight.delete(catgName)
       }
     });
   }
@@ -137,7 +137,8 @@ export class PrismaPostCatgStore {
         return categories;
       } catch (error) {
         console.error(error);
-      }
+        PrismaPostCatgStore.inFlight.delete("allCatgsNames")
+      } 
     });
   }
 }
